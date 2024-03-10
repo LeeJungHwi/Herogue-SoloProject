@@ -17,10 +17,16 @@ public class SecretBox : MonoBehaviour
     // 오브젝트 타입
     public ObjType type;
 
+    // 오브젝트 풀
+    private PoolingManager poolManager;
+
     void Start()
     {
         // 방 모델
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
+
+        // 오브젝트 풀
+        poolManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
     void Update()
@@ -37,5 +43,11 @@ public class SecretBox : MonoBehaviour
             templates.secretBoxes.Add(this.gameObject);
             isAdd = true;
         }
+    }
+
+    void DeActive()
+    {
+        // 풀에 반환
+        poolManager.ReturnObj(gameObject, ObjType.시크릿박스);
     }
 }
