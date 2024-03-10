@@ -33,17 +33,10 @@ public class AbilitySword1Collision : MonoBehaviour
             player.AbilityCollisionLogic(damage, enemy, transform);
 
             // 플레이어 흡혈
-            if (player.curHealth + (damage + player.damage) > player.maxHealth)
-            {
-                player.curHealth = player.maxHealth;
-            }
-            else
-            {
-                player.curHealth = player.curHealth + (damage + player.damage);
-            }
+            player.curHealth = player.curHealth + (damage + player.damage) > player.maxHealth ? player.maxHealth : player.curHealth + (damage + player.damage);
 
             // 흡혈 텍스트
-            GameObject instantHealingText = poolingManager.GetObj("HealingText");
+            GameObject instantHealingText = poolingManager.GetObj(ObjType.회복텍스트);
             instantHealingText.GetComponent<TextMeshPro>().text = "+" + (damage + player.damage).ToString();
             instantHealingText.transform.position = transform.position + Vector3.up * 20;
             instantHealingText.transform.rotation = poolingManager.HealingTextPrefab.transform.rotation;

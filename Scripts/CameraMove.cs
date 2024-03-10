@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class CameraMove : MonoBehaviour
 {
-    // 카메라 회전속도
-    private float rot_speed = 100.0f;
-
     // 플레이어
     private GameObject Player;
 

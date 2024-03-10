@@ -19,7 +19,7 @@ public class AbilityMage1 : AbilityBase
         Player Player = player.GetComponent<Player>();
 
         // 스킬 이펙트
-        instantAbilityMage1Active = poolManager.GetObj("AbilityMage1Active");
+        instantAbilityMage1Active = poolManager.GetObj(ObjType.법사스킬2이펙트);
         instantAbilityMage1Active.transform.position = player.transform.position + player.transform.forward * 45f;
         instantAbilityMage1Active.transform.rotation = poolManager.AbilityMage1ActivePrefab.transform.rotation;
 
@@ -27,20 +27,21 @@ public class AbilityMage1 : AbilityBase
         Player.anim.SetTrigger("doAbility1");
 
         // 스킬 사운드
-        SoundManager.instance.SFXPlay("MageSkill1Sound");
+        SoundManager.instance.SFXPlay(ObjType.법사스킬2소리);
     }
 
     // 스킬 종료시 내용
     public override void DeAtivate(GameObject joystick, GameObject player, GameObject poolingManager)
     {
-        // 이펙트 비활성화
-        instantAbilityMage1Active.SetActive(false);
-
-        // 충돌 이펙트 비활성화
         PoolingManager poolManager = poolingManager.GetComponent<PoolingManager>();
+
+        // 스킬 이펙트 풀에 반환
+        poolManager.ReturnObj(instantAbilityMage1Active, ObjType.법사스킬2이펙트);
+
+        // 충돌 이펙트 풀에 반환
         for (int i = 0; i < poolManager.AbilityMage1HitEffects.Count; i++)
         {
-            poolManager.AbilityMage1HitEffects[i].SetActive(false);
+            poolManager.ReturnObj(poolManager.AbilityMage1HitEffects[i].Item1, poolManager.AbilityMage1HitEffects[i].Item2);
         }
 
         // 충돌 이펙트가 저장된 리스트 클리어

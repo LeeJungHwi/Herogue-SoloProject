@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -39,7 +40,7 @@ public class RoomTemplates : MonoBehaviour
     public GameObject goToDungeon;
 
     // 스테이지에 생성된 방이 추가되는 리스트
-    public List<GameObject> rooms;
+    public List<Tuple<GameObject, ObjType>> rooms = new List<Tuple<GameObject, ObjType>>();
 
     // 스테이지에 생성된 몬스터가 추가되는 리스트
     public List<GameObject> monsters;
@@ -87,7 +88,7 @@ public class RoomTemplates : MonoBehaviour
                 // 대기시간이 0초이하면서 보스가 스폰되지 않았을때
                 // 보스 생성
                 // 풀링에서 먼저 트랜스폼 초기화한후 활성화
-                GameObject instantBoss = poolingManager.GetObj("Boss0");
+                GameObject instantBoss = poolingManager.GetObj(ObjType.보스1);
 
                 // 보스리스트에 저장
                 boss.Add(instantBoss);
@@ -127,11 +128,11 @@ public class RoomTemplates : MonoBehaviour
         // 몬스터 생성
         // 풀링에서 시작다음방~보스전방 랜덤돌려서 몬스터위치를 잡아준뒤 활성화
         // 몬스터리스트에서 하나를 랜덤 선택해서 50% 확률로 스폰
-        int randomMonster = Random.Range(0, MonsterList.Length); // 0~16
-        int spawnRandom = Random.Range(0, 2); // 0~1
+        int randomMonster = UnityEngine.Random.Range(0, MonsterList.Length); // 0~16
+        int spawnRandom = UnityEngine.Random.Range(0, 2); // 0~1
         if (spawnRandom == 0)
         {
-            GameObject instantMonster = poolingManager.GetObj(MonsterList[randomMonster].name);
+            GameObject instantMonster = poolingManager.GetObj(MonsterList[randomMonster].GetComponent<Enemy>().type);
             monsters.Add(instantMonster);
             instantMonster.GetComponent<HpBar>().spawnHpBar = false;
         }
@@ -141,12 +142,60 @@ public class RoomTemplates : MonoBehaviour
     {
         // 다음 스테이지 로직
         // 리스트 초기화
-        InitList(hpBars);
-        InitList(rooms);
-        InitList(monsters);
-        InitList(secretBoxes);
-        InitList(items);
-        InitList(boss);
+
+        // 풀에 반환
+        for (int i = 0; i < hpBars.Count; i++)
+        {
+            poolingManager.ReturnObj(hpBars[i], ObjType.몬스터체력바);
+        }
+
+        // 리스트 클리어
+        hpBars.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            poolingManager.ReturnObj(rooms[i].Item1, rooms[i].Item2);
+        }
+
+        // 리스트 클리어
+        rooms.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < monsters.Count; i++)
+        {
+            poolingManager.ReturnObj(monsters[i], monsters[i].GetComponent<Enemy>().type);
+        }
+
+        // 리스트 클리어
+        monsters.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < secretBoxes.Count; i++)
+        {
+            poolingManager.ReturnObj(secretBoxes[i], secretBoxes[i].GetComponent<SecretBox>().type);
+        }
+
+        // 리스트 클리어
+        secretBoxes.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < items.Count; i++)
+        {
+            poolingManager.ReturnObj(items[i], items[i].GetComponent<Item>().objType);
+        }
+
+        // 리스트 클리어
+        items.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < boss.Count; i++)
+        {
+            poolingManager.ReturnObj(boss[i], ObjType.보스1);
+        }
+
+        // 리스트 클리어
+        boss.Clear();
 
         // 스폰딜레이
         DelaySpawn();
@@ -173,12 +222,60 @@ public class RoomTemplates : MonoBehaviour
         // 플레이어가 던전에서 죽으면 실행되어야함
         // 플레이어가 죽는 함수에서 호출
         // 리스트 초기화
-        InitList(hpBars);
-        InitList(rooms);
-        InitList(monsters);
-        InitList(secretBoxes);
-        InitList(items);
-        InitList(boss);
+
+        // 풀에 반환
+        for (int i = 0; i < hpBars.Count; i++)
+        {
+            poolingManager.ReturnObj(hpBars[i], ObjType.몬스터체력바);
+        }
+
+        // 리스트 클리어
+        hpBars.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            poolingManager.ReturnObj(rooms[i].Item1, rooms[i].Item2);
+        }
+
+        // 리스트 클리어
+        rooms.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < monsters.Count; i++)
+        {
+            poolingManager.ReturnObj(monsters[i], monsters[i].GetComponent<Enemy>().type);
+        }
+
+        // 리스트 클리어
+        monsters.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < secretBoxes.Count; i++)
+        {
+            poolingManager.ReturnObj(secretBoxes[i], secretBoxes[i].GetComponent<SecretBox>().type);
+        }
+
+        // 리스트 클리어
+        secretBoxes.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < items.Count; i++)
+        {
+            poolingManager.ReturnObj(items[i], items[i].GetComponent<Item>().objType);
+        }
+
+        // 리스트 클리어
+        items.Clear();
+
+        // 풀에 반환
+        for (int i = 0; i < boss.Count; i++)
+        {
+            poolingManager.ReturnObj(boss[i], ObjType.보스1);
+        }
+
+        // 리스트 클리어
+        boss.Clear();
 
 
         // 스테이지 초기화
@@ -321,18 +418,5 @@ public class RoomTemplates : MonoBehaviour
         // 플레이어를 할당하는 함수
         player = GameObject.FindGameObjectWithTag("Player");
         playerScript = player.GetComponent<Player>();
-    }
-
-    void InitList(List<GameObject> list)
-    {
-        // 리스트 초기화 함수
-        // 리스트 요소 비활성화
-        for (int i = 0; i < list.Count; i++)
-        {
-            list[i].SetActive(false);
-        }
-
-        // 리스트 요소 삭제
-        list.Clear();
     }
 }

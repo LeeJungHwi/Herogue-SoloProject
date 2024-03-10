@@ -58,7 +58,7 @@ public class HpBar : MonoBehaviour
         // 몬스터마다 크기가 달라서 큰몬스터는 HpBar를 위로 더 올려줌
         if(!spawnHpBar)
         {
-            instantHpBar = poolingManager.GetObj("MonsterHpBar");
+            instantHpBar = poolingManager.GetObj(ObjType.몬스터체력바);
             spawnHpBar = true;
         }
         if(enemy.enemyType == Enemy.Type.Bat)

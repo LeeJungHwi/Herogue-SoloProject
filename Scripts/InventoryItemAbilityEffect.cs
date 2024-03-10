@@ -27,14 +27,14 @@ public class InventoryItemAbilityEffect : InventoryItemEffect
         else
         {
             // 실패 사운드
-            SoundManager.instance.SFXPlay("FailEquipSound");
+            SoundManager.instance.SFXPlay(ObjType.장비장착실패소리);
 
             // 스킬 해제 실패
             return false;
         }
 
         // 성공 사운드
-        SoundManager.instance.SFXPlay("UsePotionSound");
+        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
 
         // 스킬 해제 성공
         return true;

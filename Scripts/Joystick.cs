@@ -236,7 +236,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
                 // 이동상태 대쉬 X 슈팅 X 일때만 발소리 재생
                 if(waitTime <= 0)
                 {
-                    SoundManager.instance.SFXPlay("MoveSound");
+                    SoundManager.instance.SFXPlay(ObjType.무빙소리);
                     waitTime = 0.4f;
                 }
                 else
@@ -313,7 +313,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             Invoke("DashOut", 0.5f);
 
             // 대쉬 효과음 재생
-            SoundManager.instance.SFXPlay("DashSound");
+            SoundManager.instance.SFXPlay(ObjType.대쉬소리);
         }
     }
 
@@ -347,7 +347,7 @@ public class Joystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPoint
             Invoke("DashOut", 0.5f);
 
             // 대쉬 효과음 재생
-            SoundManager.instance.SFXPlay("DashSound");
+            SoundManager.instance.SFXPlay(ObjType.대쉬소리);
         }
     }
 

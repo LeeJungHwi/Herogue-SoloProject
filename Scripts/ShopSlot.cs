@@ -144,7 +144,7 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
         InventorySlot.inventorySlotNumSave = inventorySlotNum;
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void QuitShopItemBuyPanel()
@@ -153,7 +153,7 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
         shopItemBuyPanel.SetActive(false);
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void BuyShopItem()
@@ -173,13 +173,13 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
             shopItemBuyPanel.SetActive(false);
 
             // 사운드
-            SoundManager.instance.SFXPlay("ButtonSound");
+            SoundManager.instance.SFXPlay(ObjType.버튼소리);
         }
         else
         {
             // 구매 불가
             // 사운드 : 장비 장착 실패 소리와 같음
-            SoundManager.instance.SFXPlay("FailEquipSound");
+            SoundManager.instance.SFXPlay(ObjType.장비장착실패소리);
         }
     }
 }

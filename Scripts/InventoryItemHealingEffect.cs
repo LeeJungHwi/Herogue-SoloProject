@@ -26,7 +26,7 @@ public class InventoryItemHealingEffect : InventoryItemEffect
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("UsePotionSound");
+        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
 
         return true;
     }

@@ -78,13 +78,13 @@ public class InventoryUI : MonoBehaviour
             inventorySlots[0].inventoryExpansionSlotItemInfoPanel.SetActive(false);
 
             // 사운드
-            SoundManager.instance.SFXPlay("ButtonSound");
+            SoundManager.instance.SFXPlay(ObjType.버튼소리);
         }
         else
         {
             // 인벤토리 슬롯 확장 불가
             // 사운드 : 장비 장착 실패 소리와 같음
-            SoundManager.instance.SFXPlay("FailEquipSound");
+            SoundManager.instance.SFXPlay(ObjType.장비장착실패소리);
         }
     }
 

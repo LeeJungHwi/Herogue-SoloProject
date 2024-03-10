@@ -38,13 +38,13 @@ public class AbilityArrow2Collision : MonoBehaviour
             enemy.nav.speed = 0f;
             enemy.isFrost = true;
 
-            // 충돌 이펙트 생성
-            instantHit = poolingManager.GetObj("AbilityArrow2Hit");
+            // 충돌 이펙트 활성화
+            instantHit = poolingManager.GetObj(ObjType.궁수스킬3충돌이펙트);
             instantHit.transform.position = enemy.transform.position + enemy.transform.up * 5f;
             instantHit.transform.rotation = poolingManager.AbilityArrow2HitPrefab.transform.rotation;
 
             // 스킬 사운드
-            SoundManager.instance.SFXPlay("ArrowSkill2HitSound");
+            SoundManager.instance.SFXPlay(ObjType.궁수스킬3충돌소리);
         }
     }
 }

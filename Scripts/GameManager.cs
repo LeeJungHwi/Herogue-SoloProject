@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     // 패널 비활성화 함수
@@ -181,14 +181,14 @@ public class GameManager : MonoBehaviour
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     // 게임 종료
     public void Exit()
     {
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
 
         // 게임종료
         Application.Quit();

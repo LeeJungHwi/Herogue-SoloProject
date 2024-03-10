@@ -19,7 +19,7 @@ public class AbilityHolyknight1 : AbilityBase
         Player Player = player.GetComponent<Player>();
 
         // 스킬 이펙트
-        instantAbilityHolyknight1Active = poolManager.GetObj("AbilityHolyknight1Active");
+        instantAbilityHolyknight1Active = poolManager.GetObj(ObjType.성기사스킬2이펙트);
         instantAbilityHolyknight1Active.transform.position = player.transform.position + player.transform.forward * 50f;
         instantAbilityHolyknight1Active.transform.rotation = poolManager.AbilityHolyknight1ActivePrefab.transform.rotation;
 
@@ -30,14 +30,15 @@ public class AbilityHolyknight1 : AbilityBase
     // 스킬 종료시 내용
     public override void DeAtivate(GameObject joystick, GameObject player, GameObject poolingManager)
     {
-        // 이펙트 비활성화
-        instantAbilityHolyknight1Active.SetActive(false);
-
-        // 충돌 이펙트 비활성화
         PoolingManager poolManager = poolingManager.GetComponent<PoolingManager>();
+
+        // 스킬 이펙트 풀에 반환
+        poolManager.ReturnObj(instantAbilityHolyknight1Active, ObjType.성기사스킬2이펙트);
+
+        // 충돌 이펙트 풀에 반환
         for (int i = 0; i < poolManager.AbilityHolyknight1HitEffects.Count; i++)
         {
-            poolManager.AbilityHolyknight1HitEffects[i].SetActive(false);
+            poolManager.ReturnObj(poolManager.AbilityHolyknight1HitEffects[i].Item1, poolManager.AbilityHolyknight1HitEffects[i].Item2);
         }
 
         // 충돌 이펙트가 저장된 리스트 클리어

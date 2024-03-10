@@ -13,6 +13,9 @@ public enum WeaponType { Arrow, Sword, Staff, Hammer, NotWeapon } // 무기아�
 [System.Serializable]
 public class InventoryItem
 { 
+    // 플레이어
+    public Player player;
+    
     // 아이템 종류
     public ItemType itemType;
 
@@ -22,6 +25,9 @@ public class InventoryItem
     // 무기 종류
     public WeaponType weaponType;
 
+    // 오브젝트 타입
+    public ObjType type;
+
     // 아이템 이름
     public string itemName; 
 
@@ -30,9 +36,6 @@ public class InventoryItem
 
     // 아이템 효과
     public List<InventoryItemEffect> Effects;   
-
-    // 플레이어
-    public Player player;
 
     // 장비 스탯 : 공격력
     public float attack;

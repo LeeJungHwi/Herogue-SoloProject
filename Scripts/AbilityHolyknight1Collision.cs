@@ -16,7 +16,7 @@ public class AbilityHolyknight1Collision : MonoBehaviour
     private PoolingManager poolingManager;
 
     // 파티클 시스템
-    private ParticleSystem particleSystem;
+    private ParticleSystem particle;
 
     // 충돌 이벤트를 저장 할 리스트
     List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
@@ -27,7 +27,7 @@ public class AbilityHolyknight1Collision : MonoBehaviour
     void Start()
     {
         // 파티클 시스템
-        particleSystem = GetComponent<ParticleSystem>();
+        particle = GetComponent<ParticleSystem>();
 
         // Player 스크립트
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -40,17 +40,17 @@ public class AbilityHolyknight1Collision : MonoBehaviour
     {
         // 파티클 충돌
         // 파티클 충돌 이벤트의 수
-        int events = particleSystem.GetCollisionEvents(other, collisionEvents);
+        int events = particle.GetCollisionEvents(other, collisionEvents);
 
         for (int i = 0; i < events; i++)
         {
             // 충돌 이벤트 수에따라 충돌시 생성할 이펙트
-            instantHit = poolingManager.GetObj("AbilityHolyknight1Hit");
+            instantHit = poolingManager.GetObj(ObjType.성기사스킬2충돌이펙트);
             instantHit.transform.position = collisionEvents[i].intersection;
             instantHit.transform.rotation = Quaternion.LookRotation(collisionEvents[i].normal);
 
             // 스킬 사운드
-            SoundManager.instance.SFXPlay("HolyknightSkill1Sound");
+            SoundManager.instance.SFXPlay(ObjType.성기사스킬2소리);
         }
 
         if (other.TryGetComponent(out Enemy enemy))

@@ -7,6 +7,26 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    // 체크
+    public bool isBorder = false, isShoot = false, isDamage, isDead, isSecretRoom, isShelter = true, iDown, fDown, isShop;
+
+    // 스탯
+    public float curHealth, maxHealth, attackSpeed = 0.5f, damage, criticalDamage, accuracy, bloodDrain, barrier;
+    public int criticalPercentage;
+
+    // 불사신 무적시간 계산용
+    private float invincibilityTime = 3f;
+    private float invincibilityTimeCalc = 3f;
+
+    // 코인
+    public int coin, maxCoin;
+
+    // 랜덤코인을 뽑기위해서 코인값 저장
+    public int[] coinValue;
+
+    // 드랍률
+    public float secretPercentage, activeDropPercentage, passiveDropPercentage, inventoryItemPercentage;
+
     // 애니메이터
     public Animator anim;
 
@@ -19,173 +39,42 @@ public class Player : MonoBehaviour
     // 물리
     private Rigidbody rigid;
 
-    // 경계와 닿았는지 체크
-    public bool isBorder = false;
-
-    // 슈팅했는지 체크
-    public bool isShoot = false;
-
-    // 공속 제한
-    public float attackSpeed = 0.5f;
-
-    // 플레이어가 피격상태인지 체크
-    public bool isDamage;
-
-    // 현재 체력
-    public float curHealth;
-
-    // 최대 체력
-    public float maxHealth;
-
-    // 데미지
-    public float damage;
-
-    // 크리티컬확률
-    public int criticalPercentage;
-
-    // 크리티컬데미지
-    public float criticalDamage;
-
-    // 명중률
-    public float accuracy;
-
-    // 흡혈
-    public float bloodDrain;
-
-    // 방벽
-    public float barrier;
-
-    // 불사신 무적시간계산용
-    private float invincibilityTime = 3f;
-    private float invincibilityTimeCalc = 3f;
-
     // 플레이어와 가까이 있는 오브젝트
     private GameObject nearObject;
-
-    // 상호작용키
-    private bool iDown;
 
     // 조이스틱 스크립트
     public Joystick joystickScript;
 
-    // 플레이어가 죽은상태인지 체크
-    public bool isDead;
-
-    // 코인
-    public int coin;
-
-    // 최대코인
-    public int maxCoin;
-
-    // 랜덤코인을 뽑기위해서 코인값 저장
-    public int[] coinValue;
-
-    // 비밀방에 있는지 체크
-    public bool isSecretRoom;
-
-    // 시크릿박스에서 아이템 드랍률
-    public float secretPercentage;
-
-    // 액티브 스킬 드랍 확률
-    public float activeDropPercentage;
-
-    // 패시브 스킬 드랍 확률
-    public float passiveDropPercentage;
-
-    // 인벤토리 아이템 드랍 확률
-    public float inventoryItemPercentage;
-
     // 다음스테이지 함수를 호출하기위해
     public RoomTemplates templates;
 
-    // 마을인지 체크
-    public bool isShelter = true;
-
-    // 체력바 가져오기
+    // 체력바
     public Slider playerHpBar;
 
     // 획득한 스킬의 설명을 저장 할 변수
     private StringBuilder sb = new StringBuilder();
 
-    // 스킬리스트 텍스트
-    public Text skillListText;
-
-    // 플레이어 스탯 텍스트
-    public Text statusInfoText;
-
-    // 플레이어 코인 텍스트
-    public Text coinText;
-
-    // 방벽 텍스트
-    public Text barrierText;
+    // 텍스트
+    public Text skillListText, statusInfoText, coinText, barrierText;
 
     // 장착된 장비의 이미지를 보여주기 위한 변수들
-    // 무기 슬롯 이미지
-    public Image weaponSlotImage;
-
-    // 갑옷 슬롯 이미지
-    public Image armorSlotImage;
-
-    // 장갑 슬롯 이미지
-    public Image gloveSlotImage;
-
-    // 신발 슬롯 이미지
-    public Image shoesSlotImage;
-
-    // 아뮬렛 슬롯 이미지
-    public Image amuletSlotImage;
-
-    // 펫 슬롯 이미지
-    public Image petSlotImage;
+    public Image weaponSlotImage, armorSlotImage, gloveSlotImage, shoesSlotImage, amuletSlotImage, petSlotImage;
 
     // 현재 장비 슬롯에 장착되어있는 장비를 저장하는 변수들
     // 현재 장착되어있는 무기
-    public InventoryItem equipedWeaponItem;
-
-    // 현재 장착되어있는 갑옷
-    public InventoryItem equipedArmorItem;
-    
-    // 현재 장착되어있는 장갑
-    public InventoryItem equipedGloveItem;
-
-    // 현재 장착되어있는 신발
-    public InventoryItem equipedShoesItem;
-
-    // 현재 장착되어있는 아뮬렛
-    public InventoryItem equipedAmuletItem;
-
-    // 현재 장착되어있는 펫
-    public InventoryItem equipedPetItem;
+    public InventoryItem equipedWeaponItem, equipedArmorItem, equipedGloveItem, equipedShoesItem, equipedAmuletItem, equipedPetItem;
 
     // 현재 장착된 무기가 있는지 체크하는 변수
     // 장착된 장비가 있는상태에서도 장비가 착용되는문제
     // 장착 : 플래그가 false 일때만 가능, 장착후에 플래그 true
     // 해제 : 플래그 false
-    public bool isWeapon;
-
-    // 현재 장착된 갑옷이 있는지 체크하는 변수
-    public bool isArmor;
-
-    // 현재 장착된 장갑이 있는지 체크하는 변수
-    public bool isGlove;
-
-    // 현재 장착된 신발이 있는지 체크하는 변수
-    public bool isShoes;
-
-    // 현재 장착된 아뮬렛이 있는지 체크하는 변수
-    public bool isAmulet;
-
-    // 현재 장착된 펫이 있는지 체크하는 변수
-    public bool isPet;
+    public bool isWeapon, isArmor, isGlove, isShoes, isAmulet, isPet;
 
     // 상점 패널
     public GameObject shopPanel;
 
     // 인벤토리 패널
     public GameObject inventoryPanel;
-
-    // 현재 상점인지 체크
-    public bool isShop;
 
     // 상점 아이템 데이터베이스
     public ShopDatabase shopDatabase;
@@ -223,41 +112,23 @@ public class Player : MonoBehaviour
     // 경사각
     public float slopeAngle;
 
-    // 플레이어 앞쪽에 오브젝트가 있는지 체크
-    public bool isForwardObject;
-
-    // 플레이어 아래쪽에 오브젝트가 있는지 체크
-    public bool isDownObject;
+    // 플레이어 앞쪽 아래쪽에 오브젝트가 있는지 체크
+    public bool isForwardObject, isDownObject;
 
     // 경사각 레이어마스크
     public LayerMask layerMask;
 
-    // Ability 소드 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
-    public InventoryItem[] abilitySwordSkillItem;
+    // 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
+    public InventoryItem[] abilitySwordSkillItem, abilityMageSkillItem, abilityBlacksmithSkillItem, abilityHolyknightSkillItem;
 
-    // Ability 소드 스킬 카운트 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
+    // 스킬 카운트 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
     public int abilitySkillCnt;
 
-    // Ability 법사 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해, 스킬 카운트는 소드랑 같이 사용
-    public InventoryItem[] abilityMageSkillItem;
-
-    // 소드 아이템 : 캐릭터에 따라 상점 무기를 바꾸기 위해, 성기사도 같이 사용
-    public InventoryItem[] swordItem;
-
-    // 지팡이 아이템 : 캐릭터에 따라 상점 무기를 바꾸기 위해, 카운트는 소드랑 같이 사용
-    public InventoryItem[] staffItem;
+    // 무기 아이템 : 캐릭터에 따라 상점 무기를 바꾸기 위해, 검은 성기사도 같이 사용
+    public InventoryItem[] swordItem, staffItem, hammerItem;
 
     // 무기 아이템 카운트 : 캐릭터에 따라 상점 무기를 바꾸기 위해
     public int weaponCnt;
-
-    // Ability 블랙스미스 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해, 스킬 카운트는 소드랑 같이 사용
-    public InventoryItem[] abilityBlacksmithSkillItem;
-
-    // 해머 아이템 : 캐릭터에 따라 상점 무기를 바꾸기 위해, 카운트는 소드랑 같이 사용
-    public InventoryItem[] hammerItem;
-
-    // Ability 성기사 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해, 스킬 카운트는 소드랑 같이 사용
-    public InventoryItem[] abilityHolyknightSkillItem;
 
     // 공격 카운트 : 콤보 공격을 위해
     public int attackCnt;
@@ -303,74 +174,6 @@ public class Player : MonoBehaviour
     // 21 : 불사신 -> 3초간격으로 무적상태가 된다 O
     public enum PassiveSkillType { 한발노리기, 백발백중, 방벽, 초월방벽, 흡혈귀, 거울, 도박꾼, 저거너트, 즉사, 시크릿, 혈액갑옷, 버티기, 구사일생, 폭발적치유, HP부스트, 광전사, 근심, 고동, 꿈의끝, 분신, 향상된대쉬, 불사신 } // 패시브 스킬 타입
     public List<int> PassiveSkill = new List<int>(); // 패시브 스킬 관리
-
-    public float DamageCalc()
-    {
-        // 플레이어 데미지 계산
-        // 패시브스킬이 적용된 데미지
-        float applyDamage = 0;
-
-        // 크리티컬 및 광전사 유무에 따른 최종 데미지 계산
-        // 영구적인 광전사가 있는지 체크
-        if(!isPermanentSkill[15])
-        {
-            // 영구적인 광전사가 없으면
-            int random = Random.Range(0, 100); // 0~99
-            if (random < criticalPercentage) // 0~24
-            {
-                // 크리티컬이 터졌을때 광전사 유무
-                if (PassiveSkill[15] > 0)
-                {
-                    // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
-                    return (damage + applyDamage) * (criticalDamage / 100) * 2;
-                }
-                else
-                {
-                    // 크리티컬이 발동하고 광전사가 없을때 -> 100을 기준으로 200
-                    return (damage + applyDamage) * (criticalDamage / 100);
-                }
-            }
-            else // 25~99
-            {
-                // 크리티컬이 안터졌을때 광전사 유무
-                if (PassiveSkill[15] > 0)
-                {
-                    // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
-                    return (damage + applyDamage) * 2;
-                }
-                else
-                {
-                    // 크리티컬이 안터지고 광전사가 없을때 -> 100을 기준으로 100
-                    return damage + applyDamage;
-                }
-            }
-        }
-        else
-        {
-            // 영구적인 광전사가 있으면
-            int random = Random.Range(0, 100); // 0~99
-            if (random < criticalPercentage) // 0~24
-            {
-                // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
-                return (damage + applyDamage) * (criticalDamage / 100) * 2;
-            }
-            else
-            {
-                // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
-                return (damage + applyDamage) * 2;
-            }
-        }
-    }
-
-    // 컴퓨터 확인용
-    // 공격
-    private bool fDown;
-    void GetInput()
-    {
-        // 컴퓨터 확인용 키입력
-        fDown = Input.GetButton("Fire1");
-        iDown = Input.GetButtonDown("Interaction");
-    }
 
     void Awake() 
     {
@@ -435,6 +238,73 @@ public class Player : MonoBehaviour
         }
     }
 
+    public float DamageCalc()
+    {
+        // 플레이어 데미지 계산
+        // 패시브스킬이 적용된 데미지
+        float applyDamage = 0;
+
+        // 크리티컬 및 광전사 유무에 따른 최종 데미지 계산
+        // 영구적인 광전사가 있는지 체크
+        if(!isPermanentSkill[15])
+        {
+            // 영구적인 광전사가 없으면
+            int random = Random.Range(0, 100); // 0~99
+            if (random < criticalPercentage) // 0~24
+            {
+                // 크리티컬이 터졌을때 광전사 유무
+                if (PassiveSkill[15] > 0)
+                {
+                    // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
+                    return (damage + applyDamage) * (criticalDamage / 100) * 2;
+                }
+                else
+                {
+                    // 크리티컬이 발동하고 광전사가 없을때 -> 100을 기준으로 200
+                    return (damage + applyDamage) * (criticalDamage / 100);
+                }
+            }
+            else // 25~99
+            {
+                // 크리티컬이 안터졌을때 광전사 유무
+                if (PassiveSkill[15] > 0)
+                {
+                    // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
+                    return (damage + applyDamage) * 2;
+                }
+                else
+                {
+                    // 크리티컬이 안터지고 광전사가 없을때 -> 100을 기준으로 100
+                    return damage + applyDamage;
+                }
+            }
+        }
+        else
+        {
+            // 영구적인 광전사가 있으면
+            int random = Random.Range(0, 100); // 0~99
+            if (random < criticalPercentage) // 0~24
+            {
+                // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
+                return (damage + applyDamage) * (criticalDamage / 100) * 2;
+            }
+            else
+            {
+                // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
+                return (damage + applyDamage) * 2;
+            }
+        }
+    }
+
+    // 컴퓨터 확인
+    // 공격
+    void GetInput()
+    {
+        // 컴퓨터 확인용 키입력
+        fDown = Input.GetButton("Fire1");
+        iDown = Input.GetButtonDown("Interaction");
+    }
+
     // 경사각 계산 함수
     void CalcSlopeAngle()
     {
@@ -469,35 +339,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
-    // void OnCollisionEnter(Collision collision)
-    // {
-    //     // 플레이어 착지
-    //     if (collision.gameObject.tag == "Floor")
-    //     {
-    //         // 일반 바닥
-    //         // 점프상태 X
-    //         joystickScript.isJump = false;
-
-    //         // 애니메이션
-    //         anim.SetBool("isJump", false);
-
-    //         // 비밀방 X
-    //         isSecretRoom = false;
-    //     }
-    //     else if(collision.gameObject.tag == "SecretFloor")
-    //     {
-    //         // 비밀방 바닥
-    //         // 점프상태 X
-    //         joystickScript.isJump = false;
-
-    //         // 애니메이션
-    //         anim.SetBool("isJump", false);
-
-    //         // 비밀방 O
-    //         isSecretRoom = true;
-    //     }
-    // }
 
     void FixedUpdate()
     {
@@ -609,7 +450,7 @@ public class Player : MonoBehaviour
                     barrier--;
 
                     // 플레이어 피격 사운드 : 방벽 O
-                    SoundManager.instance.SFXPlay("BarrierSound");
+                    SoundManager.instance.SFXPlay(ObjType.방벽소리);
                 }
             }
             else if (other.tag == "EnemyRange")
@@ -621,8 +462,9 @@ public class Player : MonoBehaviour
                     if (other.GetComponent<Rigidbody>() != null)
                     {
                         // 당근 반납
-                        other.gameObject.SetActive(false);
+                        poolingManager.ReturnObj(other.gameObject, other.gameObject.GetComponent<Carrot>().type);
                     }
+
                     // 애니메이션
                     StartCoroutine(DoDamaged("doBlock"));
 
@@ -630,7 +472,7 @@ public class Player : MonoBehaviour
                     barrier--;
 
                     // 플레이어 피격 사운드 : 방벽 O
-                    SoundManager.instance.SFXPlay("BarrierSound");
+                    SoundManager.instance.SFXPlay(ObjType.방벽소리);
                 }
             }
         }
@@ -701,7 +543,7 @@ public class Player : MonoBehaviour
                         }
                     }
                     // 플레이어 피격 사운드 : 방벽 X
-                    SoundManager.instance.SFXPlay("PlayerDamagedSound");
+                    SoundManager.instance.SFXPlay(ObjType.플레이어피격소리);
                 }
             }
             else if (other.tag == "EnemyRange")
@@ -719,7 +561,7 @@ public class Player : MonoBehaviour
                     if (other.GetComponent<Rigidbody>() != null)
                     {
                         // 당근 반납
-                        other.gameObject.SetActive(false);
+                        poolingManager.ReturnObj(other.gameObject, other.gameObject.GetComponent<Carrot>().type);
                     }
 
                     // 피격 리액션
@@ -754,7 +596,7 @@ public class Player : MonoBehaviour
                         }
                     }
                     // 플레이어 피격 사운드 : 방벽 X
-                    SoundManager.instance.SFXPlay("PlayerDamagedSound");
+                    SoundManager.instance.SFXPlay(ObjType.플레이어피격소리);
                 }
             }
         }
@@ -782,7 +624,7 @@ public class Player : MonoBehaviour
             other.gameObject.transform.GetComponent<SecretDoor>().isOpen = true;
 
             // 사운드
-            SoundManager.instance.SFXPlay("SecretDoorSound");
+            SoundManager.instance.SFXPlay(ObjType.시크릿문소리);
         }
 
         if(other.tag == "FallTrigger")
@@ -904,7 +746,7 @@ public class Player : MonoBehaviour
 
         // 새로운 스킬이야? -> 그럼 먹고 반납
         ActiveSkill[activeSkillIndex]++;
-        nearObject.SetActive(false);
+        poolingManager.ReturnObj(nearObject, nearObject.GetComponent<Item>().objType);
     }
 
     void OnTriggerStay(Collider other)
@@ -966,7 +808,7 @@ public class Player : MonoBehaviour
         enemy.curHealth -= skillBasicDamage + damage;
 
         // 데미지 텍스트
-        GameObject instantDamageText = poolingManager.GetObj("DamageText");
+        GameObject instantDamageText = poolingManager.GetObj(ObjType.데미지텍스트);
         instantDamageText.GetComponent<TextMeshPro>().text = (skillBasicDamage + damage).ToString();
         instantDamageText.transform.position = skillTransform.position + Vector3.up * 25;
         instantDamageText.transform.rotation = poolingManager.DamageTextPrefab.transform.rotation;
@@ -990,7 +832,7 @@ public class Player : MonoBehaviour
         {
             // 0, 1 모두 없을때
             // 화살 생성
-            GameObject instantArrow = poolingManager.GetObj("Arrow");
+            GameObject instantArrow = poolingManager.GetObj(ObjType.화살);
 
             // 화살 트랜스폼 초기화
             instantArrow.transform.position = ArrowPos[0].position;
@@ -1004,8 +846,8 @@ public class Player : MonoBehaviour
         {
             // 0 있을때
             // 화살 생성
-            GameObject instantArrow1 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow2 = poolingManager.GetObj("Arrow");
+            GameObject instantArrow1 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow2 = poolingManager.GetObj(ObjType.화살);
 
             // 화살 트랜스폼 초기화
             instantArrow1.transform.position = ArrowPos[0].position;
@@ -1023,9 +865,9 @@ public class Player : MonoBehaviour
         {
             // 1 있을때
             // 화살 생성
-            GameObject instantArrow1 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow2 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow3 = poolingManager.GetObj("Arrow");
+            GameObject instantArrow1 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow2 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow3 = poolingManager.GetObj(ObjType.화살);
 
             // 화살 트랜스폼 초기화
             instantArrow1.transform.position = ArrowPos[0].position;
@@ -1047,12 +889,12 @@ public class Player : MonoBehaviour
         {
             // 1, 2 모두 있을때
             // 화살 생성
-            GameObject instantArrow1 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow2 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow3 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow4 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow5 = poolingManager.GetObj("Arrow");
-            GameObject instantArrow6 = poolingManager.GetObj("Arrow");
+            GameObject instantArrow1 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow2 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow3 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow4 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow5 = poolingManager.GetObj(ObjType.화살);
+            GameObject instantArrow6 = poolingManager.GetObj(ObjType.화살);
 
             // 화살 트랜스폼 초기화
             instantArrow1.transform.position = ArrowPos[0].position;
@@ -1093,14 +935,14 @@ public class Player : MonoBehaviour
         Invoke("ShootOut", 1f - attackSpeed * 0.2f);
 
         // 슈팅 효과음 재생
-        SoundManager.instance.SFXPlay("ShootSound");
+        SoundManager.instance.SFXPlay(ObjType.슈팅소리);
     }
 
     public void MageAttack()
     {
         // 법사 공격 함수
         // 미사일 생성
-        GameObject instantMageMissile = poolingManager.GetObj("MageMissile");
+        GameObject instantMageMissile = poolingManager.GetObj(ObjType.법사미사일);
 
         // 미사일 트랜스폼 초기화
         instantMageMissile.transform.position = ArrowPos[0].position;
@@ -1120,7 +962,7 @@ public class Player : MonoBehaviour
         Invoke("ShootOut", 1f - attackSpeed * 0.2f);
 
         // 슈팅 효과음 재생
-        SoundManager.instance.SFXPlay("MageMissileSound");
+        SoundManager.instance.SFXPlay(ObjType.법사미사일소리);
     }
 
     // 콤보 공격 함수
@@ -1149,18 +991,36 @@ public class Player : MonoBehaviour
 
         Invoke("ShootOut", 1f - attackSpeed * 0.2f); // 공격 종료
 
-        SoundManager.instance.SFXPlay("SwordSound"); // 공격 사운드
+        SoundManager.instance.SFXPlay(ObjType.칼소리); // 공격 사운드
     }
 
     // 콤보 공격 이펙트 활성화 함수
     void CreateAndInitializeComboEffect(int index)
     {
-        string comboAttackName = characterType + "ComboAttack" + index.ToString(); // 콤보 카운트에 따라 풀 할 이펙트 이름
-        GameObject instantComboAttack = poolingManager.GetObj(comboAttackName); // 콤보 이펙트 활성화
+        if(characterType.Equals("Sword"))
+        {
+            GameObject instantComboAttack = poolingManager.GetObj((ObjType)((int)ObjType.전사콤보공격1이펙트 + index)); // 콤보 이펙트 활성화
 
-        // 콤보 이펙트 트랜스폼 설정
-        instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
-        instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+            // 콤보 이펙트 트랜스폼 설정
+            instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
+            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+        }
+        else if(characterType.Equals("Blacksmith"))
+        {
+            GameObject instantComboAttack = poolingManager.GetObj((ObjType)((int)ObjType.블랙스미스콤보공격1이펙트 + index)); // 콤보 이펙트 활성화
+
+            // 콤보 이펙트 트랜스폼 설정
+            instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
+            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+        }
+        else if(characterType.Equals("Holyknight"))
+        {
+            GameObject instantComboAttack = poolingManager.GetObj((ObjType)((int)ObjType.성기사콤보공격1이펙트 + index)); // 콤보 이펙트 활성화
+
+            // 콤보 이펙트 트랜스폼 설정
+            instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
+            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+        }  
     }
 
 
@@ -1184,11 +1044,11 @@ public class Player : MonoBehaviour
             // 패시브 스킬 획득
             PassiveSkill[(int)passiveSkillType]++;
 
-            // 아이템 비활성화
-            nearObject.SetActive(false);
+            // 아이템 풀에 반환
+            poolingManager.ReturnObj(nearObject, nearObject.GetComponent<Item>().objType);
 
             // 아이템 획득 사운드
-            SoundManager.instance.SFXPlay("ItemSound");
+            SoundManager.instance.SFXPlay(ObjType.아이템소리);
 
             // 추가적 처리가 필요한 패시브 스킬
             switch (passiveSkillType)
@@ -1250,7 +1110,7 @@ public class Player : MonoBehaviour
 
                     // 사운드 재생
                     // 아이템 획득 음원 재생
-                    SoundManager.instance.SFXPlay("ItemSound");
+                    SoundManager.instance.SFXPlay(ObjType.아이템소리);
 
                     // 가지고있는 상태
                     item.hasItem = true;
@@ -1270,7 +1130,7 @@ public class Player : MonoBehaviour
 
                     // 사운드 재생
                     // 아이템 획득 음원 재생
-                    SoundManager.instance.SFXPlay("ItemSound");
+                    SoundManager.instance.SFXPlay(ObjType.아이템소리);
 
                     // 가지고있는 상태
                     item.hasItem = true;
@@ -1294,7 +1154,7 @@ public class Player : MonoBehaviour
 
                 // 사운드 재생
                 // 아이템 획득 음원 재생
-                SoundManager.instance.SFXPlay("ItemSound");
+                SoundManager.instance.SFXPlay(ObjType.아이템소리);
 
                 // 먹은 코인
                 item.hasItem = true;
@@ -1307,7 +1167,7 @@ public class Player : MonoBehaviour
             }
 
             // 해당 코인 반납
-            nearObject.gameObject.SetActive(false);
+            poolingManager.ReturnObj(nearObject.gameObject, nearObject.GetComponent<Item>().objType);
         }
         else if (nearObject.tag == "SecretBox")
         {
@@ -1329,7 +1189,7 @@ public class Player : MonoBehaviour
                     int passiveSkillRandom = Random.Range(0, 22); // 0~21
 
                     // 랜덤인덱스에 해당하는 패시브 스킬을 받아온다
-                    GameObject instantPassiveSkill = poolingManager.GetObj("PassiveSkill" + passiveSkillRandom.ToString());
+                    GameObject instantPassiveSkill = poolingManager.GetObj((ObjType)((int)ObjType.한발노리기 + passiveSkillRandom));
 
                     // 받아온 패시브 스킬의 트랜스폼을 초기화한다
                     instantPassiveSkill.transform.position = nearObject.GetComponent<SecretBox>().transform.position;
@@ -1342,7 +1202,7 @@ public class Player : MonoBehaviour
                     int activeSkillRandom = Random.Range(0, 2); // 0~1
 
                     // 랜덤인덱스에 해당하는 액티브 스킬을 받아온다
-                    GameObject instantActiveSkill = poolingManager.GetObj("ActiveSkill" + activeSkillRandom.ToString());
+                    GameObject instantActiveSkill = poolingManager.GetObj((ObjType)((int)ObjType.멀티샷 + activeSkillRandom));
 
                     // 받아온 액티브 스킬의 트랜스폼을 초기화한다
                     instantActiveSkill.transform.position = nearObject.GetComponent<SecretBox>().transform.position + new Vector3(0, 0, 5f);
@@ -1355,7 +1215,7 @@ public class Player : MonoBehaviour
                     int inventoryItemRandom = Random.Range(0, 15); // 0~14
 
                     // 랜덤인덱스에 해당하는 인벤토리 아이템을 받아온다
-                    GameObject instantInventoryItem = poolingManager.GetObj("inventoryItem" + inventoryItemRandom.ToString());
+                    GameObject instantInventoryItem = poolingManager.GetObj((ObjType)((int)ObjType.화려한장신구 + inventoryItemRandom));
 
                     // 받아온 인벤토리 아이템의 트랜스폼을 초기화한다
                     instantInventoryItem.transform.position = nearObject.GetComponent<SecretBox>().transform.position + new Vector3(0, 0, -5f);
@@ -1363,7 +1223,7 @@ public class Player : MonoBehaviour
                 }
 
                 // 상자 사운드
-                SoundManager.instance.SFXPlay("BoxSound");
+                SoundManager.instance.SFXPlay(ObjType.박스소리);
             }
         }
         else if (nearObject.tag == "NextStage")
@@ -1694,7 +1554,7 @@ public class Player : MonoBehaviour
             isShop = true;
 
             // 사운드
-            SoundManager.instance.SFXPlay("ButtonSound");
+            SoundManager.instance.SFXPlay(ObjType.버튼소리);
         }
     }   
 
@@ -1758,10 +1618,10 @@ public class Player : MonoBehaviour
                     enemyScript.GetBarrier();
 
                     // 몬스터 체력바 반납
-                    enemyScript.GetComponent<HpBar>().instantHpBar.SetActive(false);
+                    poolingManager.ReturnObj(enemyScript.GetComponent<HpBar>().instantHpBar, ObjType.몬스터체력바);
 
                     // 몬스터 반납
-                    enemyScript.transform.gameObject.SetActive(false);
+                    poolingManager.ReturnObj(enemyScript.transform.gameObject, enemyScript.transform.gameObject.GetComponent<Enemy>().type);
                 }
                 else
                 {

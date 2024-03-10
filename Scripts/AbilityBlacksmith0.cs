@@ -19,7 +19,7 @@ public class AbilityBlacksmith0 : AbilityBase
         Player Player = player.GetComponent<Player>();
 
         // 스킬 이펙트
-        instantAbilityBlacksmith0 = poolManager.GetObj("AbilityBlacksmith0");
+        instantAbilityBlacksmith0 = poolManager.GetObj(ObjType.블랙스미스스킬1이펙트);
         instantAbilityBlacksmith0.transform.position = player.transform.position + player.transform.up * 10f;
         instantAbilityBlacksmith0.transform.rotation = player.transform.rotation;
 
@@ -27,13 +27,16 @@ public class AbilityBlacksmith0 : AbilityBase
         Player.anim.SetTrigger("doAbility0");
 
         // 스킬 사운드
-        SoundManager.instance.SFXPlay("BlacksmithSkill0Sound");
+        SoundManager.instance.SFXPlay(ObjType.블랙스미스스킬1소리);
     }
 
     // 스킬 종료시 내용
     public override void DeAtivate(GameObject joystick, GameObject player, GameObject poolingManager)
     {
-        // 이펙트 비활성화
-        instantAbilityBlacksmith0.SetActive(false);
+        // PoolingManager 스크립트 할당
+        PoolingManager poolManager = poolingManager.GetComponent<PoolingManager>();
+
+        // 스킬 이펙트 풀에 반환
+        poolManager.ReturnObj(instantAbilityBlacksmith0, ObjType.블랙스미스스킬1이펙트);
     }
 }

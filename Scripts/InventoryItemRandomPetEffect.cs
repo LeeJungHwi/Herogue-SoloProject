@@ -17,7 +17,7 @@ public class InventoryItemRandomPetEffect : InventoryItemEffect
         {
             // 사용 실패
             // 사운드
-            SoundManager.instance.SFXPlay("FailEquipSound");
+            SoundManager.instance.SFXPlay(ObjType.장비장착실패소리);
 
             return false;
         }
@@ -29,7 +29,7 @@ public class InventoryItemRandomPetEffect : InventoryItemEffect
         Inventory.instance.AddInventoryItem(player.shopDatabase.petItemList[petRandom]);
 
         // 사운드
-        SoundManager.instance.SFXPlay("UsePotionSound");
+        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
 
         return true;
     }

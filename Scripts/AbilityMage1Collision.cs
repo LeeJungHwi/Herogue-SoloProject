@@ -16,7 +16,7 @@ public class AbilityMage1Collision : MonoBehaviour
     private PoolingManager poolingManager;
 
     // 파티클 시스템
-    private ParticleSystem particleSystem;
+    private ParticleSystem particle;
 
     // 충돌 이벤트를 저장 할 리스트
     List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
@@ -30,7 +30,7 @@ public class AbilityMage1Collision : MonoBehaviour
     void Start()
     {
         // 파티클 시스템
-        particleSystem = GetComponent<ParticleSystem>();
+        particle = GetComponent<ParticleSystem>();
 
         // Player 스크립트
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -43,19 +43,19 @@ public class AbilityMage1Collision : MonoBehaviour
     {
         // 파티클 충돌
         // 파티클 충돌 이벤트의 수
-        int events = particleSystem.GetCollisionEvents(other, collisionEvents);
+        int events = particle.GetCollisionEvents(other, collisionEvents);
         
         for (int i = 0; i < events; i++)
         {
-            // 충돌 이벤트 수에따라 충돌시 생성할 이펙트
+            // 충돌 이벤트 수에따라 충돌시 이펙트 활성화
             random = Random.Range(0, 2); // 0~1
             if(random == 0)
             {
-                instantHit = poolingManager.GetObj("AbilityMage1Hit");
+                instantHit = poolingManager.GetObj(ObjType.법사스킬2충돌1이펙트);
             }
             else
             {
-                instantHit = poolingManager.GetObj("AbilityMage1Hit2");
+                instantHit = poolingManager.GetObj(ObjType.법사스킬2충돌2이펙트);
             }
             instantHit.transform.position = collisionEvents[i].intersection;
             instantHit.transform.rotation = Quaternion.LookRotation(collisionEvents[i].normal);

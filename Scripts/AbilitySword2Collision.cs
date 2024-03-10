@@ -12,16 +12,10 @@ public class AbilitySword2Collision : MonoBehaviour
     // 플레이어
     private Player player;
 
-    // 오브젝트 풀링
-    private PoolingManager poolingManager;
-
     void Start()
     {
         // Player 스크립트
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
-        // PoolingManager 스크립트
-        poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
     void OnParticleCollision(GameObject other)
@@ -33,7 +27,7 @@ public class AbilitySword2Collision : MonoBehaviour
             player.AbilityCollisionLogic(damage, enemy, transform);
 
             // 스킬 사운드
-            SoundManager.instance.SFXPlay("SwordSkill2HitSound");
+            SoundManager.instance.SFXPlay(ObjType.전사스킬3충돌소리);
         }
     }
 }

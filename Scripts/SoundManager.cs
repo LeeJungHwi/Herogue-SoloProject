@@ -78,11 +78,11 @@ public class SoundManager : MonoBehaviour
     }
 
     // 게임화면 효과음
-    public void SFXPlay(string sfxName)
+    public void SFXPlay(ObjType type)
     {
         // 사운드 풀링
         PoolingManager poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
-        GameObject instantSfx = poolingManager.GetObj(sfxName);
+        GameObject instantSfx = poolingManager.GetObj(type);
 
         // 오디오소스
         AudioSource audioSource = instantSfx.GetComponent<AudioSource>();

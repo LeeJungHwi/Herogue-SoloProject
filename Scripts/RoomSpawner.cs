@@ -95,7 +95,7 @@ public class RoomSpawner : MonoBehaviour
                 if (other.GetComponent<RoomSpawner>().spawned == false && spawned == false)
                 {
                     // 시크릿방 생성
-                    GameObject instanceSecretRoom = poolingManager.GetObj("SecretRoom");
+                    GameObject instanceSecretRoom = poolingManager.GetObj(ObjType.SecretRoom);
                     instanceSecretRoom.transform.position = transform.position;
                     instanceSecretRoom.transform.rotation = poolingManager.SecretRoomPrefab.transform.rotation;
 
@@ -153,7 +153,7 @@ public class RoomSpawner : MonoBehaviour
         // 방 생성 함수
         rand = Random.Range(0, roomType.Length);
         GameObject randomRoom = roomType[rand];
-        GameObject instantRoom = poolingManager.GetObj(randomRoom.name);
+        GameObject instantRoom = poolingManager.GetObj(randomRoom.GetComponent<AddRoom>().type);
         instantRoom.transform.position = transform.position;
         instantRoom.transform.rotation = roomType[rand].transform.rotation;
     }
@@ -164,7 +164,7 @@ public class RoomSpawner : MonoBehaviour
         rand = Random.Range(0, 2);
         if (rand == 0)
         {
-            GameObject instantSecretBox = poolingManager.GetObj("SecretBox");
+            GameObject instantSecretBox = poolingManager.GetObj(ObjType.시크릿박스);
             instantSecretBox.transform.position = transform.position + spawnPosition;
             instantSecretBox.transform.rotation = poolingManager.SecretBoxPrefab.transform.rotation;
         }

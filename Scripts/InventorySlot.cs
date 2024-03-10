@@ -173,7 +173,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         inventory.RemoveInventoryItem(inventorySlotNumSave);
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void SellInventoryItem()
@@ -189,7 +189,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         inventory.RemoveInventoryItem(inventorySlotNumSave);
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void DeActiveInventoryPanel(string panelType)
@@ -237,7 +237,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -460,7 +460,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void UseInventoryItem(string itemType)
@@ -634,7 +634,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("ButtonSound");
+        SoundManager.instance.SFXPlay(ObjType.버튼소리);
     }
 
     public void UnEquipment()
@@ -756,7 +756,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         }
 
         // 사운드
-        SoundManager.instance.SFXPlay("UnEquipSound");
+        SoundManager.instance.SFXPlay(ObjType.장비장착해제소리);
     }
 }
 

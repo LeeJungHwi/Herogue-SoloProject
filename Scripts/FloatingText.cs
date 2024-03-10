@@ -20,6 +20,12 @@ public class FloatingText : MonoBehaviour
     // 텍스트 반납 타임
     public float waitTime;
 
+    // 오브젝트 타입
+    public ObjType type;
+
+    // 오브젝트 풀
+    private PoolingManager poolingManager;
+
     void Start()
     {
         // TMP
@@ -27,6 +33,9 @@ public class FloatingText : MonoBehaviour
 
         // TMP Color
         alpha = text.color;
+
+        // 오브젝트 풀
+        poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
     void Update()
@@ -39,7 +48,7 @@ public class FloatingText : MonoBehaviour
         // 데미지 텍스트 반납
         if(waitTime <= 0)
         {
-            gameObject.SetActive(false);
+            poolingManager.ReturnObj(gameObject, type);
         }
         else
         {

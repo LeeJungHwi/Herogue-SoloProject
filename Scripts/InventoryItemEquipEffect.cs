@@ -15,12 +15,12 @@ public class InventoryItemEquipEffect : InventoryItemEffect
         // 장비 장착 할 수 있는지 체크
         if(!CanEquip(player, inventoryItem))
         {
-            SoundManager.instance.SFXPlay("FailEquipSound"); // 사운드
+            SoundManager.instance.SFXPlay(ObjType.장비장착실패소리); // 사운드
             return false; // 장착 실패
         }
         
         EquipLogic(player, inventoryItem); // 장비 장착
-        SoundManager.instance.SFXPlay("EquipSound"); // 사운드
+        SoundManager.instance.SFXPlay(ObjType.장비장착소리); // 사운드
         return true; // 장착 성공
     }
 
@@ -198,7 +198,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     // 펫 생성
     void PetSpawn(Player player, InventoryItem inventoryItem)
     {
-        GameObject instantPet = player.poolingManager.GetObj(inventoryItem.itemName); // 펫 활성화
+        GameObject instantPet = player.poolingManager.GetObj(inventoryItem.type); // 펫 활성화
         player.RepositionPet(instantPet); // 펫 위치 설정
     }
 }

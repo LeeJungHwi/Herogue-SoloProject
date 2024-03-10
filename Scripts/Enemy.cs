@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using TMPro;
+using System;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,31 +13,22 @@ public class Enemy : MonoBehaviour
     // 몬스터 타입을 저장할 변수
     public Type enemyType;
 
-    // 최대체력
-    public float maxHealth;
+    // 오브젝트 타입
+    public ObjType type;
 
-    // 현재체력
-    public float curHealth;
+    // 몬스터 스탯
+    public float maxHealth, curHealth, damage, moveSpeed;
 
-    // 근접데미지
-    public float damage;
+    // 체크
+    public bool isAttack, isChase, isDead, isFrost, isDrop;
 
     // 타겟
     private Transform target;
 
-    // 근접공격범위
-    public BoxCollider meleeArea;
-
-    // 공격중인지 체크
-    public bool isAttack;
-
-    // 추적중인지 체크
-    public bool isChase;
-
-    // 플레이어와의 거리
+    // 타겟 거리
     private float distance;
 
-    // 인식가능한 거리
+    // 타겟 인식 거리
     public float recognizeArea;
 
     // 스폰지점
@@ -48,17 +40,14 @@ public class Enemy : MonoBehaviour
     // 오브젝트 풀링
     private PoolingManager poolingManager;
 
-    // 죽은상태인지 체크
-    public bool isDead;
-
-    // 플레이어
-    private GameObject player;
-
     // 다음 스테이지로가는 문 : 보스가 죽고나서 보스 뒤에 생기게한다
     public GameObject nextStage;
 
     // 물리
     private Rigidbody rigid;
+
+    // 근접공격범위
+    public BoxCollider meleeArea;
 
     // 애니메이터
     private Animator anim;
@@ -69,24 +58,17 @@ public class Enemy : MonoBehaviour
     // 콜라이더
     public BoxCollider boxCollider;
 
+    // 플레이어
+    private GameObject player;
+
     // 플레이어 스크립트
     private Player playerScript;
-
-    // 얼려졌는지 체크
-    public bool isFrost;
-
-    // 몬스터 이동속도
-    private float moveSpeed;
-
-    // 얼리기 해제 대기시간
-    private float waitTime;
 
     // 체력바
     private HpBar hpBarScript;
 
-    // 아이템 드랍을 실행했는지 체크
-    // 0 : 패시브 1 : 액티브 2 : 코인 3 : 인벤토리아이템
-    public bool isDrop;  
+    // 얼리기 해제 대기시간
+    private float waitTime;
 
     void Awake()
     { 
@@ -313,10 +295,10 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(1f);
 
                 // 체력바 반납
-                hpBarScript.instantHpBar.SetActive(false);
+                poolingManager.ReturnObj(hpBarScript.instantHpBar, ObjType.몬스터체력바);
 
                 // 폭탄 반납
-                transform.gameObject.SetActive(false);
+                poolingManager.ReturnObj(transform.gameObject, type);
 
                 // 아이템 드랍
                 ItemDrop(false);
@@ -347,7 +329,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
 
                 // 당근 생성
-                GameObject instantCarrot = poolingManager.GetObj("Carrot");
+                GameObject instantCarrot = poolingManager.GetObj(ObjType.당근);
 
                 // 당근 트랜스폼 초기화
                 instantCarrot.transform.position = carrotPos[0].position;
@@ -360,7 +342,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(0.2f);
 
                 // 당근 생성
-                instantCarrot = poolingManager.GetObj("Carrot");
+                instantCarrot = poolingManager.GetObj(ObjType.당근);
 
                 // 당근 트랜스폼 초기화
                 instantCarrot.transform.position = carrotPos[2].position;
@@ -373,7 +355,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(0.5f);
 
                 // 당근 생성
-                instantCarrot = poolingManager.GetObj("CarrotGroup");
+                instantCarrot = poolingManager.GetObj(ObjType.당근그룹);
 
                 // 당근 트랜스폼 초기화
                 instantCarrot.transform.position = carrotPos[1].position;
@@ -391,7 +373,7 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(0.1f);
 
                 // 랜덤 공격 패턴
-                int ranAction = Random.Range(0, 2); // 0~1
+                int ranAction = UnityEngine.Random.Range(0, 2); // 0~1
                 if(ranAction == 0)
                 {
                     // 키클롭스눈 하나씩 생성
@@ -424,121 +406,121 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // 키클롭스눈 발사
-        GameObject instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        GameObject instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[0].position;
         instantCiclopEye.transform.rotation = carrotPos[0].rotation;
         Rigidbody ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[1].position;
         instantCiclopEye.transform.rotation = carrotPos[1].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[2].position;
         instantCiclopEye.transform.rotation = carrotPos[2].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[3].position;
         instantCiclopEye.transform.rotation = carrotPos[3].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[4].position;
         instantCiclopEye.transform.rotation = carrotPos[4].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[5].position;
         instantCiclopEye.transform.rotation = carrotPos[5].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[6].position;
         instantCiclopEye.transform.rotation = carrotPos[6].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[7].position;
         instantCiclopEye.transform.rotation = carrotPos[7].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[8].position;
         instantCiclopEye.transform.rotation = carrotPos[8].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[9].position;
         instantCiclopEye.transform.rotation = carrotPos[9].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[10].position;
         instantCiclopEye.transform.rotation = carrotPos[10].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[11].position;
         instantCiclopEye.transform.rotation = carrotPos[11].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[12].position;
         instantCiclopEye.transform.rotation = carrotPos[12].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[13].position;
         instantCiclopEye.transform.rotation = carrotPos[13].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[14].position;
         instantCiclopEye.transform.rotation = carrotPos[14].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[15].position;
         instantCiclopEye.transform.rotation = carrotPos[15].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[16].position;
         instantCiclopEye.transform.rotation = carrotPos[16].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[17].position;
         instantCiclopEye.transform.rotation = carrotPos[17].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[18].position;
         instantCiclopEye.transform.rotation = carrotPos[18].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
         yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[19].position;
         instantCiclopEye.transform.rotation = carrotPos[19].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
@@ -552,102 +534,102 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // 키클롭스눈 발사
-        GameObject instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        GameObject instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[0].position;
         instantCiclopEye.transform.rotation = carrotPos[0].rotation;
         Rigidbody ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[1].position;
         instantCiclopEye.transform.rotation = carrotPos[1].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[2].position;
         instantCiclopEye.transform.rotation = carrotPos[2].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[3].position;
         instantCiclopEye.transform.rotation = carrotPos[3].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[4].position;
         instantCiclopEye.transform.rotation = carrotPos[4].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[5].position;
         instantCiclopEye.transform.rotation = carrotPos[5].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[6].position;
         instantCiclopEye.transform.rotation = carrotPos[6].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[7].position;
         instantCiclopEye.transform.rotation = carrotPos[7].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[8].position;
         instantCiclopEye.transform.rotation = carrotPos[8].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[9].position;
         instantCiclopEye.transform.rotation = carrotPos[9].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[10].position;
         instantCiclopEye.transform.rotation = carrotPos[10].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[11].position;
         instantCiclopEye.transform.rotation = carrotPos[11].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[12].position;
         instantCiclopEye.transform.rotation = carrotPos[12].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[13].position;
         instantCiclopEye.transform.rotation = carrotPos[13].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[14].position;
         instantCiclopEye.transform.rotation = carrotPos[14].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[15].position;
         instantCiclopEye.transform.rotation = carrotPos[15].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[16].position;
         instantCiclopEye.transform.rotation = carrotPos[16].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[17].position;
         instantCiclopEye.transform.rotation = carrotPos[17].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[18].position;
         instantCiclopEye.transform.rotation = carrotPos[18].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
         ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj("CiclopEye");
+        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
         instantCiclopEye.transform.position = carrotPos[19].position;
         instantCiclopEye.transform.rotation = carrotPos[19].rotation;
         ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
@@ -660,7 +642,7 @@ public class Enemy : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         // 명중률에 따른 몬스터 피격
-        int random = Random.Range(0, 100); // 0~99
+        int random = UnityEngine.Random.Range(0, 100); // 0~99
         if(random < playerScript.accuracy) // 명중률 50 기준 0~49
         {
             // 몬스터 피격
@@ -915,7 +897,7 @@ public class Enemy : MonoBehaviour
                 }
 
                 // 데미지 텍스트
-                GameObject instantDamageText = poolingManager.GetObj("DamageText");
+                GameObject instantDamageText = poolingManager.GetObj(ObjType.데미지텍스트);
                 instantDamageText.GetComponent<TextMeshPro>().text = playerDamage.ToString();
                 instantDamageText.transform.position = transform.position + Vector3.up * 25;
                 instantDamageText.transform.rotation = poolingManager.DamageTextPrefab.transform.rotation;
@@ -931,7 +913,7 @@ public class Enemy : MonoBehaviour
                 // 소드콤보공격은 이펙트가 유지되어야하므로 화살만 반납
                 if (other.tag == "Arrow")
                 {
-                    other.transform.gameObject.SetActive(false);
+                    poolingManager.ReturnObj(other.transform.gameObject, other.transform.gameObject.GetComponent<PlayerWeapon>().type);
                 }
 
                 // 피격 리액션
@@ -946,11 +928,11 @@ public class Enemy : MonoBehaviour
                 // 소드콤보공격은 이펙트가 유지되어야하므로 화살만 반납
                 if(other.tag == "Arrow")
                 {
-                    other.transform.gameObject.SetActive(false);
+                    poolingManager.ReturnObj(other.transform.gameObject, other.transform.gameObject.GetComponent<PlayerWeapon>().type);
                 }
 
                 // 회피 텍스트
-                GameObject instantMissText = poolingManager.GetObj("MissText");
+                GameObject instantMissText = poolingManager.GetObj(ObjType.회피텍스트);
                 instantMissText.transform.position = transform.position + Vector3.up * 20;
                 instantMissText.transform.rotation = poolingManager.MissTextPrefab.transform.rotation;
             }
@@ -960,23 +942,23 @@ public class Enemy : MonoBehaviour
     void PlayerAtkEffect(Collider Arrow)
     {
         // 플레이어 공격 이펙트
-        GameObject instantPlayerAtkEffect = poolingManager.GetObj("PlayerAtkEffect");
+        GameObject instantPlayerAtkEffect = poolingManager.GetObj(ObjType.플레이어공격이펙트);
         instantPlayerAtkEffect.transform.position = Arrow.transform.position;
         instantPlayerAtkEffect.transform.rotation = Quaternion.identity;
 
         // 플레이어 공격 사운드
-        SoundManager.instance.SFXPlay("BasicAttackSound");
+        SoundManager.instance.SFXPlay(ObjType.기본공격소리);
     }
 
     void PlayerCriticalAtkEffect(Collider Arrow)
     {
         // 플레이어 크리티컬공격 이펙트
-        GameObject instantPlayerCriticalAtkEffect = poolingManager.GetObj("PlayerCriticalAtkEffect");
+        GameObject instantPlayerCriticalAtkEffect = poolingManager.GetObj(ObjType.플레이어크리티컬공격이펙트);
         instantPlayerCriticalAtkEffect.transform.position = Arrow.transform.position;
         instantPlayerCriticalAtkEffect.transform.rotation = Quaternion.identity;
 
         // 플레이어 크리티컬 공격 사운드
-        SoundManager.instance.SFXPlay("CriticalAttackSound");
+        SoundManager.instance.SFXPlay(ObjType.크리티컬공격소리);
     }
 
     public IEnumerator OnDamage(Vector3 reactVec)
@@ -1000,10 +982,10 @@ public class Enemy : MonoBehaviour
                 ItemDrop(false);
 
                 // 체력바 반납
-                hpBarScript.instantHpBar.SetActive(false);
+                poolingManager.ReturnObj(hpBarScript.instantHpBar, ObjType.몬스터체력바);
 
                 // 보스 및 폭탄을 제외한 몬스터 반납
-                transform.gameObject.SetActive(false);
+                poolingManager.ReturnObj(transform.gameObject, type);    
 
                 // 방벽 얻기
                 GetBarrier();
@@ -1036,10 +1018,10 @@ public class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(1f);
 
                 // 체력바 반납
-                hpBarScript.instantHpBar.SetActive(false);
+                poolingManager.ReturnObj(hpBarScript.instantHpBar, ObjType.몬스터체력바);
 
                 // 폭탄 반납
-                transform.gameObject.SetActive(false);
+                poolingManager.ReturnObj(transform.gameObject, type); 
 
                 // 방벽 얻기
                 GetBarrier();
@@ -1068,7 +1050,7 @@ public class Enemy : MonoBehaviour
                 nextStage.transform.rotation = Quaternion.identity;
 
                 // 체력바 반납
-                hpBarScript.instantHpBar.SetActive(false);
+                poolingManager.ReturnObj(hpBarScript.instantHpBar, ObjType.몬스터체력바);
 
                 // 방벽 얻기
                 GetBarrier();
@@ -1099,53 +1081,53 @@ public class Enemy : MonoBehaviour
             if(!isBoss)
             {
                 // 일반몬스터이면
-                int random = Random.Range(0, 100); // 0~99
+                int random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < playerScript.passiveDropPercentage) // 0~4
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int passiveSkillRandom = Random.Range(0, 22); // 0~21
+                    int passiveSkillRandom = UnityEngine.Random.Range(0, 22); // 0~21
 
                     // 랜덤인덱스에 해당하는 패시브 스킬을 받아온다
-                    GameObject instantPassiveSkill = poolingManager.GetObj("PassiveSkill" + passiveSkillRandom.ToString());
+                    GameObject instantPassiveSkill = poolingManager.GetObj((ObjType)((int)ObjType.한발노리기 + passiveSkillRandom));
 
                     // 받아온 패시브 스킬의 트랜스폼을 초기화한다
                     instantPassiveSkill.transform.position = transform.position + new Vector3(0, 15f, 0);
                     instantPassiveSkill.transform.rotation = Quaternion.identity;
                 }
-                random = Random.Range(0, 100); // 0~99
+                random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < playerScript.activeDropPercentage) // 0~2
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int activeSkillRandom = Random.Range(0, 2); // 0~1
+                    int activeSkillRandom = UnityEngine.Random.Range(0, 2); // 0~1
 
                     // 랜덤인덱스에 해당하는 액티브 스킬을 받아온다
-                    GameObject instantActiveSkill = poolingManager.GetObj("ActiveSkill" + activeSkillRandom.ToString());
+                    GameObject instantActiveSkill = poolingManager.GetObj((ObjType)((int)ObjType.멀티샷 + activeSkillRandom));
 
                     // 받아온 액티브 스킬의 트랜스폼을 초기화한다
                     instantActiveSkill.transform.position = transform.position + new Vector3(0, 15f, 15f);
                     instantActiveSkill.transform.rotation = Quaternion.identity;
                 }
-                random = Random.Range(0, 100); // 0~99
+                random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < 5) // 0~4
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int coinRandom = Random.Range(0, 3); // 0~2
+                    int coinRandom = UnityEngine.Random.Range(0, 3); // 0~2
 
                     // 랜덤인덱스에 해당하는 코인값의 코인을 받아온다
-                    GameObject instantCoin = poolingManager.GetObj("Coin" + playerScript.coinValue[coinRandom].ToString());
+                    GameObject instantCoin = poolingManager.GetObj((ObjType)((int)ObjType.백원 + coinRandom));
 
                     // 받아온 코인의 트랜스폼을 초기화한다
                     instantCoin.transform.position = transform.position + new Vector3(0, 15f, -15f);
                     instantCoin.transform.rotation = Quaternion.identity;
                 }
-                random = Random.Range(0, 100); // 0~99
+                random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < playerScript.inventoryItemPercentage) // 0~4
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int inventoryItemRandom = Random.Range(0, 19); // 0~18
+                    int inventoryItemRandom = UnityEngine.Random.Range(0, 19); // 0~18
 
                     // 랜덤인덱스에 해당하는 인벤토리 아이템을 받아온다
-                    GameObject instantInventoryItem = poolingManager.GetObj("inventoryItem" + inventoryItemRandom.ToString());
+                    GameObject instantInventoryItem = poolingManager.GetObj((ObjType)((int)ObjType.화려한장신구 + inventoryItemRandom));
 
                     // 받아온 인벤토리 아이템의 트랜스폼을 초기화한다
                     instantInventoryItem.transform.position = GetComponent<Enemy>().transform.position + new Vector3(15f, 15f, 0f);
@@ -1155,53 +1137,53 @@ public class Enemy : MonoBehaviour
             else
             {
                 // 보스이면
-                int random = Random.Range(0, 100); // 0~99
+                int random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < 50) // 0~49
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int passiveSkillRandom = Random.Range(0, 22); // 0~21
+                    int passiveSkillRandom = UnityEngine.Random.Range(0, 22); // 0~21
 
                     // 랜덤인덱스에 해당하는 패시브 스킬을 받아온다
-                    GameObject instantPassiveSkill = poolingManager.GetObj("PassiveSkill" + passiveSkillRandom.ToString());
+                    GameObject instantPassiveSkill = poolingManager.GetObj((ObjType)((int)ObjType.한발노리기 + passiveSkillRandom));
 
                     // 받아온 패시브 스킬의 트랜스폼을 초기화한다
                     instantPassiveSkill.transform.position = transform.position + new Vector3(0, 15f, 0);
                     instantPassiveSkill.transform.rotation = Quaternion.identity;
                 }
-                random = Random.Range(0, 100); // 0~99
+                random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < 20) // 0~19
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int activeSkillRandom = Random.Range(0, 2); // 0~1
+                    int activeSkillRandom = UnityEngine.Random.Range(0, 2); // 0~1
 
                     // 랜덤인덱스에 해당하는 액티브 스킬을 받아온다
-                    GameObject instantActiveSkill = poolingManager.GetObj("ActiveSkill" + activeSkillRandom.ToString());
+                    GameObject instantActiveSkill = poolingManager.GetObj((ObjType)((int)ObjType.멀티샷 + activeSkillRandom));
 
                     // 받아온 액티브 스킬의 트랜스폼을 초기화한다
                     instantActiveSkill.transform.position = transform.position + new Vector3(0, 15f, 15f);
                     instantActiveSkill.transform.rotation = Quaternion.identity;
                 }
-                random = Random.Range(0, 100); // 0~99
+                random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < 100) // 0~99
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int coinRandom = Random.Range(0, 3); // 0~2
+                    int coinRandom = UnityEngine.Random.Range(0, 3); // 0~2
 
                     // 랜덤인덱스에 해당하는 코인값의 코인을 받아온다
-                    GameObject instantCoin = poolingManager.GetObj("Coin" + playerScript.coinValue[coinRandom].ToString());
+                    GameObject instantCoin = poolingManager.GetObj((ObjType)((int)ObjType.백원 + coinRandom));
 
                     // 받아온 코인의 트랜스폼을 초기화한다
                     instantCoin.transform.position = transform.position + new Vector3(0, 15f, -15f);
                     instantCoin.transform.rotation = Quaternion.identity;
                 }
-                random = Random.Range(0, 100); // 0~99
+                random = UnityEngine.Random.Range(0, 100); // 0~99
                 if (random < 100) // 0~99
                 {
                     // 랜덤 인덱스를 뽑는다
-                    int inventoryItemRandom = Random.Range(0, 19); // 0~18
+                    int inventoryItemRandom = UnityEngine.Random.Range(0, 19); // 0~18
 
                     // 랜덤인덱스에 해당하는 인벤토리 아이템을 받아온다
-                    GameObject instantInventoryItem = poolingManager.GetObj("inventoryItem" + inventoryItemRandom.ToString());
+                    GameObject instantInventoryItem = poolingManager.GetObj((ObjType)((int)ObjType.화려한장신구 + inventoryItemRandom));
 
                     // 받아온 인벤토리 아이템의 트랜스폼을 초기화한다
                     instantInventoryItem.transform.position = GetComponent<Enemy>().transform.position + new Vector3(15f, 15f, 0f);
@@ -1303,10 +1285,10 @@ public class Enemy : MonoBehaviour
         ItemDrop(false);
 
         // 체력바 반납
-        hpBarScript.instantHpBar.SetActive(false);
+        poolingManager.ReturnObj(hpBarScript.instantHpBar, ObjType.몬스터체력바);
 
         // 보스를 제외한 몬스터 반납
-        transform.gameObject.SetActive(false);
+        poolingManager.ReturnObj(transform.gameObject, type);
 
         // 방벽 얻기
         GetBarrier();
@@ -1327,7 +1309,7 @@ public class Enemy : MonoBehaviour
         }
 
         // 흡혈 텍스트
-        GameObject instantHealingText = poolingManager.GetObj("HealingText");
+        GameObject instantHealingText = poolingManager.GetObj(ObjType.회복텍스트);
         instantHealingText.GetComponent<TextMeshPro>().text = "+" + (playerDamage * 20 / 100).ToString();
         instantHealingText.transform.position = transform.position + Vector3.up * 20;
         instantHealingText.transform.rotation = poolingManager.HealingTextPrefab.transform.rotation;

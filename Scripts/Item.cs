@@ -19,6 +19,9 @@ public class Item : MonoBehaviour
     // 패시브 스킬 설명
     public string skillContent;
 
+    // 오브젝트 타입
+    public ObjType objType;
+
     void Update()
     {
         // 아이템 회전

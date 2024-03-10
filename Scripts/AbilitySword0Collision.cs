@@ -12,16 +12,10 @@ public class AbilitySword0Collision : MonoBehaviour
     // 플레이어
     private Player player;
 
-    // 오브젝트 풀링
-    private PoolingManager poolingManager;
-
     void Start()
     {
         // Player 스크립트
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-
-        // PoolingManager 스크립트
-        poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
     void OnParticleCollision(GameObject other)

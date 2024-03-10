@@ -19,7 +19,7 @@ public class AbilitySword1 : AbilityBase
         Player Player = player.GetComponent<Player>();
 
         // 스킬 이펙트
-        instantAbilitySword1 = poolManager.GetObj("AbilitySword1");
+        instantAbilitySword1 = poolManager.GetObj(ObjType.전사스킬2이펙트);
         instantAbilitySword1.transform.position = player.transform.position + player.transform.forward * 10f;
         instantAbilitySword1.transform.rotation = player.transform.rotation;
 
@@ -27,13 +27,16 @@ public class AbilitySword1 : AbilityBase
         Player.anim.SetTrigger("doAbility1");
 
         // 스킬 사운드
-        SoundManager.instance.SFXPlay("SwordSkill1Sound");
+        SoundManager.instance.SFXPlay(ObjType.전사스킬2소리);
     }
 
     // 스킬 종료시 내용
     public override void DeAtivate(GameObject joystick, GameObject player, GameObject poolingManager)
     {
-        // 이펙트 비활성화
-        instantAbilitySword1.SetActive(false);
+        // PoolingManager 스크립트 할당
+        PoolingManager poolManager = poolingManager.GetComponent<PoolingManager>();
+
+        // 스킬 이펙트 풀에 반환
+        poolManager.ReturnObj(instantAbilitySword1, ObjType.전사스킬2이펙트);
     }
 }

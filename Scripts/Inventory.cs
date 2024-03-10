@@ -42,10 +42,16 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    // 오브젝트 풀
+    private PoolingManager poolingManager;
+
     void Start()
     {
         // 인벤토리 슬롯 초기화
         InventorySlotCnt = 4;
+
+        // 오브젝트 풀
+        poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
     // 인벤토리에 아이템을 추가하는 함수
@@ -89,11 +95,11 @@ public class Inventory : MonoBehaviour
             if(AddInventoryItem(inventoryFieldItems.inventoryItem))
             {
                 // 필드 아이템 비활성화
-                inventoryFieldItems.gameObject.SetActive(false);
+                poolingManager.ReturnObj(inventoryFieldItems.gameObject, inventoryFieldItems.inventoryItem.type);
             }
 
             // 사운드
-            SoundManager.instance.SFXPlay("ItemSound");
+            SoundManager.instance.SFXPlay(ObjType.아이템소리);
         }
     }
 }

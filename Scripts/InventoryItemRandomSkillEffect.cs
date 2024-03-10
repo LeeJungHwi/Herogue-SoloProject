@@ -15,7 +15,7 @@ public class InventoryItemRandomSkillEffect : InventoryItemEffect
         if(player.permanentSkillCnt == 5)
         {
             // 사운드
-            SoundManager.instance.SFXPlay("FailEquipSound");
+            SoundManager.instance.SFXPlay(ObjType.장비장착실패소리);
 
             return false;
         }
@@ -122,7 +122,7 @@ public class InventoryItemRandomSkillEffect : InventoryItemEffect
         player.permanentSkillCnt++;
 
         // 사운드
-        SoundManager.instance.SFXPlay("UsePotionSound");
+        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
 
         return true;
     }

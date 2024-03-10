@@ -18,7 +18,7 @@ public class DungeonDecoSpawner : MonoBehaviour
         // 던전 장식 생성
         poolManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
         int dungeonDecorationRandom = Random.Range(0, templates.DungeonDecorationList.Length); // 0~28
-        GameObject instantDungeonDecoration = poolManager.GetObj("DungeonDecoration" + (dungeonDecorationRandom + 1).ToString());
+        GameObject instantDungeonDecoration = poolManager.GetObj((ObjType)((int)ObjType.던전장식1 + dungeonDecorationRandom));
         instantDungeonDecoration.transform.position = transform.position;
         instantDungeonDecoration.transform.rotation = Quaternion.identity;
         instantDungeonDecoration.transform.SetParent(transform);

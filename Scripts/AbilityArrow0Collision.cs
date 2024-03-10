@@ -36,12 +36,12 @@ public class AbilityArrow0Collision : MonoBehaviour
             player.AbilityCollisionLogic(damage, enemy, transform);
 
             // 충돌 이펙트 활성화
-            instantHit = poolingManager.GetObj("AbilityArrow0Hit");
+            instantHit = poolingManager.GetObj(ObjType.궁수스킬1충돌이펙트);
             instantHit.transform.position = enemy.transform.position + enemy.transform.up * 10f;
             instantHit.transform.rotation = poolingManager.AbilityArrow0HitPrefab.transform.rotation;
 
             // 스킬 충돌 사운드
-            SoundManager.instance.SFXPlay("ArrowSkill0HitSound");
+            SoundManager.instance.SFXPlay(ObjType.궁수스킬1충돌소리);
         }
     }
 }

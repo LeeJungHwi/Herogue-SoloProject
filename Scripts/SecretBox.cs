@@ -14,6 +14,9 @@ public class SecretBox : MonoBehaviour
     // 풀링에서 활성화할때 false로 바꿔서 활성화
     public bool isAdd;
 
+    // 오브젝트 타입
+    public ObjType type;
+
     void Start()
     {
         // 방 모델
@@ -34,11 +37,5 @@ public class SecretBox : MonoBehaviour
             templates.secretBoxes.Add(this.gameObject);
             isAdd = true;
         }
-    }
-
-    void DeActive()
-    {
-        // 시크릿박스 반납
-        gameObject.SetActive(false);
     }
 }
