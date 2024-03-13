@@ -166,6 +166,18 @@ public class PoolingManager : MonoBehaviour
     // 펫
     public GameObject CatPrefab, DuckPrefab, PenguinPrefab, SheepPrefab;
 
+    void Awake()
+    {
+        // 캔버스 할당
+        Canvas = GameObject.Find(DataManager.instance.character.ToString() + "Canvas");
+
+        // (타입, 프리팹) 맵핑
+        Map();
+
+        // (타입, 큐) 맵핑
+        Gen();
+    }
+
     // (타입, 프리팹) 맵핑
     private Dictionary<ObjType, GameObject> genPref = new Dictionary<ObjType, GameObject>();
 
@@ -419,34 +431,19 @@ public class PoolingManager : MonoBehaviour
             Queue<GameObject> queue = new Queue<GameObject>();
             GameObject prefab = genPref[type];
 
-            // 몬스터체력바는 부모를 캔버스로 설정해준뒤 비활성화 함
-            // 선택한 캐릭터 하위에있는 캔버스로 설정해줘야하므로
-            // 0.5초뒤에 캔버스를 할당하고 별도로 생성해줌
-            if(type == ObjType.몬스터체력바)
-            {
-                continue;
-            }
-
-            // 텍스트 표시는 부모를 FloatingText 오브젝트로 설정
-            if(type == ObjType.데미지텍스트 || type == ObjType.회복텍스트 || type == ObjType.회피텍스트)
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    GameObject obj = Instantiate(prefab);
-                    obj.transform.SetParent(FloatingText.transform);
-                    obj.SetActive(false);
-                    queue.Enqueue(obj);
-                }
-
-                poolPref.Add(type, queue);
-
-                continue;
-            }
-
             // count 개 생성하고 비활성화 후 큐에 저장
             for (int i = 0; i < count; i++)
             {
+                // 프리팹 생성해서
                 GameObject obj = Instantiate(prefab);
+
+                // 비활성화전에 따로 처리해줘야 하는 프리팹 처리
+                if(type == ObjType.데미지텍스트 || type == ObjType.회복텍스트 || type == ObjType.회피텍스트 || type == ObjType.몬스터체력바)
+                {
+                    GenSubTask(type, obj);
+                }
+
+                // 오브젝트 비활성화
                 obj.SetActive(false);
                 queue.Enqueue(obj);
             }
@@ -454,18 +451,6 @@ public class PoolingManager : MonoBehaviour
             // (타입, 큐) 맵핑
             poolPref.Add(type, queue);
         }
-    }
-
-    void Awake()
-    {
-        // (타입, 프리팹) 맵핑
-        Map();
-
-        // (타입, 큐) 맵핑
-        Gen();
-
-        // 몬스터체력바는 부모를 캔버스로 설정해준뒤 비활성화 해둔다
-        Invoke("SetCanvas", 0.5f);
     }
 
     // 풀에서 꺼냄
@@ -524,24 +509,23 @@ public class PoolingManager : MonoBehaviour
         poolPref[type].Enqueue(obj);
     }
 
-    // 캔버스를 할당하고 몬스터체력바 생성 후 풀에 저장해둠
-    void SetCanvas()
+        // 비활성화전에 따로 처리해줘야 하는 프리팹 처리
+    void GenSubTask(ObjType type, GameObject obj)
     {
-        // 캔버스 할당
-        Canvas = GameObject.FindGameObjectWithTag("Canvas");
-
-        // 풀에 저장
-        Queue<GameObject> queue = new Queue<GameObject>();
-
-        for (int i = 0; i < 100; i++)
+        switch(type)
         {
-            GameObject obj = Instantiate(genPref[ObjType.몬스터체력바]);
-            obj.transform.SetParent(Canvas.transform);
-            obj.SetActive(false);
-            queue.Enqueue(obj);
+            // 플로팅텍스트는 부모를 빈오브젝트로 설정해준뒤 비활성화
+            case ObjType.데미지텍스트:
+            case ObjType.회복텍스트:
+            case ObjType.회피텍스트:
+                obj.transform.SetParent(FloatingText.transform);
+                return;
+            
+            // 몬스터체력바는 부모를 캔버스로 설정해준뒤 비활성화
+            case ObjType.몬스터체력바:
+                obj.transform.SetParent(Canvas.transform);
+                return;
         }
-
-        poolPref.Add(ObjType.몬스터체력바, queue);
     }
 
     // 활성화전에 따로 처리해줘야 하는 프리팹 처리
