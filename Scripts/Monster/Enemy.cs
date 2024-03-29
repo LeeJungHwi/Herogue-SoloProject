@@ -900,7 +900,7 @@ public class Enemy : MonoBehaviour
                 GameObject instantDamageText = poolingManager.GetObj(ObjType.데미지텍스트);
                 instantDamageText.GetComponent<TextMeshPro>().text = playerDamage.ToString();
                 instantDamageText.transform.position = transform.position + Vector3.up * 25;
-                instantDamageText.transform.rotation = poolingManager.DamageTextPrefab.transform.rotation;
+                instantDamageText.transform.rotation = poolingManager.FloationTextPrefs[0].transform.rotation;
 
                 // 카메라 흔들림
                 CameraShake.Instance.OnCameraShake(0.1f, 0.5f);
@@ -934,7 +934,7 @@ public class Enemy : MonoBehaviour
                 // 회피 텍스트
                 GameObject instantMissText = poolingManager.GetObj(ObjType.회피텍스트);
                 instantMissText.transform.position = transform.position + Vector3.up * 20;
-                instantMissText.transform.rotation = poolingManager.MissTextPrefab.transform.rotation;
+                instantMissText.transform.rotation = poolingManager.FloationTextPrefs[2].transform.rotation;
             }
         }
     }
@@ -1312,6 +1312,6 @@ public class Enemy : MonoBehaviour
         GameObject instantHealingText = poolingManager.GetObj(ObjType.회복텍스트);
         instantHealingText.GetComponent<TextMeshPro>().text = "+" + (playerDamage * 20 / 100).ToString();
         instantHealingText.transform.position = transform.position + Vector3.up * 20;
-        instantHealingText.transform.rotation = poolingManager.HealingTextPrefab.transform.rotation;
+        instantHealingText.transform.rotation = poolingManager.FloationTextPrefs[1].transform.rotation;
     }
 }

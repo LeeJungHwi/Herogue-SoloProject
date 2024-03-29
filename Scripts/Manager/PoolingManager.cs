@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // 생성할 프리팹 타입 -> 키로 사용
@@ -101,81 +102,84 @@ public class PoolingManager : MonoBehaviour
     public List<Tuple<GameObject, ObjType>> AbilityArrow0HitEffects = new List<Tuple<GameObject, ObjType>>();
 
     // 생성할 프리팹 -> 인스펙터에서 할당
+
+    // 모든 프리팹 리스트 저장
+    public List<List<GameObject> > Prefs = new List<List<GameObject> >();
+
     // 무기
-    public GameObject ArrowPrefab, CarrotPrefab, CarrotGroubPrefab, CiclopEyePrefab, MageMissilePrefab;
+    public List<GameObject> WeaponPrefs = new List<GameObject>();
 
     // 패시브 스킬
-    public GameObject PassiveSkill0Prefab, PassiveSkill1Prefab, PassiveSkill2Prefab, PassiveSkill3Prefab, PassiveSkill4Prefab, PassiveSkill5Prefab,
-    PassiveSkill6Prefab, PassiveSkill7Prefab, PassiveSkill8Prefab, PassiveSkill9Prefab, PassiveSkill10Prefab, PassiveSkill11Prefab, PassiveSkill12Prefab,
-    PassiveSkill13Prefab, PassiveSkill14Prefab, PassiveSkill15Prefab, PassiveSkill16Prefab, PassiveSkill17Prefab, PassiveSkill18Prefab, PassiveSkill19Prefab,
-    PassiveSkill20Prefab, PassiveSkill21Prefab;
+    public List<GameObject> PassiveSkillPrefs = new List<GameObject>();
 
     // 액티브 스킬
-    public GameObject ActiveSkill0Prefab, ActiveSkill1Prefab;
+    public List<GameObject> ActiveSkillPrefs = new List<GameObject>();
     
     // 코인
-    public GameObject Coin100Prefab, Coin500Prefab, Coin1000Prefab;
+    public List<GameObject> CoinPrefs = new List<GameObject>();
 
     // 시크릿 박스
-    public GameObject SecretBoxPrefab;
+    public List<GameObject> SecretBoxPrefs = new List<GameObject>();
 
     // 몬스터
-    public GameObject Boss0Prefab, Boss1Prefab, Boss2Prefab;
-    public GameObject Normal0Prefab, Normal1Prefab, Normal2Prefab, Normal3Prefab, Normal4Prefab, Normal5Prefab, Normal6Prefab, Normal7Prefab, 
-    Normal8Prefab, Normal9Prefab, Normal10Prefab, Normal11Prefab, Normal12Prefab, Normal13Prefab, Normal14Prefab, Normal15Prefab, Normal16Prefab;
+    public List<GameObject> MonsterPrefs = new List<GameObject>();
 
     // 랜덤맵 모델
-    public GameObject BPrefab, BLPrefab, LBPrefab, BLTPrefab, LTBPrefab, TBLPrefab, LPrefab, LRPrefab, RLPrefab, LTRPrefab, TRLPrefab, RLTPrefab,
-    RPrefab, RBPrefab, BRPrefab, RBLPrefab, BLRPrefab, LRBPrefab, SecretRoomPrefab, TPrefab, TBPrefab, BTPrefab, TLPrefab, LTPrefab, TRPrefab,
-    RTPrefab, TRBPrefab, RBTPrefab, BTRPrefab;
+    public List<GameObject> RandomMapPrefs = new List<GameObject>();
 
     // 던전 장식
-    public GameObject DungeonDecoration1Prefab, DungeonDecoration2Prefab, DungeonDecoration3Prefab, DungeonDecoration4Prefab, DungeonDecoration5Prefab,
-    DungeonDecoration6Prefab, DungeonDecoration7Prefab, DungeonDecoration8Prefab, DungeonDecoration9Prefab, DungeonDecoration10Prefab, DungeonDecoration11Prefab,
-    DungeonDecoration12Prefab, DungeonDecoration13Prefab, DungeonDecoration14Prefab, DungeonDecoration15Prefab, DungeonDecoration16Prefab, DungeonDecoration17Prefab,
-    DungeonDecoration18Prefab, DungeonDecoration19Prefab, DungeonDecoration20Prefab, DungeonDecoration21Prefab, DungeonDecoration22Prefab, DungeonDecoration23Prefab,
-    DungeonDecoration24Prefab, DungeonDecoration25Prefab, DungeonDecoration26Prefab, DungeonDecoration27Prefab, DungeonDecoration28Prefab, DungeonDecoration29Prefab;
+    public List<GameObject> DungeonDecoPrefs = new List<GameObject>();
 
     // 이펙트
-    public GameObject PlayerAtkEffectPrefab, PlayerCriticalAtkEffectPrefab, AbilityArrow0Prefab, AbilityArrow0HitPrefab, AbilityArrow1ActivePrefab,
-    AbilityArrow1HitPrefab, AbilityArrow2ActivePrefab, AbilityArrow2HitPrefab, AbilitySword0Prefab, AbilitySword1Prefab, AbilitySword2Prefab,
-    AbilityMage0Prefab, AbilityMage1ActivePrefab, AbilityMage1HitPrefab, AbilityMage1Hit2Prefab, AbilityMage2Prefab, AbilityBlacksmith0Prefab,
-    AbilityBlacksmith1Prefab, AbilityBlacksmith2Prefab, SwordComboAttack0Prefab, SwordComboAttack1Prefab, SwordComboAttack2Prefab, 
-    BlacksmithComboAttack0Prefab, BlacksmithComboAttack1Prefab, BlacksmithComboAttack2Prefab, AbilityHolyknight0Prefab, AbilityHolyknight1ActivePrefab,
-    AbilityHolyknight1HitPrefab, AbilityHolyknight2Prefab, HolyknightComboAttack0Prefab, HolyknightComboAttack1Prefab, HolyknightComboAttack2Prefab;
+    public List<GameObject> EffectPrefs = new List<GameObject>();
 
     // 체력바
-    public GameObject MonsterHpBarPrefab;
+    public List<GameObject> MonsterHpBarPrefs = new List<GameObject>();
 
     // 텍스트 표시
-    public GameObject DamageTextPrefab, HealingTextPrefab, MissTextPrefab;
+    public List<GameObject> FloationTextPrefs = new List<GameObject>();
 
     // 사운드
-    public GameObject ShootSoundPrefab, MoveSoundPrefab, DashSoundPrefab, ItemSoundPrefab, BasicAttackSoundPrefab, CriticalAttackSoundPrefab,
-    BarrierSoundPrefab, BoxSoundPrefab, SecretDoorSoundPrefab, ArrowSkill02SoundPrefab, ArrowSkill0HitSoundPrefab, ArrowSkill1SoundPrefab,
-    ArrowSkill2HitSoundPrefab, PlayerDamagedSoundPrefab, ButtonSoundPrefab, UsePotionSoundPrefab, EquipSoundPrefab, UnEquipSoundPrefab,
-    FailEquipSoundPrefab, SwordSoundPrefab, SwordSkill0SoundPrefab, SwordSkill1SoundPrefab, SwordSkill2SoundPrefab, SwordSkill2HitSoundPrefab,
-    MageSkill0SoundPrefab, MageSkill1SoundPrefab, MageSkill2SoundPrefab, MageMissileSoundPrefab, BlacksmithSkill0SoundPrefab, BlacksmithSkill1SoundPrefab,
-    BlacksmithSkill1HitSoundPrefab, BlacksmithSkill2SoundPrefab, HammerSoundPrefab, HolyknightSkill0SoundPrefab, HolyknightSkill1SoundPrefab, HolyknightSkill2SoundPrefab;
+    public List<GameObject> SoundPrefs = new List<GameObject>();
     
     // 인벤토리 아이템
-    public GameObject inventoryItem0Prefab, inventoryItem1Prefab, inventoryItem2Prefab, inventoryItem3Prefab, inventoryItem4Prefab, inventoryItem5Prefab,
-    inventoryItem6Prefab, inventoryItem7Prefab, inventoryItem8Prefab, inventoryItem9Prefab, inventoryItem10Prefab, inventoryItem11Prefab,
-    inventoryItem12Prefab, inventoryItem13Prefab, inventoryItem14Prefab, inventoryItem15Prefab, inventoryItem16Prefab, inventoryItem17Prefab, inventoryItem18Prefab;
+    public List<GameObject> InventoryItemPrefs = new List<GameObject>();
 
     // 펫
-    public GameObject CatPrefab, DuckPrefab, PenguinPrefab, SheepPrefab;
+    public List<GameObject> PetPrefs = new List<GameObject>();
 
     void Awake()
     {
         // 캔버스 할당
         Canvas = GameObject.Find(DataManager.instance.character.ToString() + "Canvas");
 
+        // 모든 프리팹 리스트 저장
+        Pref();
+
         // (타입, 프리팹) 맵핑
         Map();
 
         // (타입, 큐) 맵핑
         Gen();
+    }
+
+    // 모든 프리팹 리스트 저장
+    private void Pref()
+    {
+        Prefs.Add(WeaponPrefs);
+        Prefs.Add(PassiveSkillPrefs);
+        Prefs.Add(ActiveSkillPrefs);
+        Prefs.Add(CoinPrefs);
+        Prefs.Add(SecretBoxPrefs);
+        Prefs.Add(MonsterPrefs);
+        Prefs.Add(RandomMapPrefs);
+        Prefs.Add(DungeonDecoPrefs);
+        Prefs.Add(EffectPrefs);
+        Prefs.Add(MonsterHpBarPrefs);
+        Prefs.Add(FloationTextPrefs);
+        Prefs.Add(SoundPrefs);
+        Prefs.Add(InventoryItemPrefs);
+        Prefs.Add(PetPrefs);
     }
 
     // (타입, 프리팹) 맵핑
@@ -187,239 +191,17 @@ public class PoolingManager : MonoBehaviour
     // (타입, 프리팹) 맵핑
     private void Map()
     {
-        // 무기
-        genPref.Add(ObjType.화살, ArrowPrefab);
-        genPref.Add(ObjType.당근, CarrotPrefab);
-        genPref.Add(ObjType.당근그룹, CarrotGroubPrefab);
-        genPref.Add(ObjType.키클롭스눈, CiclopEyePrefab);
-        genPref.Add(ObjType.법사미사일, MageMissilePrefab);
+        // 현재 맵핑할 오브젝트타입에 따라 프리팹 맵핑
+        ObjType curObjType = 0;
 
-        // 패시브스킬
-        genPref.Add(ObjType.한발노리기, PassiveSkill0Prefab);
-        genPref.Add(ObjType.백발백중, PassiveSkill1Prefab);
-        genPref.Add(ObjType.방벽, PassiveSkill2Prefab);
-        genPref.Add(ObjType.초월방벽, PassiveSkill3Prefab);
-        genPref.Add(ObjType.흡혈귀, PassiveSkill4Prefab);
-        genPref.Add(ObjType.거울, PassiveSkill5Prefab);
-        genPref.Add(ObjType.도박꾼, PassiveSkill6Prefab);
-        genPref.Add(ObjType.저거너트, PassiveSkill7Prefab);
-        genPref.Add(ObjType.즉사, PassiveSkill8Prefab);
-        genPref.Add(ObjType.시크릿, PassiveSkill9Prefab);
-        genPref.Add(ObjType.혈액갑옷, PassiveSkill10Prefab);
-        genPref.Add(ObjType.버티기, PassiveSkill11Prefab);
-        genPref.Add(ObjType.구사일생, PassiveSkill12Prefab);
-        genPref.Add(ObjType.폭발적치유, PassiveSkill13Prefab);
-        genPref.Add(ObjType.HP부스트, PassiveSkill14Prefab);
-        genPref.Add(ObjType.광전사, PassiveSkill15Prefab);
-        genPref.Add(ObjType.근심, PassiveSkill16Prefab);
-        genPref.Add(ObjType.고동, PassiveSkill17Prefab);
-        genPref.Add(ObjType.꿈의끝, PassiveSkill18Prefab);
-        genPref.Add(ObjType.분신, PassiveSkill19Prefab);
-        genPref.Add(ObjType.향상된대쉬, PassiveSkill20Prefab);
-        genPref.Add(ObjType.불사신, PassiveSkill21Prefab);
-
-        // 액티브스킬
-        genPref.Add(ObjType.멀티샷, ActiveSkill0Prefab);
-        genPref.Add(ObjType.사선화살, ActiveSkill1Prefab);
-
-        // 코인
-        genPref.Add(ObjType.백원, Coin100Prefab);
-        genPref.Add(ObjType.오백원, Coin500Prefab);
-        genPref.Add(ObjType.천원, Coin1000Prefab);
-        
-        // 시크릿박스
-        genPref.Add(ObjType.시크릿박스, SecretBoxPrefab);
-
-        // 몬스터
-        genPref.Add(ObjType.보스1, Boss0Prefab);
-        genPref.Add(ObjType.보스2, Boss1Prefab);
-        genPref.Add(ObjType.보스3, Boss2Prefab);
-        genPref.Add(ObjType.기본몬스터1, Normal0Prefab);
-        genPref.Add(ObjType.기본몬스터2, Normal1Prefab);
-        genPref.Add(ObjType.기본몬스터3, Normal2Prefab);
-        genPref.Add(ObjType.기본몬스터4, Normal3Prefab);
-        genPref.Add(ObjType.기본몬스터5, Normal4Prefab);
-        genPref.Add(ObjType.기본몬스터6, Normal5Prefab);
-        genPref.Add(ObjType.기본몬스터7, Normal6Prefab);
-        genPref.Add(ObjType.기본몬스터8, Normal7Prefab);
-        genPref.Add(ObjType.기본몬스터9, Normal8Prefab);
-        genPref.Add(ObjType.기본몬스터10, Normal9Prefab);
-        genPref.Add(ObjType.기본몬스터11, Normal10Prefab);
-        genPref.Add(ObjType.기본몬스터12, Normal11Prefab);
-        genPref.Add(ObjType.기본몬스터13, Normal12Prefab);
-        genPref.Add(ObjType.기본몬스터14, Normal13Prefab);
-        genPref.Add(ObjType.기본몬스터15, Normal14Prefab);
-        genPref.Add(ObjType.기본몬스터16, Normal15Prefab);
-        genPref.Add(ObjType.기본몬스터17, Normal16Prefab);
-
-        // 랜덤맵
-        genPref.Add(ObjType.B, BPrefab);
-        genPref.Add(ObjType.BL, BLPrefab);
-        genPref.Add(ObjType.LB, LBPrefab);
-        genPref.Add(ObjType.BLT, BLTPrefab);
-        genPref.Add(ObjType.LTB, LTBPrefab);
-        genPref.Add(ObjType.TBL, TBLPrefab);
-        genPref.Add(ObjType.L, LPrefab);
-        genPref.Add(ObjType.LR, LRPrefab);
-        genPref.Add(ObjType.RL, RLPrefab);
-        genPref.Add(ObjType.LTR, LTRPrefab);
-        genPref.Add(ObjType.TRL, TRLPrefab);
-        genPref.Add(ObjType.RLT, RLTPrefab);
-        genPref.Add(ObjType.R, RPrefab);
-        genPref.Add(ObjType.RB, RBPrefab);
-        genPref.Add(ObjType.BR, BRPrefab);
-        genPref.Add(ObjType.RBL, RBLPrefab);
-        genPref.Add(ObjType.BLR, BLRPrefab);
-        genPref.Add(ObjType.LRB, LRBPrefab);
-        genPref.Add(ObjType.SecretRoom, SecretRoomPrefab);
-        genPref.Add(ObjType.T, TPrefab);
-        genPref.Add(ObjType.TB, TBPrefab);
-        genPref.Add(ObjType.BT, BTPrefab);
-        genPref.Add(ObjType.TL, TLPrefab);
-        genPref.Add(ObjType.LT, LTPrefab);
-        genPref.Add(ObjType.TR, TRPrefab);
-        genPref.Add(ObjType.RT, RTPrefab);
-        genPref.Add(ObjType.TRB, TRBPrefab);
-        genPref.Add(ObjType.RBT, RBTPrefab);
-        genPref.Add(ObjType.BTR, BTRPrefab);
-
-        // 던전장식
-        genPref.Add(ObjType.던전장식1, DungeonDecoration1Prefab);
-        genPref.Add(ObjType.던전장식2, DungeonDecoration2Prefab);
-        genPref.Add(ObjType.던전장식3, DungeonDecoration3Prefab);
-        genPref.Add(ObjType.던전장식4, DungeonDecoration4Prefab);
-        genPref.Add(ObjType.던전장식5, DungeonDecoration5Prefab);
-        genPref.Add(ObjType.던전장식6, DungeonDecoration6Prefab);
-        genPref.Add(ObjType.던전장식7, DungeonDecoration7Prefab);
-        genPref.Add(ObjType.던전장식8, DungeonDecoration8Prefab);
-        genPref.Add(ObjType.던전장식9, DungeonDecoration9Prefab);
-        genPref.Add(ObjType.던전장식10, DungeonDecoration10Prefab);
-        genPref.Add(ObjType.던전장식11, DungeonDecoration11Prefab);
-        genPref.Add(ObjType.던전장식12, DungeonDecoration12Prefab);
-        genPref.Add(ObjType.던전장식13, DungeonDecoration13Prefab);
-        genPref.Add(ObjType.던전장식14, DungeonDecoration14Prefab);
-        genPref.Add(ObjType.던전장식15, DungeonDecoration15Prefab);
-        genPref.Add(ObjType.던전장식16, DungeonDecoration16Prefab);
-        genPref.Add(ObjType.던전장식17, DungeonDecoration17Prefab);
-        genPref.Add(ObjType.던전장식18, DungeonDecoration18Prefab);
-        genPref.Add(ObjType.던전장식19, DungeonDecoration19Prefab);
-        genPref.Add(ObjType.던전장식20, DungeonDecoration20Prefab);
-        genPref.Add(ObjType.던전장식21, DungeonDecoration21Prefab);
-        genPref.Add(ObjType.던전장식22, DungeonDecoration22Prefab);
-        genPref.Add(ObjType.던전장식23, DungeonDecoration23Prefab);
-        genPref.Add(ObjType.던전장식24, DungeonDecoration24Prefab);
-        genPref.Add(ObjType.던전장식25, DungeonDecoration25Prefab);
-        genPref.Add(ObjType.던전장식26, DungeonDecoration26Prefab);
-        genPref.Add(ObjType.던전장식27, DungeonDecoration27Prefab);
-        genPref.Add(ObjType.던전장식28, DungeonDecoration28Prefab);
-        genPref.Add(ObjType.던전장식29, DungeonDecoration29Prefab);
-
-        // 이펙트
-        genPref.Add(ObjType.플레이어공격이펙트, PlayerAtkEffectPrefab);
-        genPref.Add(ObjType.플레이어크리티컬공격이펙트, PlayerCriticalAtkEffectPrefab);
-        genPref.Add(ObjType.궁수스킬1이펙트, AbilityArrow0Prefab);
-        genPref.Add(ObjType.궁수스킬1충돌이펙트, AbilityArrow0HitPrefab);
-        genPref.Add(ObjType.궁수스킬2이펙트, AbilityArrow1ActivePrefab);
-        genPref.Add(ObjType.궁수스킬2충돌이펙트, AbilityArrow1HitPrefab);
-        genPref.Add(ObjType.궁수스킬3이펙트, AbilityArrow2ActivePrefab);
-        genPref.Add(ObjType.궁수스킬3충돌이펙트, AbilityArrow2HitPrefab);
-        genPref.Add(ObjType.전사스킬1이펙트, AbilitySword0Prefab);
-        genPref.Add(ObjType.전사스킬2이펙트, AbilitySword1Prefab);
-        genPref.Add(ObjType.전사스킬3이펙트, AbilitySword2Prefab);
-        genPref.Add(ObjType.법사스킬1이펙트, AbilityMage0Prefab);
-        genPref.Add(ObjType.법사스킬2이펙트, AbilityMage1ActivePrefab);
-        genPref.Add(ObjType.법사스킬2충돌1이펙트, AbilityMage1HitPrefab);
-        genPref.Add(ObjType.법사스킬2충돌2이펙트, AbilityMage1Hit2Prefab);
-        genPref.Add(ObjType.법사스킬3이펙트, AbilityMage2Prefab);
-        genPref.Add(ObjType.블랙스미스스킬1이펙트, AbilityBlacksmith0Prefab);
-        genPref.Add(ObjType.블랙스미스스킬2이펙트, AbilityBlacksmith1Prefab);
-        genPref.Add(ObjType.블랙스미스스킬3이펙트, AbilityBlacksmith2Prefab);
-        genPref.Add(ObjType.전사콤보공격1이펙트, SwordComboAttack0Prefab);
-        genPref.Add(ObjType.전사콤보공격2이펙트, SwordComboAttack1Prefab);
-        genPref.Add(ObjType.전사콤보공격3이펙트, SwordComboAttack2Prefab);
-        genPref.Add(ObjType.블랙스미스콤보공격1이펙트, BlacksmithComboAttack0Prefab);
-        genPref.Add(ObjType.블랙스미스콤보공격2이펙트, BlacksmithComboAttack1Prefab);
-        genPref.Add(ObjType.블랙스미스콤보공격3이펙트, BlacksmithComboAttack2Prefab);
-        genPref.Add(ObjType.성기사스킬1이펙트, AbilityHolyknight0Prefab);
-        genPref.Add(ObjType.성기사스킬2이펙트, AbilityHolyknight1ActivePrefab);
-        genPref.Add(ObjType.성기사스킬2충돌이펙트, AbilityHolyknight1HitPrefab);
-        genPref.Add(ObjType.성기사스킬3이펙트, AbilityHolyknight2Prefab);
-        genPref.Add(ObjType.성기사콤보공격1이펙트, HolyknightComboAttack0Prefab);
-        genPref.Add(ObjType.성기사콤보공격2이펙트, HolyknightComboAttack1Prefab);
-        genPref.Add(ObjType.성기사콤보공격3이펙트, HolyknightComboAttack2Prefab);
-
-        // 체력바
-        genPref.Add(ObjType.몬스터체력바, MonsterHpBarPrefab);
-
-        // 텍스트 표시
-        genPref.Add(ObjType.데미지텍스트, DamageTextPrefab);
-        genPref.Add(ObjType.회복텍스트, HealingTextPrefab);
-        genPref.Add(ObjType.회피텍스트, MissTextPrefab);
-
-        // 사운드
-        genPref.Add(ObjType.슈팅소리, ShootSoundPrefab);
-        genPref.Add(ObjType.무빙소리, MoveSoundPrefab);
-        genPref.Add(ObjType.대쉬소리, DashSoundPrefab);
-        genPref.Add(ObjType.아이템소리, ItemSoundPrefab);
-        genPref.Add(ObjType.기본공격소리, BasicAttackSoundPrefab);
-        genPref.Add(ObjType.크리티컬공격소리, CriticalAttackSoundPrefab);
-        genPref.Add(ObjType.방벽소리, BarrierSoundPrefab);
-        genPref.Add(ObjType.박스소리, BoxSoundPrefab);
-        genPref.Add(ObjType.시크릿문소리, SecretDoorSoundPrefab);
-        genPref.Add(ObjType.궁수스킬13소리, ArrowSkill02SoundPrefab);
-        genPref.Add(ObjType.궁수스킬1충돌소리, ArrowSkill0HitSoundPrefab);
-        genPref.Add(ObjType.궁수스킬2소리, ArrowSkill1SoundPrefab);
-        genPref.Add(ObjType.궁수스킬3충돌소리, ArrowSkill2HitSoundPrefab);
-        genPref.Add(ObjType.플레이어피격소리, PlayerDamagedSoundPrefab);
-        genPref.Add(ObjType.버튼소리, ButtonSoundPrefab);
-        genPref.Add(ObjType.포션사용소리, UsePotionSoundPrefab);
-        genPref.Add(ObjType.장비장착소리, EquipSoundPrefab);
-        genPref.Add(ObjType.장비장착해제소리, UnEquipSoundPrefab);
-        genPref.Add(ObjType.장비장착실패소리, FailEquipSoundPrefab);
-        genPref.Add(ObjType.칼소리, SwordSoundPrefab);
-        genPref.Add(ObjType.전사스킬1소리, SwordSkill0SoundPrefab);
-        genPref.Add(ObjType.전사스킬2소리, SwordSkill1SoundPrefab);
-        genPref.Add(ObjType.전사스킬3소리, SwordSkill2SoundPrefab);
-        genPref.Add(ObjType.전사스킬3충돌소리, SwordSkill2HitSoundPrefab);
-        genPref.Add(ObjType.법사스킬1소리, MageSkill0SoundPrefab);
-        genPref.Add(ObjType.법사스킬2소리, MageSkill1SoundPrefab);
-        genPref.Add(ObjType.법사스킬3소리, MageSkill2SoundPrefab);
-        genPref.Add(ObjType.법사미사일소리, MageMissileSoundPrefab);
-        genPref.Add(ObjType.블랙스미스스킬1소리, BlacksmithSkill0SoundPrefab);
-        genPref.Add(ObjType.블랙스미스스킬2소리, BlacksmithSkill1SoundPrefab);
-        genPref.Add(ObjType.블랙스미스스킬2충돌소리, BlacksmithSkill1HitSoundPrefab);
-        genPref.Add(ObjType.블랙스미스스킬3소리, BlacksmithSkill2SoundPrefab);
-        genPref.Add(ObjType.해머소리, HammerSoundPrefab);
-        genPref.Add(ObjType.성기사스킬1소리, HolyknightSkill0SoundPrefab);
-        genPref.Add(ObjType.성기사스킬2소리, HolyknightSkill1SoundPrefab);
-        genPref.Add(ObjType.성기사스킬3소리, HolyknightSkill2SoundPrefab);
-
-        // 인벤토리 아이템
-        genPref.Add(ObjType.화려한장신구, inventoryItem0Prefab);
-        genPref.Add(ObjType.녹슨장신구, inventoryItem1Prefab);
-        genPref.Add(ObjType.단단한갑옷, inventoryItem2Prefab);
-        genPref.Add(ObjType.부서진갑옷, inventoryItem3Prefab);
-        genPref.Add(ObjType.큰체력물약, inventoryItem4Prefab);
-        genPref.Add(ObjType.강력한활, inventoryItem5Prefab);
-        genPref.Add(ObjType.낡은활, inventoryItem6Prefab);
-        genPref.Add(ObjType.매끈한장갑, inventoryItem7Prefab);
-        genPref.Add(ObjType.찢어진장갑, inventoryItem8Prefab);
-        genPref.Add(ObjType.중간체력물약, inventoryItem9Prefab);
-        genPref.Add(ObjType.깔끔한신발, inventoryItem10Prefab);
-        genPref.Add(ObjType.더러운신발, inventoryItem11Prefab);
-        genPref.Add(ObjType.작은체력물약, inventoryItem12Prefab);
-        genPref.Add(ObjType.강력한소드, inventoryItem13Prefab);
-        genPref.Add(ObjType.낡은소드, inventoryItem14Prefab);
-        genPref.Add(ObjType.강력한지팡이, inventoryItem15Prefab);
-        genPref.Add(ObjType.낡은지팡이, inventoryItem16Prefab);
-        genPref.Add(ObjType.강력한해머, inventoryItem17Prefab);
-        genPref.Add(ObjType.낡은해머, inventoryItem18Prefab);
-
-        // 펫
-        genPref.Add(ObjType.고양이, CatPrefab);
-        genPref.Add(ObjType.오리, DuckPrefab);
-        genPref.Add(ObjType.펭귄, PenguinPrefab);
-        genPref.Add(ObjType.양, SheepPrefab);
+        for(int i = 0; i < Prefs.Count; i++)
+        {
+            for(int j = 0; j < Prefs[i].Count; j++)
+            {
+                genPref.Add(curObjType, Prefs[i][j]);
+                curObjType++;
+            }
+        }
     }
 
     // (타입, 큐) 맵핑

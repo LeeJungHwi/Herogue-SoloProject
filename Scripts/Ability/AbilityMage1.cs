@@ -21,7 +21,7 @@ public class AbilityMage1 : AbilityBase
         // 스킬 이펙트
         instantAbilityMage1Active = poolManager.GetObj(ObjType.법사스킬2이펙트);
         instantAbilityMage1Active.transform.position = player.transform.position + player.transform.forward * 45f;
-        instantAbilityMage1Active.transform.rotation = poolManager.AbilityMage1ActivePrefab.transform.rotation;
+        instantAbilityMage1Active.transform.rotation = poolManager.EffectPrefs[12].transform.rotation;
 
         // 애니메이션
         Player.anim.SetTrigger("doAbility1");

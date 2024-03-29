@@ -41,7 +41,7 @@ public class AbilityArrow2Collision : MonoBehaviour
             // 충돌 이펙트 활성화
             instantHit = poolingManager.GetObj(ObjType.궁수스킬3충돌이펙트);
             instantHit.transform.position = enemy.transform.position + enemy.transform.up * 5f;
-            instantHit.transform.rotation = poolingManager.AbilityArrow2HitPrefab.transform.rotation;
+            instantHit.transform.rotation = poolingManager.EffectPrefs[7].transform.rotation;
 
             // 스킬 사운드
             SoundManager.instance.SFXPlay(ObjType.궁수스킬3충돌소리);

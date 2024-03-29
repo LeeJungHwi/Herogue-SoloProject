@@ -21,7 +21,7 @@ public class AbilityHolyknight1 : AbilityBase
         // 스킬 이펙트
         instantAbilityHolyknight1Active = poolManager.GetObj(ObjType.성기사스킬2이펙트);
         instantAbilityHolyknight1Active.transform.position = player.transform.position + player.transform.forward * 50f;
-        instantAbilityHolyknight1Active.transform.rotation = poolManager.AbilityHolyknight1ActivePrefab.transform.rotation;
+        instantAbilityHolyknight1Active.transform.rotation = poolManager.EffectPrefs[26].transform.rotation;
 
         // 애니메이션
         Player.anim.SetTrigger("doAbility1");

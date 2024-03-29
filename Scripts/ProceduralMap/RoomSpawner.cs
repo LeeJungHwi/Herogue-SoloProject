@@ -97,7 +97,7 @@ public class RoomSpawner : MonoBehaviour
                     // 시크릿방 생성
                     GameObject instanceSecretRoom = poolingManager.GetObj(ObjType.SecretRoom);
                     instanceSecretRoom.transform.position = transform.position;
-                    instanceSecretRoom.transform.rotation = poolingManager.SecretRoomPrefab.transform.rotation;
+                    instanceSecretRoom.transform.rotation = poolingManager.RandomMapPrefs[18].transform.rotation;
 
                     // 시크릿 문 원래대로
                     Transform[] transforms = instanceSecretRoom.GetComponentsInChildren<Transform>();
@@ -166,7 +166,7 @@ public class RoomSpawner : MonoBehaviour
         {
             GameObject instantSecretBox = poolingManager.GetObj(ObjType.시크릿박스);
             instantSecretBox.transform.position = transform.position + spawnPosition;
-            instantSecretBox.transform.rotation = poolingManager.SecretBoxPrefab.transform.rotation;
+            instantSecretBox.transform.rotation = poolingManager.SecretBoxPrefs[0].transform.rotation;
         }
     }
 }

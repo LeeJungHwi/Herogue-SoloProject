@@ -39,7 +39,7 @@ public class AbilitySword1Collision : MonoBehaviour
             GameObject instantHealingText = poolingManager.GetObj(ObjType.회복텍스트);
             instantHealingText.GetComponent<TextMeshPro>().text = "+" + (damage + player.damage).ToString();
             instantHealingText.transform.position = transform.position + Vector3.up * 20;
-            instantHealingText.transform.rotation = poolingManager.HealingTextPrefab.transform.rotation;
+            instantHealingText.transform.rotation = poolingManager.FloationTextPrefs[1].transform.rotation;
         }
     }
 }

@@ -791,7 +791,7 @@ public class Player : MonoBehaviour
 
             // 트랜스폼 초기화한후
             pet.transform.position = transform.position;
-            pet.transform.rotation = poolingManager.SheepPrefab.transform.rotation;
+            pet.transform.rotation = poolingManager.PetPrefs[3].transform.rotation;
 
             // 네비메쉬를 다시 켜준다
             pet.GetComponent<Pet>().nav.enabled = true;
@@ -811,7 +811,7 @@ public class Player : MonoBehaviour
         GameObject instantDamageText = poolingManager.GetObj(ObjType.데미지텍스트);
         instantDamageText.GetComponent<TextMeshPro>().text = (skillBasicDamage + damage).ToString();
         instantDamageText.transform.position = skillTransform.position + Vector3.up * 25;
-        instantDamageText.transform.rotation = poolingManager.DamageTextPrefab.transform.rotation;
+        instantDamageText.transform.rotation = poolingManager.FloationTextPrefs[0].transform.rotation;
 
         // 카메라 흔들림
         CameraShake.Instance.OnCameraShake(0.1f, 0.5f);
@@ -1003,7 +1003,7 @@ public class Player : MonoBehaviour
 
             // 콤보 이펙트 트랜스폼 설정
             instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
-            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.EffectPrefs[20].transform.rotation : transform.rotation;
         }
         else if(characterType.Equals("Blacksmith"))
         {
@@ -1011,7 +1011,7 @@ public class Player : MonoBehaviour
 
             // 콤보 이펙트 트랜스폼 설정
             instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
-            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.EffectPrefs[20].transform.rotation : transform.rotation;
         }
         else if(characterType.Equals("Holyknight"))
         {
@@ -1019,7 +1019,7 @@ public class Player : MonoBehaviour
 
             // 콤보 이펙트 트랜스폼 설정
             instantComboAttack.transform.position = transform.position + transform.forward * 10f + transform.up * 10f;
-            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.SwordComboAttack1Prefab.transform.rotation : transform.rotation;
+            instantComboAttack.transform.rotation = index == 1 ? transform.rotation * poolingManager.EffectPrefs[20].transform.rotation : transform.rotation;
         }  
     }
 

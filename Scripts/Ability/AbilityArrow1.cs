@@ -21,7 +21,7 @@ public class AbilityArrow1 : AbilityBase
         // 스킬 이펙트
         instantAbilityArrow1Active = poolManager.GetObj(ObjType.궁수스킬2이펙트);
         instantAbilityArrow1Active.transform.position = player.transform.position + player.transform.forward * 50f;
-        instantAbilityArrow1Active.transform.rotation = poolManager.AbilityArrow1ActivePrefab.transform.rotation;
+        instantAbilityArrow1Active.transform.rotation = poolManager.EffectPrefs[4].transform.rotation;
 
         // 애니메이션
         Player.anim.SetTrigger("doShoot");
