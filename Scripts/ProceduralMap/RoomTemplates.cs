@@ -72,6 +72,9 @@ public class RoomTemplates : MonoBehaviour
     // 플레이어 스크립트
     public Player playerScript;
 
+    // RoomBFS
+    public RoomBFS roomBFS;
+
     void Awake()
     {
         // 플레이어 할당
@@ -197,6 +200,9 @@ public class RoomTemplates : MonoBehaviour
         // 리스트 클리어
         boss.Clear();
 
+        // 그래프, 거리, 최대거리, BFS체크
+        roomBFS.InitForNextBFS();
+
         // 스폰딜레이
         DelaySpawn();
 
@@ -277,6 +283,8 @@ public class RoomTemplates : MonoBehaviour
         // 리스트 클리어
         boss.Clear();
 
+        // 그래프, 거리, 최대거리, BFS체크
+        roomBFS.InitForNextBFS();
 
         // 스테이지 초기화
         currentStage = 0;

@@ -77,6 +77,9 @@ public class PoolingManager : MonoBehaviour
     // 방 모델
     public RoomTemplates templates;
 
+    // RoomBFS
+    public RoomBFS roomBFS;
+
     // 방내에서 몬스터 랜덤배치를 위한 벡터
     public Vector3[] MonsterVec;
 
@@ -401,7 +404,8 @@ public class PoolingManager : MonoBehaviour
             // 보스 처리
             case ObjType.보스1:
                 Enemy enemyBoss = obj.GetComponent<Enemy>();
-                obj.transform.position = templates.rooms[templates.rooms.Count - 1].Item1.transform.position; // 마지막방으로 이동
+                //obj.transform.position = templates.rooms[templates.rooms.Count - 1].Item1.transform.position; // 마지막방으로 이동
+                obj.transform.position = roomBFS.maxDisPos; // 시작방에서 가장 먼 방으로 이동
                 obj.transform.rotation = Quaternion.identity; // 회전값 정규화
                 enemyBoss.isDrop = false; // 플래그
                 enemyBoss.isDead = false;
