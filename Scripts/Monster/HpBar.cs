@@ -29,7 +29,7 @@ public class HpBar : MonoBehaviour
     // 카메라
     Camera cam = null;
 
-    // 카메라와의 거리
+    // 플레이어와의 거리
     private float distance;
 
     void Start()
@@ -82,24 +82,48 @@ public class HpBar : MonoBehaviour
             instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
         }
 
-        // 카메라와의 거리
-        distance = Vector3.Distance(cam.GetComponentInParent<Transform>().transform.position, transform.position);
+        // 플레이어와의 거리
+        distance = Vector3.Distance(enemy.player.transform.position, transform.position);
 
         // 체력에따라 슬라이더 값 조절
         instantHpBar.GetComponent<Slider>().value = Mathf.Lerp(instantHpBar.GetComponent<Slider>().value, enemy.curHealth / enemy.maxHealth, Time.deltaTime * 15);
         instantHpBar.GetComponentInChildren<Text>().text = enemy.curHealth + " / " + enemy.maxHealth;
 
-        // 카메라와의 거리에따른 스케일 조정
-        if(distance > 200)
+        // 플레이어와의 거리 및 레이 결과에 따라 체력바 보이기
+        instantHpBar.transform.localScale = distance > 150 || !IsMonsterVisible() ? new Vector3(0, 1, 1) : new Vector3(1, 1, 1);
+    }
+
+    // 플레이어 시야에 몬스터가 보이는지 체크
+    bool IsMonsterVisible()
+    {
+        Vector3 layDir = MonsterPos.position - enemy.player.transform.position; // 레이 방향
+        float radius = 1.0f; // 레이 반지름
+        RaycastHit[] hits; // 레이 충돌정보
+
+        // 충돌정보 가져와서
+        hits = Physics.SphereCastAll(enemy.player.transform.position + transform.up * 2, radius, layDir, Mathf.Infinity);
+
+        foreach (RaycastHit hit in hits)
         {
-            // 체력바 사라짐
-            instantHpBar.transform.localScale = new Vector3(0, 1, 1);
+            if (hit.collider.gameObject.CompareTag("Enemy")) // 몬스터면 체력바 보이기
+            {
+                // 레이 디버깅
+                Debug.DrawLine(enemy.player.transform.position, hit.point, Color.green);
+                return true;
+            }
+            else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Border")) // 벽이면 체력바 안 보이기
+            {
+                // 레이 디버깅
+                Debug.DrawLine(enemy.player.transform.position, hit.point, Color.red);
+                return false;
+            }
         }
-        else
-        {
-            // 체력바 생김
-            instantHpBar.transform.localScale = new Vector3(1, 1, 1);
-        }
+
+        // 레이 디버깅
+        Debug.DrawRay(enemy.player.transform.position, layDir * 1000f, Color.blue);
+
+        // 여기까지 오면 레이가 아무것도 부딪히지 않았으므로 몬스터 체력바 안 보이기
+        return false;
     }
 
     void SetCanvas()

@@ -59,7 +59,7 @@ public class Enemy : MonoBehaviour
     public BoxCollider boxCollider;
 
     // 플레이어
-    private GameObject player;
+    public GameObject player;
 
     // 플레이어 스크립트
     private Player playerScript;
