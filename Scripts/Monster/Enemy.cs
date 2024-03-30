@@ -399,243 +399,67 @@ public class Enemy : MonoBehaviour
         anim.SetBool("isAttack", false);
     }
 
-    IEnumerator CiclopEye()
+    // 키클롭스눈 생성 후 발사
+    void FireCiclopEye(Vector3 position, Quaternion rotation, Vector3 velocity)
     {
-        // 키클롭스눈 하나씩 생성
-        // 애니메이션이 공격타이밍보다 느림
-        yield return new WaitForSeconds(0.5f);
-
-        // 키클롭스눈 발사
         GameObject instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[0].position;
-        instantCiclopEye.transform.rotation = carrotPos[0].rotation;
+        instantCiclopEye.transform.position = position;
+        instantCiclopEye.transform.rotation = rotation;
         Rigidbody ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[1].position;
-        instantCiclopEye.transform.rotation = carrotPos[1].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[2].position;
-        instantCiclopEye.transform.rotation = carrotPos[2].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[3].position;
-        instantCiclopEye.transform.rotation = carrotPos[3].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[4].position;
-        instantCiclopEye.transform.rotation = carrotPos[4].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[5].position;
-        instantCiclopEye.transform.rotation = carrotPos[5].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[6].position;
-        instantCiclopEye.transform.rotation = carrotPos[6].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[7].position;
-        instantCiclopEye.transform.rotation = carrotPos[7].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[8].position;
-        instantCiclopEye.transform.rotation = carrotPos[8].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[9].position;
-        instantCiclopEye.transform.rotation = carrotPos[9].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[10].position;
-        instantCiclopEye.transform.rotation = carrotPos[10].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[11].position;
-        instantCiclopEye.transform.rotation = carrotPos[11].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[12].position;
-        instantCiclopEye.transform.rotation = carrotPos[12].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[13].position;
-        instantCiclopEye.transform.rotation = carrotPos[13].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[14].position;
-        instantCiclopEye.transform.rotation = carrotPos[14].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[15].position;
-        instantCiclopEye.transform.rotation = carrotPos[15].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[16].position;
-        instantCiclopEye.transform.rotation = carrotPos[16].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[17].position;
-        instantCiclopEye.transform.rotation = carrotPos[17].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[18].position;
-        instantCiclopEye.transform.rotation = carrotPos[18].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        yield return new WaitForSeconds(0.1f);
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[19].position;
-        instantCiclopEye.transform.rotation = carrotPos[19].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
+        ciclopEyeRigid.velocity = velocity;
     }
 
-    IEnumerator CiclopEyeAll()
+    // 키클롭스눈 하나씩 발사
+    IEnumerator CiclopEye()
     {
-        // 키클롭스눈 한번에
         // 애니메이션이 공격타이밍보다 느림
         yield return new WaitForSeconds(0.5f);
 
-        // 키클롭스눈 발사
-        GameObject instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[0].position;
-        instantCiclopEye.transform.rotation = carrotPos[0].rotation;
-        Rigidbody ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[1].position;
-        instantCiclopEye.transform.rotation = carrotPos[1].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[2].position;
-        instantCiclopEye.transform.rotation = carrotPos[2].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[3].position;
-        instantCiclopEye.transform.rotation = carrotPos[3].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[4].position;
-        instantCiclopEye.transform.rotation = carrotPos[4].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[5].position;
-        instantCiclopEye.transform.rotation = carrotPos[5].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[6].position;
-        instantCiclopEye.transform.rotation = carrotPos[6].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[7].position;
-        instantCiclopEye.transform.rotation = carrotPos[7].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[8].position;
-        instantCiclopEye.transform.rotation = carrotPos[8].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[9].position;
-        instantCiclopEye.transform.rotation = carrotPos[9].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[10].position;
-        instantCiclopEye.transform.rotation = carrotPos[10].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[11].position;
-        instantCiclopEye.transform.rotation = carrotPos[11].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[12].position;
-        instantCiclopEye.transform.rotation = carrotPos[12].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[13].position;
-        instantCiclopEye.transform.rotation = carrotPos[13].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[14].position;
-        instantCiclopEye.transform.rotation = carrotPos[14].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.forward * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[15].position;
-        instantCiclopEye.transform.rotation = carrotPos[15].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[16].position;
-        instantCiclopEye.transform.rotation = carrotPos[16].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[17].position;
-        instantCiclopEye.transform.rotation = carrotPos[17].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[18].position;
-        instantCiclopEye.transform.rotation = carrotPos[18].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1;
-        instantCiclopEye = poolingManager.GetObj(ObjType.키클롭스눈);
-        instantCiclopEye.transform.position = carrotPos[19].position;
-        instantCiclopEye.transform.rotation = carrotPos[19].rotation;
-        ciclopEyeRigid = instantCiclopEye.GetComponent<Rigidbody>();
-        ciclopEyeRigid.velocity = transform.right * 40 * -1; 
+        // 키클롭스눈 방향 맵핑
+        // 0~4 : forward * 40
+        // 5~9 : right * 40
+        // 10~14 : forward * 40 * (-1)
+        // 15~19 : right * 40 * (-1)
+        Dictionary<int, Vector3> eyeDir = new Dictionary<int, Vector3>();
+        eyeDir[0] = transform.forward * 40;
+        eyeDir[1] = transform.right * 40;
+        eyeDir[2] = -transform.forward * 40;
+        eyeDir[3] = -transform.right * 40;
 
-        // 2초간 쉰다
+        // 키클롭스눈 생성 위치 돌면서
+        for (int i = 0; i < carrotPos.Length; i++)
+        {
+            Vector3 velocity = eyeDir[i / 5]; // 방향 설정
+            FireCiclopEye(carrotPos[i].position, carrotPos[i].rotation, velocity); // 키클롭스눈 생성
+            yield return new WaitForSeconds(0.1f); // 0.1초마다 한개씩
+        }
+    }
+
+    // 키클롭스눈 한번에 발사
+    IEnumerator CiclopEyeAll()
+    {
+        // 애니메이션이 공격타이밍보다 느림
+        yield return new WaitForSeconds(0.5f);
+
+        // 키클롭스눈 방향 맵핑
+        // 0~4 : forward * 40
+        // 5~9 : right * 40
+        // 10~14 : forward * 40 * (-1)
+        // 15~19 : right * 40 * (-1)
+        Dictionary<int, Vector3> eyeDir = new Dictionary<int, Vector3>();
+        eyeDir[0] = transform.forward * 40;
+        eyeDir[1] = transform.right * 40;
+        eyeDir[2] = -transform.forward * 40;
+        eyeDir[3] = -transform.right * 40;
+
+        // 키클롭스눈 생성 위치 돌면서
+        for (int i = 0; i < carrotPos.Length; i++)
+        {
+            Vector3 velocity = eyeDir[i / 5]; // 방향 설정
+            FireCiclopEye(carrotPos[i].position, carrotPos[i].rotation, velocity); // 키클롭스눈 생성
+        }
+
+        // 2초 쉼
         yield return new WaitForSeconds(2f);
     }
 
