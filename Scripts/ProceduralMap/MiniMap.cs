@@ -44,33 +44,15 @@ public class MiniMap : MonoBehaviour
             if (playerPos.y < (curRoom.y * 200 - 100))
             {
                 curRoom = new Vector2Int(curRoom.x, curRoom.y - 1); // 현재 플레이어가 위치한 방 갱신
-
-                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red; // 플레이어가 이전에 위치한 방이 보스방이면 빨간색으로
-                }
-                else
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white; // 플레이어가 이전에 위치한 방이 일반방이면 흰색으로
-                }
-
-                preRoom = curRoom; // 플레이어가 위치했던 방의 좌표 갱신
+                roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = ((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y) ? Color.red : Color.white; // 플레이어가 이전에 위치했던방 보스방은 빨간색 일반방은 흰색으로 돌림
+                preRoom = curRoom; // 플레이어가 이전에 위치했던 방 갱신
             }
             
             // 오른쪽
             if (playerPos.y > (curRoom.y * 200 + 100))
             {
                 curRoom = new Vector2Int(curRoom.x, curRoom.y + 1);
-
-                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red;
-                }
-                else
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white; 
-                }
-
+                roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = ((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y) ? Color.red : Color.white;
                 preRoom = curRoom;
             }
             
@@ -78,16 +60,7 @@ public class MiniMap : MonoBehaviour
             if (playerPos.x < (curRoom.x * 200 - 100))
             {
                 curRoom = new Vector2Int(curRoom.x - 1, curRoom.y);
-
-                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red;
-                }
-                else
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white;
-                }
-
+                roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = ((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y) ? Color.red : Color.white;
                 preRoom = curRoom; 
             }
             
@@ -95,16 +68,7 @@ public class MiniMap : MonoBehaviour
             if (playerPos.x > (curRoom.x * 200 + 100))
             {
                 curRoom = new Vector2Int(curRoom.x + 1, curRoom.y);
-
-                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red;
-                }
-                else
-                {
-                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white;
-                }
-
+                roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = ((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y) ? Color.red : Color.white;
                 preRoom = curRoom; 
             }
 

@@ -89,6 +89,9 @@ public class PoolingManager : MonoBehaviour
     // 텍스트 표시
     public GameObject FloatingText;
 
+    // 풀셋 -> 부모를 캔버스로 둬야하는 UI를 제외한 프리팹은 부모를 풀셋으로
+    public GameObject poolSet; 
+
     // AbilityArrow1Hit를 저장 할 리스트
     public List<Tuple<GameObject, ObjType>> AbilityArrow1HitEffects = new List<Tuple<GameObject, ObjType>>();
 
@@ -227,6 +230,10 @@ public class PoolingManager : MonoBehaviour
                 {
                     GenSubTask(type, obj);
                 }
+                else // 부모를 캔버스로 둬야하는 UI를 제외한 프리팹은 부모를 풀셋으로
+                {
+                    obj.transform.SetParent(poolSet.transform);
+                }
 
                 // 오브젝트 비활성화
                 obj.SetActive(false);
@@ -294,7 +301,7 @@ public class PoolingManager : MonoBehaviour
         poolPref[type].Enqueue(obj);
     }
 
-        // 비활성화전에 따로 처리해줘야 하는 프리팹 처리
+    // 비활성화전에 따로 처리해줘야 하는 프리팹 처리
     void GenSubTask(ObjType type, GameObject obj)
     {
         switch(type)

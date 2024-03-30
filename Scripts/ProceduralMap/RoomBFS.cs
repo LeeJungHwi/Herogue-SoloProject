@@ -35,6 +35,9 @@ public class RoomBFS : MonoBehaviour
         checkDir.Add(new Vector2Int(1, 0));
         checkDir.Add(new Vector2Int(0, -1));
         checkDir.Add(new Vector2Int(0, 1));
+
+        // 미니맵
+        miniMap = GameObject.Find(DataManager.instance.character.ToString() + "Canvas").GetComponentInChildren<MiniMap>();
     }
 
     void Update()
