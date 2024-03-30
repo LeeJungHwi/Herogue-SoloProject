@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 // 목적 : 문의 다음방이 없는 이슈 픽스 + 시작방에서 가장 거리가 먼 방에 보스 생성
 public class RoomBFS : MonoBehaviour
@@ -15,7 +16,7 @@ public class RoomBFS : MonoBehaviour
     public RoomTemplates templates; // 방모델
     int maxDis = 0; // 최대거리
     public Vector3 maxDisPos = Vector3.zero; // 최대거리 위치
-    bool isBFS = false; // BFS 돌렸는지 체크
+    public bool isBFS = false; // BFS 돌렸는지 체크
     public MiniMap miniMap; // 던전 미니맵
 
     void Awake()
@@ -87,6 +88,8 @@ public class RoomBFS : MonoBehaviour
         dis[10, 11] = 1;
         maxDis = 1;
         maxDisPos = new Vector3(1800, 0, 2000);
+        miniMap.curRoom = new Vector2Int(10, 10);
+        miniMap.preRoom = new Vector2Int(10, 10);
 
         while(checkPos.Count != 0) // 큐가 빌때까지
         {
@@ -283,12 +286,13 @@ public class RoomBFS : MonoBehaviour
             }
         }
 
-        // 이전 스테이지에서 활성화했던 미니맵 타일 초기화
+        // 이전 스테이지에서 활성화했던 미니맵 타일 초기화 및 보스방 타일 다시 흰색으로
         for(int i = 0; i < miniMap.drawIndex.Count; i++)
         {
             miniMap.roomTilePref[miniMap.drawIndex[i]].SetActive(false);
         }
         miniMap.drawIndex.Clear();
+        miniMap.roomTilePref[(int)maxDisPos.x / 200 * 21 + (int)maxDisPos.z / 200].GetComponent<UnityEngine.UI.Image>().color = Color.white;
 
         // 최대거리, BFS체크 초기화
         maxDisPos = Vector3.zero;

@@ -10,6 +10,108 @@ public class MiniMap : MonoBehaviour
     public RoomBFS roomBFS; // 그래프
     public List<GameObject> roomTilePref = new List<GameObject>(); // 미니맵에 표시 할 타일
     public List<int> drawIndex = new List<int>(); // 인덱스 백업
+    public Player player; // 플레이어
+    public Vector2Int curRoom; // 현재 플레이어가 위치한 방의 좌표, BFS 돌릴때 시작방 (10,10)으로 초기화함
+    public Vector2Int preRoom; // 이전에 플레이어가 위치했던 방의 좌표, BFS 돌릴때 시작방 (10,10)으로 초기화함
+
+    // 플레이어가 있는 방의 타일을 초록색으로
+    void Update()
+    {
+        // 던전일때만
+        if(!player.isShelter)
+        {
+            // 플레이어의 현재 위치를 가져와서
+            Vector2Int playerPos = new Vector2Int((int)player.transform.position.x, (int)player.transform.position.z);
+
+            // 좌우는 z축 상하는 x축으로 결정됨
+            // 현재방을 기준으로 상하좌우로 이동하면 현재 플레이어가 위치한 방 갱신해줘야함
+            // 갱신해주면서 플레이어가 이전에 위치한 방은 다시 흰색으로 돌려놔야함(단, 보스방은 빨간색으로 돌려야함)
+            // 흰색으로 돌리고나서 이전에 플레이어가 위치했던 방을 현재 방으로 갱신해줘야함
+
+            // 1.플레이어가 왼쪽방에 간다고 생각해보자(z)
+            // 현재 플레이어 위치 < (현재 플레이어가 위치한 방의 좌표 - 100) 이면 왼쪽방
+
+            // 2.풀레이어가 오른쪽방에 간다고 생각해보자(z)
+            // 현재 플레이어 위치 > (현재 플레이어가 위치한 방의 좌표 + 100) 이면 오른쪽방
+
+            // 3.플레이어가 위쪽방에 간다고 생각해보자(x)
+            // 현재 플레이어 위치 < (현재 플레이어가 위치한 방의 좌표 - 100) 이면 위쪽방
+
+            // 4.플레이어가 아래쪽방에 간다고 생각해보자(x)
+            // 현재 플레이어 위치 > (현재 플레이어가 위치한 방의 좌표 + 100) 이면 아래쪽방
+
+            // 왼쪽
+            if (playerPos.y < (curRoom.y * 200 - 100))
+            {
+                curRoom = new Vector2Int(curRoom.x, curRoom.y - 1); // 현재 플레이어가 위치한 방 갱신
+
+                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red; // 플레이어가 이전에 위치한 방이 보스방이면 빨간색으로
+                }
+                else
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white; // 플레이어가 이전에 위치한 방이 일반방이면 흰색으로
+                }
+
+                preRoom = curRoom; // 플레이어가 위치했던 방의 좌표 갱신
+            }
+            
+            // 오른쪽
+            if (playerPos.y > (curRoom.y * 200 + 100))
+            {
+                curRoom = new Vector2Int(curRoom.x, curRoom.y + 1);
+
+                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red;
+                }
+                else
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white; 
+                }
+
+                preRoom = curRoom;
+            }
+            
+            // 위쪽
+            if (playerPos.x < (curRoom.x * 200 - 100))
+            {
+                curRoom = new Vector2Int(curRoom.x - 1, curRoom.y);
+
+                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red;
+                }
+                else
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white;
+                }
+
+                preRoom = curRoom; 
+            }
+            
+            // 아래쪽
+            if (playerPos.x > (curRoom.x * 200 + 100))
+            {
+                curRoom = new Vector2Int(curRoom.x + 1, curRoom.y);
+
+                if((int)roomBFS.maxDisPos.x / 200 == preRoom.x && (int)roomBFS.maxDisPos.z / 200 == preRoom.y)
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.red;
+                }
+                else
+                {
+                    roomTilePref[preRoom.x * 21 + preRoom.y].GetComponent<Image>().color = Color.white;
+                }
+
+                preRoom = curRoom; 
+            }
+
+            // 플레이어가 현재 위치한 방의 타일을 초록색으로
+            roomTilePref[curRoom.x * 21 + curRoom.y].GetComponent<Image>().color = Color.green;
+        }
+    }
 
     // 미니맵 표시하는 함수
     public void DrawMiniMap()
@@ -31,5 +133,8 @@ public class MiniMap : MonoBehaviour
                 }
             }
         }
+
+        // maxDisPos 보스 방은 빨간색으로
+        roomTilePref[(int)roomBFS.maxDisPos.x / 200 * 21 + (int)roomBFS.maxDisPos.z / 200].GetComponent<Image>().color = Color.red;
     }
 }
