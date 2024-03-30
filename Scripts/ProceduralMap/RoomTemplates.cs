@@ -75,6 +75,18 @@ public class RoomTemplates : MonoBehaviour
     // RoomBFS
     public RoomBFS roomBFS;
 
+    // 기본스테이지
+    public int baseStage = 5;
+    
+    // 방 계수
+    public int stageCoef = 3;
+
+    // 기본몬스터 수
+    public int baseMonster = 10;
+
+    // 몬스터 수 계수
+    public int monsterCoef = 6;
+
     void Awake()
     {
         // 플레이어 할당
@@ -107,14 +119,9 @@ public class RoomTemplates : MonoBehaviour
 
             // 대기시간이 0이하이고 보스가 생성되었을때
             // 그때부터 생성하는데 몬스터의 수를 제한
-            // 현재스테이지를 5로나눈 몫
-            // 즉 5 스테이지는 1, 10스테이지는 2
-            // 이것을 기본10 마리에 5씩 곱해준다
-            // 결과로 0~4 스테이지는 10 마리
-            // 5~9 스테이지는 15 마리
-            // 10~14 스테이지는 20 마리
-            // 몬스터 생성
-            if (waitTime <= 0 && monsters.Count < 15 + 5 * (currentStage / 5) && spawnedBoss == true)
+            // 기본몬스터 수 + (현재스테이지 / 스테이지계수) * 몬스터 수 계수
+            // 0~2 스테이지는 10개까지, 3~5 스테이지는 16개까지, 6~8 스테이지는 22개까지, ...
+            if (waitTime <= 0 && monsters.Count < baseMonster + currentStage / stageCoef * monsterCoef && spawnedBoss == true)
             {
                 MonsterSpawn();
             }

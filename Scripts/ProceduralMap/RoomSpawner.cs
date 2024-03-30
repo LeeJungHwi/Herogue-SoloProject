@@ -44,9 +44,9 @@ public class RoomSpawner : MonoBehaviour
             if (spawned == false)
             {
                 // 방 생성 제한 부분
-                // 현재스테이지를 5로나눈 몫 => 즉 5 스테이지는 1, 10스테이지는 2 => 이것을 기본10스테이지에 5씩 곱해준다
-                // 결과로 0~4 스테이지는 10개까지, 5~9 스테이지는 15개까지, 10~14 스테이지는 20개까지, ...
-                if (templates.rooms.Count > 10 + 5 * (templates.currentStage / 5))
+                // 기본스테이지 + (현재스테이지 / 스테이지계수) * 스테이지계수
+                // 0~2 스테이지는 5개까지, 3~5 스테이지는 8개까지, 6~8 스테이지는 11개까지, ...
+                if (templates.rooms.Count > templates.baseStage + templates.currentStage / templates.stageCoef * templates.stageCoef)
                 {
                     // 스폰상태
                     spawned = true;

@@ -44,7 +44,7 @@ public class RoomBFS : MonoBehaviour
         }
 
         // 방이 모두 생성된 상태
-        if(templates.rooms.Count > 10 + 5 * (templates.currentStage / 5))
+        if(templates.rooms.Count > templates.baseStage + templates.currentStage / templates.stageCoef * templates.stageCoef)
         {
             // 방이 모두 생성되고 BFS 돌림
             // 문의 다음방이 없는 버그 픽스 + 시작방에서 가장 거리가 먼 방에 보스 생성
