@@ -358,9 +358,9 @@ public class Player : MonoBehaviour
     void StopBorder()
     {
         // 플레이어가 경계와 닿았는지 체크
-        // 플레이어가 벽을 뚫는문제 : 레이캐스트 길이 늘렸음 
+        // 플레이어가 벽을 뚫는문제 : 레이캐스트 길이 늘렸음 + 플레이어 이동방향으로 레이를 쏨
         // Debug.DrawRay(transform.position + transform.up * 5, transform.forward * 5, Color.green);
-        isBorder = Physics.Raycast(transform.position + transform.up * 5, transform.forward, 5, LayerMask.GetMask("Border"));
+        isBorder = Physics.Raycast(transform.position + transform.up * 5, joystickScript.moveVec, 5, LayerMask.GetMask("Border"));
     }
     
     public void MobileShoot()
