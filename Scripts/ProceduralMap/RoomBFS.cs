@@ -16,6 +16,7 @@ public class RoomBFS : MonoBehaviour
     int maxDis = 0; // 최대거리
     public Vector3 maxDisPos = Vector3.zero; // 최대거리 위치
     bool isBFS = false; // BFS 돌렸는지 체크
+    public MiniMap miniMap; // 던전 미니맵
 
     void Awake()
     {
@@ -94,7 +95,7 @@ public class RoomBFS : MonoBehaviour
             checkPos.Dequeue();
 
             // 기준위치 방의 타입에 따라 문의 다음방이 없으면
-            // 3면이 막힌방을 다음방에 생성하고 거리저장 최대거리갱신 최대거리위치갱신
+            // 3면이 막힌방을 다음방에 생성하고 거리저장 최대거리갱신 최대거리위치갱신 미니맵에표시한인덱스저장
 
             string checkDoor = graph[standardPos.x, standardPos.y].ToString(); // 체크 할 문 : 방타입을 일단 문자열로 가져옴 B BL TBL ....
 
@@ -110,7 +111,7 @@ public class RoomBFS : MonoBehaviour
 
                 switch(curDir) // 현재 체크 할 문 방향에 따라 방이있는지 체크하고 없으면 
                 {
-                    case 'T': // 위쪽에 방이 있는지 체크하고 없으면 B만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신
+                    case 'T': // 위쪽에 방이 있는지 체크하고 없으면 B만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신 미니맵에표시한인덱스저장
                         if(graph[standardPos.x - 1, standardPos.y] == ObjType.화살)
                         {
                             // 방 생성 거리저장
@@ -123,9 +124,13 @@ public class RoomBFS : MonoBehaviour
                                 maxDis = dis[standardPos.x - 1, standardPos.y];
                                 maxDisPos = new Vector3((standardPos.x - 1) * 200, 0, standardPos.y * 200);
                             }
+
+                            // 생성한 막힌 방 미니맵에 표시하고 인덱스 백업
+                            miniMap.roomTilePref[(standardPos.x - 1) * 21 + standardPos.y].SetActive(true);
+                            miniMap.drawIndex.Add((standardPos.x - 1) * 21 + standardPos.y);
                         }
                         break; 
-                    case 'B': // 아래쪽에 방이 있는지 체크하고 없으면 T만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신
+                    case 'B': // 아래쪽에 방이 있는지 체크하고 없으면 T만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신 미니맵에표시한인덱스저장
                         if(graph[standardPos.x + 1, standardPos.y] == ObjType.화살)
                         {
                             RoomSpawn(ObjType.T, new Vector3((standardPos.x + 1) * 200, 0, standardPos.y * 200));
@@ -136,10 +141,14 @@ public class RoomBFS : MonoBehaviour
                             {
                                 maxDis = dis[standardPos.x + 1, standardPos.y];
                                 maxDisPos = new Vector3((standardPos.x + 1) * 200, 0, standardPos.y * 200);
-                            }                           
+                            }            
+
+                            // 생성한 막힌 방 미니맵에 표시하고 인덱스 백업
+                            miniMap.roomTilePref[(standardPos.x + 1) * 21 + standardPos.y].SetActive(true);   
+                            miniMap.drawIndex.Add((standardPos.x + 1) * 21 + standardPos.y);            
                         }
                         break;
-                    case 'L': // 왼쪽에 방이 있는지 체크하고 없으면 R만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신
+                    case 'L': // 왼쪽에 방이 있는지 체크하고 없으면 R만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신 미니맵에표시한인덱스저장
                         if(graph[standardPos.x, standardPos.y - 1] == ObjType.화살)
                         {
                             RoomSpawn(ObjType.R, new Vector3(standardPos.x * 200, 0, (standardPos.y - 1) * 200));
@@ -151,9 +160,13 @@ public class RoomBFS : MonoBehaviour
                                 maxDis = dis[standardPos.x, standardPos.y - 1];
                                 maxDisPos = new Vector3(standardPos.x * 200, 0, (standardPos.y - 1) * 200);
                             }                           
+
+                            // 생성한 막힌 방 미니맵에 표시하고 인덱스 백업
+                            miniMap.roomTilePref[standardPos.x * 21 + standardPos.y - 1].SetActive(true);
+                            miniMap.drawIndex.Add(standardPos.x * 21 + standardPos.y - 1); 
                         }
                         break;
-                    case 'R': // 오른쪽에 방이 있는지 체크하고 없으면 L만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신
+                    case 'R': // 오른쪽에 방이 있는지 체크하고 없으면 L만 열려있는 방 생성 거리저장 최대거리갱신 최대거리위치갱신 미니맵에표시한인덱스저장
                         if(graph[standardPos.x, standardPos.y + 1] == ObjType.화살)
                         {
                             RoomSpawn(ObjType.L, new Vector3(standardPos.x * 200, 0, (standardPos.y + 1) * 200));
@@ -165,6 +178,10 @@ public class RoomBFS : MonoBehaviour
                                 maxDis = dis[standardPos.x, standardPos.y + 1];
                                 maxDisPos = new Vector3(standardPos.x * 200, 0, (standardPos.y + 1) * 200);
                             }      
+
+                            // 생성한 막힌 방 미니맵에 표시하고 인덱스 백업
+                            miniMap.roomTilePref[standardPos.x * 21 + standardPos.y + 1].SetActive(true);
+                            miniMap.drawIndex.Add(standardPos.x * 21 + standardPos.y + 1); 
                         }
                         break;
                 }
@@ -240,6 +257,9 @@ public class RoomBFS : MonoBehaviour
                 }  
             }
         }
+
+        // 그래프 돌면서 미니맵에 방 표시
+        miniMap.DrawMiniMap();
     }
 
     // 방생성
@@ -250,10 +270,10 @@ public class RoomBFS : MonoBehaviour
         instantRoom.transform.rotation = poolingManager.RandomMapPrefs[(int)type - 53].transform.rotation;
     }
 
-    // 그래프, 거리, 최대거리, BFS체크
     // 다음 BFS를 위해서 다음스테이지 또는 마을로 갈때 초기화
     public void InitForNextBFS()
     {
+        // 그래프, 거리 초기화
         for(int i = 0; i < 21; i++)
         {
             for(int j = 0; j < 21; j++)
@@ -263,6 +283,14 @@ public class RoomBFS : MonoBehaviour
             }
         }
 
+        // 이전 스테이지에서 활성화했던 미니맵 타일 초기화
+        for(int i = 0; i < miniMap.drawIndex.Count; i++)
+        {
+            miniMap.roomTilePref[miniMap.drawIndex[i]].SetActive(false);
+        }
+        miniMap.drawIndex.Clear();
+
+        // 최대거리, BFS체크 초기화
         maxDisPos = Vector3.zero;
         isBFS = false;
     }
