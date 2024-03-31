@@ -315,7 +315,7 @@ public class PoolingManager : MonoBehaviour
             
             // 몬스터체력바는 부모를 캔버스로 설정해준뒤 비활성화
             case ObjType.몬스터체력바:
-                obj.transform.SetParent(Canvas.transform);
+                obj.transform.SetParent(Canvas.transform.GetChild(0));
                 return;
         }
     }
