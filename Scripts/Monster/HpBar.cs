@@ -61,23 +61,23 @@ public class HpBar : MonoBehaviour
             instantHpBar = poolingManager.GetObj(ObjType.몬스터체력바);
             spawnHpBar = true;
         }
-        if(enemy.enemyType == Enemy.Type.Bat)
+        if(enemy.enemyType == Type.Bat)
         {
             instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 15f, 0));
         }
-        else if(enemy.enemyType == Enemy.Type.Bomb)
+        else if(enemy.enemyType == Type.Bomb)
         {
             instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 20f, 0));
         }
-        else if(enemy.enemyType == Enemy.Type.Ciclop)
+        else if(enemy.enemyType == Type.Ciclop)
         {
             instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 30f, 0));
         }
-        else if(enemy.enemyType == Enemy.Type.Golem)
+        else if(enemy.enemyType == Type.Golem)
         {
             instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
         }
-        else if(enemy.enemyType == Enemy.Type.Rabbit)
+        else if(enemy.enemyType == Type.Rabbit)
         {
             instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
         }

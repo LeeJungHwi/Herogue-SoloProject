@@ -449,13 +449,13 @@ public class PoolingManager : MonoBehaviour
                 Enemy enemyNormal = obj.GetComponent<Enemy>();
 
                 // 스테이지에 따라 스탯 조정
-                if (enemyNormal.enemyType == Enemy.Type.Bat) // 기본
+                if (enemyNormal.enemyType == Type.Bat) // 기본
                 {
                     enemyNormal.maxHealth = 1000 + 300 * (templates.currentStage);
                     enemyNormal.curHealth = 1000 + 300 * (templates.currentStage);
                     enemyNormal.damage = 100 + 50 * (templates.currentStage);
                 }
-                else if (enemyNormal.enemyType == Enemy.Type.Bomb) // 폭탄
+                else if (enemyNormal.enemyType == Type.Bomb) // 폭탄
                 {
                     enemyNormal.maxHealth = 100 + 100 * (templates.currentStage);
                     enemyNormal.curHealth = 100 + 100 * (templates.currentStage);
@@ -466,13 +466,13 @@ public class PoolingManager : MonoBehaviour
                     obj.layer = 9;
                     enemyNormal.isDead = false;
                 }
-                else if (enemyNormal.enemyType == Enemy.Type.Golem) // 돌진
+                else if (enemyNormal.enemyType == Type.Golem) // 돌진
                 {
                     enemyNormal.maxHealth = 2000 + 500 * (templates.currentStage);
                     enemyNormal.curHealth = 2000 + 500 * (templates.currentStage);
                     enemyNormal.damage = 200 + 100 * (templates.currentStage);
                 }
-                else if (enemyNormal.enemyType == Enemy.Type.Rabbit) // 토끼
+                else if (enemyNormal.enemyType == Type.Rabbit) // 토끼
                 {
                     // 원거리 데미지는 플레이어 원거리피격에서 조절
                     enemyNormal.maxHealth = 1500 + 500 * (templates.currentStage);

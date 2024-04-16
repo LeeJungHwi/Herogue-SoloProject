@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 // 목적 : 문의 다음방이 없는 이슈 픽스 + 시작방에서 가장 거리가 먼 방에 보스 생성
 public class RoomBFS : MonoBehaviour

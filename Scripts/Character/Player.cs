@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
     private Rigidbody rigid;
 
     // 플레이어와 가까이 있는 오브젝트
-    private GameObject nearObject;
+    public GameObject nearObject;
 
     // 조이스틱 스크립트
     public Joystick joystickScript;
@@ -631,6 +631,31 @@ public class Player : MonoBehaviour
         {
             // 떨어지면 죽음
             StartCoroutine("DoDie");
+        }
+
+        if(other.tag == "BossRoom")
+        {
+            Debug.Log("BossRoom detected");
+        }
+
+        // 가까운 오브젝트 있음
+        if(other.tag == "GoToDungeon" || other.tag == "Shop" || other.tag == "BossRoom")
+        {
+            nearObject = other.gameObject;
+        }
+
+        // 목표베이스 퀘스트 처리
+        if(other.tag == "Shop" || other.tag == "GoToDungeon" || other.tag == "BossRoom")
+        {
+            foreach (QuestBase quest in QuestManager.instance.QuestList)
+            {
+                if (quest is ObjectiveBase)
+                {
+                    ObjectiveBase objectiveBase = quest as ObjectiveBase;
+                    objectiveBase.Check();
+                    return;
+                }
+            }
         }
     }
 
@@ -1603,11 +1628,14 @@ public class Player : MonoBehaviour
         int random = Random.Range(0, 2); // 0~1
         if (random == 0)
         {
-            if (enemyScript.enemyType != Enemy.Type.Ciclop || enemyScript.enemyType != Enemy.Type.Bomb)
+            if (enemyScript.enemyType != Type.Ciclop || enemyScript.enemyType != Type.Bomb)
             {
                 // 몬스터 죽음
                 if (enemyScript.curHealth - enemyScript.damage <= 0)
                 {
+                    // 카운트베이스 퀘스트 처리
+                    enemyScript.EnemyKillQuestCheck();
+
                     // 아이템 드랍
                     if (!enemyScript.isDrop)
                     {

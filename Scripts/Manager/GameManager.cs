@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
     // 액티브스킬 패널
     public GameObject abilityPanel;
 
+    // 퀘스트 패널
+    public GameObject questPanel;
+
     void Start()
     {
         // 게임화면 시작시 배경음 슬라이더값 세팅
@@ -112,6 +115,15 @@ public class GameManager : MonoBehaviour
             // 액티브스킬 패널 활성화
             abilityPanel.SetActive(true);
         }
+        else if(panelType == "Quest")
+        {
+            // 퀘스트 패널이면
+            // 퀘스트 패널 활성화
+            questPanel.SetActive(true);
+
+            // 퀘스트 UI 업데이트
+            QuestManager.instance.UpdateUI();
+        }
 
         // 사운드
         SoundManager.instance.SFXPlay(ObjType.버튼소리);
@@ -178,6 +190,12 @@ public class GameManager : MonoBehaviour
             // 액티브스킬 패널이면
             // 액티브스킬 패널 비활성화
             abilityPanel.SetActive(false);
+        }
+        else if(panelType == "Quest")
+        {
+            // 퀘스트 패널이면
+            // 퀘스트 패널 비활성화
+            questPanel.SetActive(false);
         }
 
         // 사운드

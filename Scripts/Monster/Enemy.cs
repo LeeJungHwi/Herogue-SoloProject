@@ -5,11 +5,11 @@ using UnityEngine.AI;
 using TMPro;
 using System;
 
+// 몬스터 타입종류
+public enum Type { Bat, Golem, Rabbit, Ciclop, Bomb };
+
 public class Enemy : MonoBehaviour
 {
-    // 몬스터 타입종류
-    public enum Type { Bat, Golem, Rabbit, Ciclop, Bomb };
-
     // 몬스터 타입을 저장할 변수
     public Type enemyType;
 
@@ -799,9 +799,14 @@ public class Enemy : MonoBehaviour
         else
         {
             // 죽어있는 상태
+
+            // 카운트베이스 퀘스트 처리
+            EnemyKillQuestCheck();
+            
             if(enemyType != Type.Ciclop && enemyType != Type.Bomb)
             {
                 // 보스와 폭탄을 제외한 몬스터
+
                 // 아이템 드랍
                 ItemDrop(false);
 
@@ -817,6 +822,10 @@ public class Enemy : MonoBehaviour
             else if(enemyType == Type.Bomb)
             {
                 // 폭탄
+
+                // 카운트베이스 퀘스트 처리
+                EnemyKillQuestCheck();
+
                 // 아이템 드랍
                 ItemDrop(false);
 
@@ -853,6 +862,10 @@ public class Enemy : MonoBehaviour
             else if(enemyType == Type.Ciclop)
             {
                 // 보스
+
+                // 카운트베이스 퀘스트 처리
+                EnemyKillQuestCheck();
+
                 // 아이템 드랍
                 ItemDrop(true);
 
@@ -1105,6 +1118,9 @@ public class Enemy : MonoBehaviour
     // 즉사와 꿈의끝
     public void InstantDeathAndEndOfDream()
     {
+        // 카운트베이스 퀘스트 처리
+        EnemyKillQuestCheck();
+        
         // 아이템드랍
         ItemDrop(false);
 
@@ -1137,5 +1153,46 @@ public class Enemy : MonoBehaviour
         instantHealingText.GetComponent<TextMeshPro>().text = "+" + (playerDamage * 20 / 100).ToString();
         instantHealingText.transform.position = transform.position + Vector3.up * 20;
         instantHealingText.transform.rotation = poolingManager.FloationTextPrefs[1].transform.rotation;
+    }
+
+    // 몬스터 킬 퀘스트 체크
+    public void EnemyKillQuestCheck()
+    {
+        // 일반몬스터
+        if(enemyType == Type.Bat || enemyType == Type.Golem || enemyType == Type.Rabbit || enemyType == Type.Bomb)
+        {
+            foreach (QuestBase quest in QuestManager.instance.QuestList)
+            {
+                if (quest is KillNormalQuest)
+                {
+                    CountBase countBase = quest as CountBase;
+                    countBase.CurCnt++;
+                    break;
+                }
+            }
+
+            foreach (QuestBase quest in QuestManager.instance.QuestList)
+            {
+                if (quest is KillNormalLoopQuest)
+                {
+                    CountBase countBase = quest as CountBase;
+                    countBase.CurCnt++;
+                    break;
+                }
+            }
+
+            return;
+        }
+
+        // 보스
+        foreach (QuestBase quest in QuestManager.instance.QuestList)
+        {
+            if (quest is KillBossQuest)
+            {
+                CountBase countBase = quest as CountBase;
+                countBase.CurCnt++;
+                return;
+            }
+        }
     }
 }

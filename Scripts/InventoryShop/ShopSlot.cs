@@ -174,6 +174,17 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
 
             // 사운드
             SoundManager.instance.SFXPlay(ObjType.버튼소리);
+
+            // 카운트베이스 퀘스트 처리 -> 얘는 카운팅만하면 자동으로 Check함
+            foreach (QuestBase quest in QuestManager.instance.QuestList)
+            {
+                if (quest is ShopBuyQuest)
+                {
+                    CountBase countBase = quest as CountBase;
+                    countBase.CurCnt++;
+                    return;
+                }
+            }
         }
         else
         {
