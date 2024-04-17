@@ -7,7 +7,7 @@ using TMPro;
 public class AbilityHolyknight1Collision : MonoBehaviour
 {
     // 스킬 기본 데미지
-    private float damage = 100f;
+    private float damage = 300f;
 
     // 플레이어
     private Player player;
@@ -44,10 +44,13 @@ public class AbilityHolyknight1Collision : MonoBehaviour
 
         for (int i = 0; i < events; i++)
         {
-            // 충돌 이벤트 수에따라 충돌시 생성할 이펙트
-            instantHit = poolingManager.GetObj(ObjType.성기사스킬2충돌이펙트);
-            instantHit.transform.position = collisionEvents[i].intersection;
-            instantHit.transform.rotation = Quaternion.LookRotation(collisionEvents[i].normal);
+            // 바닥에 닿으면 충돌이펙트 생성
+            if(other.layer == 12)
+            {
+                instantHit = poolingManager.GetObj(ObjType.성기사스킬2충돌이펙트);
+                instantHit.transform.position = collisionEvents[i].intersection;
+                instantHit.transform.rotation = Quaternion.LookRotation(collisionEvents[i].normal);
+            }
 
             // 스킬 사운드
             SoundManager.instance.SFXPlay(ObjType.성기사스킬2소리);
