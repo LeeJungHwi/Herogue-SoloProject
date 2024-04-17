@@ -633,11 +633,6 @@ public class Player : MonoBehaviour
             StartCoroutine("DoDie");
         }
 
-        if(other.tag == "BossRoom")
-        {
-            Debug.Log("BossRoom detected");
-        }
-
         // 가까운 오브젝트 있음
         if(other.tag == "GoToDungeon" || other.tag == "Shop" || other.tag == "BossRoom")
         {
@@ -653,6 +648,11 @@ public class Player : MonoBehaviour
                 {
                     ObjectiveBase objectiveBase = quest as ObjectiveBase;
                     objectiveBase.Check();
+                    if(other.tag == "BossRoom")
+                    {
+                        other.gameObject.SetActive(false);
+                        Physics.IgnoreLayerCollision(7, 9, true);
+                    }
                     return;
                 }
             }

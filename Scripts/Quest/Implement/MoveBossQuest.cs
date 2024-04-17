@@ -18,7 +18,7 @@ public class MoveBossQuest : ObjectiveBase, ISequential
     public override void Complete()
     {
         // 다음 퀘스트 추가
-        QuestManager.instance.AddQuest(nextQuest);
+        AddNextQuest();
         
         // 완료된 퀘스트 삭제
         QuestManager.instance.DeleteQuest(this);
