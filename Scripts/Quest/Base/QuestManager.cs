@@ -38,9 +38,7 @@ public class QuestManager : MonoBehaviour
         QuestList.Remove(quest);
 
         // 퀘스트 완료 알림
-        GameObject instantQuestAddedText = poolingManager.GetObj(ObjType.퀘스트완료텍스트);
-        instantQuestAddedText.transform.position = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().transform.position + Vector3.up * 20;
-        instantQuestAddedText.transform.rotation = poolingManager.FloationTextPrefs[3].transform.rotation;
+        QuestNotify($" {quest.questName} 완료");
     }
     
     // 퀘스트 UI 업데이트
@@ -62,5 +60,15 @@ public class QuestManager : MonoBehaviour
 
         // 퀘스트텍스트에 표시
         questText.text = tempText.ToString();
+    }
+
+    // 퀘스트 진행상황 알림
+    public void QuestNotify(string info)
+    {
+        // 퀘스트 완료 알림
+        GameObject instantQuestAddedText = poolingManager.GetObj(ObjType.퀘스트완료텍스트);
+        instantQuestAddedText.transform.position = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>().transform.position + Vector3.up * 20;
+        instantQuestAddedText.transform.rotation = poolingManager.FloationTextPrefs[3].transform.rotation;
+        instantQuestAddedText.GetComponent<TMP_Text>().text = info;
     }
 }

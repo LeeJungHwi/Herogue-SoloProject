@@ -192,6 +192,10 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
                             // 카운트베이스 가져와서 카운팅
                             CountBase countBase = quest as CountBase;
                             countBase.CurCnt++;
+
+                            // 퀘스트 진행상황 알림
+                            QuestManager.instance.QuestNotify($"{countBase.questName} {countBase.CurCnt}/{countBase.completeCnt}");
+
                             return;
                         }
                     }

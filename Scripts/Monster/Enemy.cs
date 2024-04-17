@@ -1162,6 +1162,7 @@ public class Enemy : MonoBehaviour
                 {
                     CountBase countBase = quest as CountBase;
                     countBase.CurCnt++;
+                    QuestManager.instance.QuestNotify($"{countBase.questName} {countBase.CurCnt}/{countBase.completeCnt}"); // 퀘스트 진행상황 알림
                     break;
                 }
             }
@@ -1172,6 +1173,7 @@ public class Enemy : MonoBehaviour
                 {
                     CountBase countBase = quest as CountBase;
                     countBase.CurCnt++;
+                    QuestManager.instance.QuestNotify($"{countBase.questName} {countBase.CurCnt}/{countBase.completeCnt}"); // 퀘스트 진행상황 알림
                     break;
                 }
             }
@@ -1186,6 +1188,7 @@ public class Enemy : MonoBehaviour
             {
                 CountBase countBase = quest as CountBase;
                 countBase.CurCnt++;
+                QuestManager.instance.QuestNotify($"{countBase.questName} {countBase.CurCnt}/{countBase.completeCnt}"); // 퀘스트 진행상황 알림
                 return;
             }
         }
