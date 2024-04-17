@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 카운트 베이스 -> 킬, 구매 퀘스트가 상속
+// 카운트 베이스 -> 카운트 관련 퀘스트 상속
 public class CountBase : QuestBase
 {
     public int completeCnt; // 완료 개수
@@ -17,6 +17,7 @@ public class CountBase : QuestBase
             Check();
         }
     }
+    public int rewardCoin; // 퀘스트 보상 코인
 
     // 퀘스트 체크
     public override void Check()
@@ -25,10 +26,12 @@ public class CountBase : QuestBase
         if (curCnt >= completeCnt) Complete();
     }
 
-    // 퀘스트 완료
-    public override void Complete()
+    // 퀘스트 보상
+    protected virtual void Reward()
     {
-        // 완료된 퀘스트 삭제
-        QuestManager.instance.DeleteQuest(this);
+        // 코인 보상
+        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player.coin += rewardCoin;
+        if(player.coin > player.maxCoin) player.coin = player.maxCoin;
     }
 }

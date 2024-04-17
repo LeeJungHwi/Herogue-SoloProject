@@ -50,7 +50,7 @@ public enum ObjType
     몬스터체력바,
 
     // 텍스트 표시
-    데미지텍스트, 회복텍스트, 회피텍스트,
+    데미지텍스트, 회복텍스트, 회피텍스트, 퀘스트완료텍스트,
 
     // 사운드
     슈팅소리, 무빙소리, 대쉬소리, 아이템소리, 기본공격소리, 크리티컬공격소리, 방벽소리, 박스소리,
@@ -226,7 +226,7 @@ public class PoolingManager : MonoBehaviour
                 GameObject obj = Instantiate(prefab);
 
                 // 비활성화전에 따로 처리해줘야 하는 프리팹 처리
-                if(type == ObjType.데미지텍스트 || type == ObjType.회복텍스트 || type == ObjType.회피텍스트 || type == ObjType.몬스터체력바)
+                if(type == ObjType.데미지텍스트 || type == ObjType.회복텍스트 || type == ObjType.회피텍스트 || type == ObjType.퀘스트완료텍스트 || type == ObjType.몬스터체력바)
                 {
                     GenSubTask(type, obj);
                 }
@@ -260,7 +260,7 @@ public class PoolingManager : MonoBehaviour
             || type == ObjType.키클롭스눈 || type == ObjType.당근그룹 || type == ObjType.법사미사일 || type == ObjType.전사콤보공격1이펙트 
             || type == ObjType.전사콤보공격2이펙트 || type == ObjType.전사콤보공격3이펙트 || type == ObjType.블랙스미스콤보공격1이펙트 || type == ObjType.블랙스미스콤보공격2이펙트 
             || type == ObjType.블랙스미스콤보공격3이펙트 || type == ObjType.성기사콤보공격1이펙트 || type == ObjType.성기사콤보공격2이펙트 || type == ObjType.성기사콤보공격3이펙트
-            || type == ObjType.데미지텍스트 || type == ObjType.회복텍스트 || type == ObjType.회피텍스트 || type == ObjType.몬스터체력바 
+            || type == ObjType.데미지텍스트 || type == ObjType.회복텍스트 || type == ObjType.회피텍스트 || type == ObjType.퀘스트완료텍스트 || type == ObjType.몬스터체력바 
             || type == ObjType.한발노리기 || type == ObjType.백발백중 || type == ObjType.방벽 || type == ObjType.초월방벽 
             || type == ObjType.흡혈귀 || type == ObjType.거울 || type == ObjType.도박꾼 || type == ObjType.저거너트 
             || type == ObjType.즉사 || type == ObjType.시크릿 || type == ObjType.혈액갑옷 || type == ObjType.버티기 
@@ -310,6 +310,7 @@ public class PoolingManager : MonoBehaviour
             case ObjType.데미지텍스트:
             case ObjType.회복텍스트:
             case ObjType.회피텍스트:
+            case ObjType.퀘스트완료텍스트:
                 obj.transform.SetParent(FloatingText.transform);
                 return;
             
@@ -367,6 +368,7 @@ public class PoolingManager : MonoBehaviour
             case ObjType.데미지텍스트:
             case ObjType.회복텍스트:
             case ObjType.회피텍스트:
+            case ObjType.퀘스트완료텍스트:
                 obj.GetComponent<FloatingText>().waitTime = 2f;
                 obj.GetComponent<FloatingText>().alpha.a = 1f;
                 return;

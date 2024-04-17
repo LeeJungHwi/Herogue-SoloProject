@@ -5,16 +5,20 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Quest/Count/KillNormalLoop")]
 public class KillNormalLoopQuest : CountBase, ILoop
 {
-    public List<Type> enemyType = new List<Type>(); // 몬스터 타입
-
     // 퀘스트 완료
     public override void Complete()
     {
+        // 퀘스트 보상
+        Reward();
+
         // 퀘스트 다시 추가
         LoopQuest();
 
         // 완료한 퀘스트 삭제
         QuestManager.instance.DeleteQuest(this);
+
+        // 사운드
+        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
     }
 
     // 반복퀘스트

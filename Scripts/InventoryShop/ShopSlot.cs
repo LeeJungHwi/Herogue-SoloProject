@@ -180,9 +180,21 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
             {
                 if (quest is ShopBuyQuest)
                 {
-                    CountBase countBase = quest as CountBase;
-                    countBase.CurCnt++;
-                    return;
+                    // 상점구매퀘스트면
+                    ShopBuyQuest shopBuyQuest = quest as ShopBuyQuest;
+                    
+                    // 퀘스트에서 타겟 아이템타입 돌면서
+                    for(int i = 0; i < shopBuyQuest.itemType.Count; i++)
+                    {
+                        // 타겟 아이템 타임을 샀으면
+                        if(shopBuyQuest.itemType[i] == player.shopSlots[InventorySlot.inventorySlotNumSave].inventoryItem.itemType)
+                        {
+                            // 카운트베이스 가져와서 카운팅
+                            CountBase countBase = quest as CountBase;
+                            countBase.CurCnt++;
+                            return;
+                        }
+                    }
                 }
             }
         }

@@ -487,7 +487,6 @@ public class Enemy : MonoBehaviour
                         {
                             // 즉사
                             InstantDeathAndEndOfDream();
-                            return;
                         }
                     }
                 }
@@ -499,7 +498,6 @@ public class Enemy : MonoBehaviour
                     {
                         // 즉사
                         InstantDeathAndEndOfDream();
-                        return;
                     }
                 }
 
@@ -515,7 +513,6 @@ public class Enemy : MonoBehaviour
                         {
                             // 꿈의 끝
                             InstantDeathAndEndOfDream();
-                            return;
                         }
                     }
                 }
@@ -527,7 +524,6 @@ public class Enemy : MonoBehaviour
                     {
                         // 꿈의 끝
                         InstantDeathAndEndOfDream();
-                        return;
                     }
                 }
 

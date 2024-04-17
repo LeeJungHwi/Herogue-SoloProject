@@ -18,16 +18,16 @@ public class ShopBuyQuest : CountBase, ISequential
     // 퀘스트 완료
     public override void Complete()
     {
+        // 퀘스트 보상
+        Reward();
+
         // 다음 퀘스트 추가
-        AddNextQuest();
+        QuestManager.instance.AddQuest(nextQuest);
         
         // 완료된 퀘스트 삭제
         QuestManager.instance.DeleteQuest(this);
-    }
 
-    // 다음 퀘스트 추가
-    public void AddNextQuest()
-    {
-        QuestManager.instance.AddQuest(nextQuest);
+        // 사운드
+        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
     }
 }

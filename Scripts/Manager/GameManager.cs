@@ -123,6 +123,9 @@ public class GameManager : MonoBehaviour
 
             // 퀘스트 UI 업데이트
             QuestManager.instance.UpdateUI();
+
+            // 새로운 퀘스트 추가 이펙트 비활성화
+            QuestManager.instance.newQuestEffect.gameObject.SetActive(false);
         }
 
         // 사운드
