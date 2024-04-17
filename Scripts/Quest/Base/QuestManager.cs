@@ -9,12 +9,19 @@ using TMPro;
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager instance; // 싱글톤
-    private void Awake() { instance = this; }
+    //private void Awake() { instance = this; }
     public List<QuestBase> QuestList = new List<QuestBase>(); // 퀘스트리스트
     private StringBuilder tempText = new StringBuilder(); // 퀘스트텍스트에 표시할 텍스트
     public Text questText; // 퀘스트텍스트
     public PoolingManager poolingManager; // 풀 매니저
     public GameObject newQuestEffect; // 퀘스트창 버튼 UI에 새로운 퀘스트가 추가되었음을 표시할 이펙트
+
+    private void Start()
+    {
+        // 선택된 캐릭터
+        if (DataManager.instance.character.ToString() + "QuestManager" != gameObject.name) gameObject.SetActive(false);
+        else instance = this;
+    }
 
     // 퀘스트 추가
     public void AddQuest(QuestBase quest)
@@ -48,7 +55,7 @@ public class QuestManager : MonoBehaviour
             tempText.Append(QuestList[i].questName);
             if(QuestList[i] is CountBase countBase)
             {
-                tempText.Append($" {countBase.CurCnt}/{countBase.completeCnt} ");
+                tempText.Append($" {countBase.CurCnt}/{countBase.completeCnt}   보상 : {countBase.rewardCoin} Gold!");
             }
             tempText.AppendLine();
         }

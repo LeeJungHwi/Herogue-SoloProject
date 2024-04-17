@@ -25,5 +25,8 @@ public class MovePortalQuest : ObjectiveBase, ISequential
 
         // 사운드
         SoundManager.instance.SFXPlay(ObjType.포션사용소리);
+
+        // 퀘스트 진행방향 화살표 비활성화
+        GameObject.FindGameObjectWithTag("QuestNaviArrow").gameObject.SetActive(false);
     }
 }

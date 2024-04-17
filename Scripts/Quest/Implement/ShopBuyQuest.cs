@@ -14,6 +14,7 @@ public class ShopBuyQuest : CountBase, ISequential
         set { nextQuest = value; }
     }
     public List<ItemType> itemType = new List<ItemType>(); // 아이템 타입
+    
 
     // 퀘스트 완료
     public override void Complete()
@@ -29,5 +30,11 @@ public class ShopBuyQuest : CountBase, ISequential
 
         // 사운드
         SoundManager.instance.SFXPlay(ObjType.포션사용소리);
+
+        // 퀘스트 경계 비활성화
+        GameObject.FindGameObjectWithTag("QuestBorder").gameObject.SetActive(false);
+
+        // 퀘스트 진행방향 화살표 활성화
+        GameObject.FindGameObjectWithTag("QuestNaviArrow").gameObject.GetComponent<SpriteRenderer>().enabled = true;
     }
 }
