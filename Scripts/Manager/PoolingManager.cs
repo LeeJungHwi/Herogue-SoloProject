@@ -482,6 +482,7 @@ public class PoolingManager : MonoBehaviour
                 enemyNormal.isDrop = false; // 플래그
                 enemyNormal.isAttack = false;
                 enemyNormal.isChase = true;
+                enemyNormal.isDead = false;
 
                 return;
 

@@ -487,6 +487,7 @@ public class Enemy : MonoBehaviour
                         {
                             // 즉사
                             InstantDeathAndEndOfDream();
+                            return;
                         }
                     }
                 }
@@ -498,6 +499,7 @@ public class Enemy : MonoBehaviour
                     {
                         // 즉사
                         InstantDeathAndEndOfDream();
+                        return;
                     }
                 }
 
@@ -513,6 +515,7 @@ public class Enemy : MonoBehaviour
                         {
                             // 꿈의 끝
                             InstantDeathAndEndOfDream();
+                            return;
                         }
                     }
                 }
@@ -524,6 +527,7 @@ public class Enemy : MonoBehaviour
                     {
                         // 꿈의 끝
                         InstantDeathAndEndOfDream();
+                        return;
                     }
                 }
 
@@ -741,7 +745,7 @@ public class Enemy : MonoBehaviour
                 }
 
                 // 피격 리액션
-                StartCoroutine(OnDamage(reactVec));
+                if(gameObject.activeSelf) StartCoroutine(OnDamage(reactVec));
             }
         }
         else // 명중률 50 기준 50~99
@@ -796,9 +800,10 @@ public class Enemy : MonoBehaviour
             anim.SetTrigger("doDamaged");
             rigid.AddForce(reactVec * 10, ForceMode.Impulse);
         }
-        else
+        else if(!isDead)
         {
             // 죽어있는 상태
+            isDead = true;
 
             // 카운트베이스 퀘스트 처리
             EnemyKillQuestCheck();
@@ -822,9 +827,6 @@ public class Enemy : MonoBehaviour
             else if(enemyType == Type.Bomb)
             {
                 // 폭탄
-
-                // 카운트베이스 퀘스트 처리
-                EnemyKillQuestCheck();
 
                 // 아이템 드랍
                 ItemDrop(false);
@@ -862,9 +864,6 @@ public class Enemy : MonoBehaviour
             else if(enemyType == Type.Ciclop)
             {
                 // 보스
-
-                // 카운트베이스 퀘스트 처리
-                EnemyKillQuestCheck();
 
                 // 아이템 드랍
                 ItemDrop(true);
