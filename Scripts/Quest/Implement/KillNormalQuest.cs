@@ -30,6 +30,6 @@ public class KillNormalQuest : CountBase, ISequential
         Physics.IgnoreLayerCollision(7, 9, false);
 
         // 사운드
-        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
+        SoundManager.instance.SFXPlay(ObjType.퀘스트완료소리);
     }
 }

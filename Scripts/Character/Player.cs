@@ -735,9 +735,8 @@ public class Player : MonoBehaviour
         // 마을로
         templates.GotoShelter();
 
-        // 마을 배경음악 재생
-        int random = Random.Range(0, SoundManager.instance.bgmList.Length);
-        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[random], false);
+        // 마을 배경음악
+        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]);
     }
 
     public void MobileInteraction()
@@ -1445,9 +1444,8 @@ public class Player : MonoBehaviour
                 NextStageHP(100f);
             }
 
-            // 던전 배경음악 재생
-            int random = Random.Range(0, SoundManager.instance.bgmList.Length);
-            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[random], true);
+            // 던전 배경음악
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[3]);
         }
         else if (nearObject.tag == "GoToDungeon")
         {
@@ -1473,15 +1471,17 @@ public class Player : MonoBehaviour
             // 마을 비활성화
             shelter.SetActive(false);
 
-            // 던전 배경음악 재생
-            int random = Random.Range(0, SoundManager.instance.bgmList.Length);
-            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[random], true);
+            // 던전 배경음악
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[3]);
         }
         else if (nearObject.tag == "Shop")
         {
             // 상점
             // 상점 패널 활성화
             shopPanel.SetActive(true);
+
+            // 상점 배경음악
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[2]);
 
             // 인벤토리 패널 위치 변경 : 상점과 인벤토리를 보여주기 위해 첫번째 자식으로
             inventoryPanel.transform.SetParent(shopPanel.transform);

@@ -29,7 +29,7 @@ public class ShopBuyQuest : CountBase, ISequential
         QuestManager.instance.DeleteQuest(this);
 
         // 사운드
-        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
+        SoundManager.instance.SFXPlay(ObjType.퀘스트완료소리);
 
         // 퀘스트 경계 비활성화
         GameObject.FindGameObjectWithTag("QuestBorder").gameObject.SetActive(false);

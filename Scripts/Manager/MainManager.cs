@@ -37,9 +37,8 @@ public class MainManager : MonoBehaviour
         // 로딩화면
         SceneManager.LoadScene(1);
 
-        // 로딩화면으로 넘어갈때 배경음악 바꾸기
-        int random = Random.Range(0, SoundManager.instance.bgmList.Length);
-        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[random], false);
+        // 마을 배경음악
+        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]);
 
         // 사운드
         SoundManager.instance.MainSFXPlay("ButtonSound", SoundManager.instance.mainSfxList[0]);

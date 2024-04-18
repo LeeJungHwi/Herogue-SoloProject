@@ -68,7 +68,10 @@ public enum ObjType
     강력한지팡이, 낡은지팡이, 강력한해머, 낡은해머,
 
     // 펫
-    고양이, 오리, 펭귄, 양
+    고양이, 오리, 펭귄, 양,
+
+    // 기타
+    퀘스트완료소리
 }
 
 public class PoolingManager : MonoBehaviour
@@ -154,6 +157,9 @@ public class PoolingManager : MonoBehaviour
     // 펫
     public List<GameObject> PetPrefs = new List<GameObject>();
 
+    // 기타
+    public List<GameObject> EtcPrefabs = new List<GameObject>();
+
     void Awake()
     {
         // 캔버스 할당
@@ -186,6 +192,7 @@ public class PoolingManager : MonoBehaviour
         Prefs.Add(SoundPrefs);
         Prefs.Add(InventoryItemPrefs);
         Prefs.Add(PetPrefs);
+        Prefs.Add(EtcPrefabs);
     }
 
     // (타입, 프리팹) 맵핑

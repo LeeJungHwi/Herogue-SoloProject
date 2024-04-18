@@ -21,9 +21,8 @@ public class SoundManager : MonoBehaviour
             bgmVolume = 0.1f;
             sfxVolume = 1f;
 
-            // 메인메뉴에서 배경음악 재생
-            random = Random.Range(0, bgmList.Length);
-            BgmSoundPlay(bgmList[random], false);
+            // 메인 배경음악
+            BgmSoundPlay(bgmList[0]);
 
             // 화면 꺼짐 방지
             Screen.sleepTimeout = SleepTimeout.NeverSleep;
@@ -91,7 +90,7 @@ public class SoundManager : MonoBehaviour
         audioSource.volume = sfxVolume;
     }
 
-    public void BgmSoundPlay(AudioClip clip, bool isDungeon)
+    public void BgmSoundPlay(AudioClip clip)
     {
         // 배경음이 발생되는 근원지에 음원 지정
         bgmSound.clip = clip;

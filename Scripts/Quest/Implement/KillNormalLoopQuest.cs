@@ -18,7 +18,7 @@ public class KillNormalLoopQuest : CountBase, ILoop
         QuestManager.instance.DeleteQuest(this);
 
         // 사운드
-        SoundManager.instance.SFXPlay(ObjType.포션사용소리);
+        SoundManager.instance.SFXPlay(ObjType.퀘스트완료소리);
     }
 
     // 반복퀘스트

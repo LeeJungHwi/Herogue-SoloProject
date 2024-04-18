@@ -45,6 +45,12 @@ public class GameManager : MonoBehaviour
     // 퀘스트 패널
     public GameObject questPanel;
 
+    // 처음인지 체크
+    public bool[] isFirst;
+
+    // IndicateHand
+    public GameObject[] indicateHandImage;
+
     void Start()
     {
         // 게임화면 시작시 배경음 슬라이더값 세팅
@@ -140,6 +146,15 @@ public class GameManager : MonoBehaviour
             // 옵션 패널이면
             // 옵션패널 비활성화
             optionPanel.SetActive(false);
+
+            // 옵션 IndicateHand 비활성화
+            // 퀘스트 IndicateHand 활성화
+            if(!isFirst[0])
+            {
+                isFirst[0] = true;
+                indicateHandImage[0].SetActive(false);
+                indicateHandImage[1].SetActive(true);
+            }
         }
         else if (panelType == "PlayerInfo")
         {
@@ -187,6 +202,9 @@ public class GameManager : MonoBehaviour
 
             // 현재 상점아님
             player.isShop = false;
+
+            // 마을 배경음악
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]);
         }
         else if (panelType == "Ability")
         {
@@ -199,6 +217,13 @@ public class GameManager : MonoBehaviour
             // 퀘스트 패널이면
             // 퀘스트 패널 비활성화
             questPanel.SetActive(false);
+
+            // 퀘스트 IndicateHand 비활성화
+            if(!isFirst[1])
+            {
+                isFirst[1] = true;
+                indicateHandImage[1].SetActive(false);
+            }
         }
 
         // 사운드
