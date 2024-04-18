@@ -26,9 +26,6 @@ public class KillNormalQuest : CountBase, ISequential
         // 완료된 퀘스트 삭제
         QuestManager.instance.DeleteQuest(this);
 
-        // 보스방 체크
-        Physics.IgnoreLayerCollision(7, 9, false);
-
         // 사운드
         SoundManager.instance.SFXPlay(ObjType.퀘스트완료소리);
     }

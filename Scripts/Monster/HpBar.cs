@@ -109,6 +109,22 @@ public class HpBar : MonoBehaviour
             {
                 // 레이 디버깅
                 Debug.DrawLine(enemy.player.transform.position, hit.point, Color.green);
+
+                // 보스 방 퀘스트 처리
+                if(enemy.type == ObjType.보스1)
+                {
+                    foreach (QuestBase quest in QuestManager.instance.QuestList)
+                    {
+                        if (quest is ObjectiveBase)
+                        {
+                            ObjectiveBase objectiveBase = quest as ObjectiveBase;
+                            objectiveBase.Check();
+
+                            break;
+                        }
+                    }
+                }
+
                 return true;
             }
             else if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Border")) // 벽이면 체력바 안 보이기

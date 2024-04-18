@@ -14,6 +14,12 @@ public class MoveBossQuest : ObjectiveBase, ISequential
         set { nextQuest = value; }
     }
 
+    public override void Check()
+    {
+        // 보스 감지하면 바로 완료
+        Complete();
+    }
+
     // 퀘스트 완료
     public override void Complete()
     {

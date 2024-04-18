@@ -634,13 +634,13 @@ public class Player : MonoBehaviour
         }
 
         // 가까운 오브젝트 있음
-        if(other.tag == "GoToDungeon" || other.tag == "Shop" || other.tag == "BossRoom")
+        if(other.tag == "GoToDungeon" || other.tag == "Shop")
         {
             nearObject = other.gameObject;
         }
 
         // 목표베이스 퀘스트 처리
-        if(other.tag == "Shop" || other.tag == "GoToDungeon" || other.tag == "BossRoom")
+        if(other.tag == "Shop" || other.tag == "GoToDungeon")
         {
             foreach (QuestBase quest in QuestManager.instance.QuestList)
             {
@@ -648,11 +648,6 @@ public class Player : MonoBehaviour
                 {
                     ObjectiveBase objectiveBase = quest as ObjectiveBase;
                     objectiveBase.Check();
-                    if(other.tag == "BossRoom")
-                    {
-                        other.gameObject.SetActive(false);
-                        Physics.IgnoreLayerCollision(7, 9, true);
-                    }
                     return;
                 }
             }
