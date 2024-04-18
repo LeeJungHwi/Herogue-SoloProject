@@ -657,6 +657,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        if(other.tag == "QuestBorder") QuestManager.instance.QuestNotify("퀘스트를 완료하세요!");
     }
 
     void NextStageHP(float percentage)

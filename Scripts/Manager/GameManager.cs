@@ -203,6 +203,13 @@ public class GameManager : MonoBehaviour
             // 현재 상점아님
             player.isShop = false;
 
+            // 상호작용 IndicateHand 비활성화
+            if(!isFirst[2])
+            {
+                isFirst[2] = true;
+                indicateHandImage[2].SetActive(false);
+            }
+
             // 마을 배경음악
             SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]);
         }
@@ -219,10 +226,12 @@ public class GameManager : MonoBehaviour
             questPanel.SetActive(false);
 
             // 퀘스트 IndicateHand 비활성화
+            // 상호작용 IndicateHand 활성화
             if(!isFirst[1])
             {
                 isFirst[1] = true;
                 indicateHandImage[1].SetActive(false);
+                indicateHandImage[2].SetActive(true);
             }
         }
 
