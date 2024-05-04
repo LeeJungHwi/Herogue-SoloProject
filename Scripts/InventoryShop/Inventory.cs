@@ -45,7 +45,7 @@ public class Inventory : MonoBehaviour
     // 오브젝트 풀
     private PoolingManager poolingManager;
 
-    void Start()
+    private void Start()
     {
         // 인벤토리 슬롯 초기화
         InventorySlotCnt = 4;
@@ -84,19 +84,15 @@ public class Inventory : MonoBehaviour
         onChangeInventoryItem.Invoke();
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("InventoryItem"))
         {
             // 필드 아이템
             InventoryFieldItems inventoryFieldItems = other.GetComponent<InventoryFieldItems>();
 
-            // 필드 아이템 정보를 넘겨 인벤토리에 추가
-            if(AddInventoryItem(inventoryFieldItems.inventoryItem))
-            {
-                // 필드 아이템 비활성화
-                poolingManager.ReturnObj(inventoryFieldItems.gameObject, inventoryFieldItems.inventoryItem.type);
-            }
+            // 필드 아이템 정보를 넘겨 인벤토리에 추가 => 필드 아이템 비활성화
+            if(AddInventoryItem(inventoryFieldItems.inventoryItem)) poolingManager.ReturnObj(inventoryFieldItems.gameObject, inventoryFieldItems.inventoryItem.type);
 
             // 사운드
             SoundManager.instance.SFXPlay(ObjType.아이템소리);

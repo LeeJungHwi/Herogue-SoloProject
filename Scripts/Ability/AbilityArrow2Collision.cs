@@ -15,9 +15,9 @@ public class AbilityArrow2Collision : MonoBehaviour
     private PoolingManager poolingManager;
 
     // 충돌시 생성할 이펙트
-    public GameObject instantHit;
+    private GameObject instantHit;
 
-    void Start()
+    private void Start()
     {
         // Player 스크립트
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -26,7 +26,7 @@ public class AbilityArrow2Collision : MonoBehaviour
         poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject other)
     {
         // 파티클 충돌 
         if (other.TryGetComponent(out Enemy enemy))

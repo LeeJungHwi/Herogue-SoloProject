@@ -7,7 +7,7 @@ using UnityEngine;
 public class AbilityArrow0 : AbilityBase
 {
     // 스킬 이펙트
-    GameObject instantAbilityArrow0;
+    private GameObject instantAbilityArrow0;
 
     // 스킬 시전
     public override void Activate(GameObject joystick, GameObject player, GameObject poolingManager)
@@ -40,10 +40,7 @@ public class AbilityArrow0 : AbilityBase
         poolManager.ReturnObj(instantAbilityArrow0, ObjType.궁수스킬1이펙트);
 
         // 충돌 이펙트 풀에 반환
-        for (int i = 0; i < poolManager.AbilityArrow0HitEffects.Count; i++)
-        {
-            poolManager.ReturnObj(poolManager.AbilityArrow0HitEffects[i].Item1, poolManager.AbilityArrow0HitEffects[i].Item2);
-        }
+        for (int i = 0; i < poolManager.AbilityArrow0HitEffects.Count; i++) poolManager.ReturnObj(poolManager.AbilityArrow0HitEffects[i].Item1, poolManager.AbilityArrow0HitEffects[i].Item2);
 
         // 충돌 이펙트 리스트 초기화
         poolManager.AbilityArrow0HitEffects.Clear();

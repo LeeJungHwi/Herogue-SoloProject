@@ -10,45 +10,42 @@ public class AbilityFSM : MonoBehaviour
     public AbilityBase abilityBase;
 
     // 스킬 쿨타임
-    float cooldownTime;
+    private float cooldownTime;
 
     // 스킬 유지시간
-    float activeTime;
+    private float activeTime;
 
     // 스킬 상태 정의
-    enum AbilityState { ready, active, cooldown }
+    private enum AbilityState { ready, active, cooldown }
 
     // 스킬 상태 참조
-    AbilityState state = AbilityState.ready;
+    private AbilityState state = AbilityState.ready;
 
     // 스킬 사용 키
     // public KeyCode key;
 
     // Joystick 오브젝트
-    public GameObject joystick;
+    [SerializeField] private GameObject joystick;
 
     // PoolingManager 오브젝트
-    public GameObject poolingManager;
+    [SerializeField] private GameObject poolingManager;
 
     // 플레이어 스크립트
-    Player player;
+    private Player player;
 
     // 스킬 버튼이 눌렸는지 체크
     private bool abilityPressed;
 
     // 스킬 쿨타임을 표시할 이미지
-    public Image cooldownImage;
+    [SerializeField] private Image cooldownImage;
 
     // 스킬 쿨타임을 표시하기위해
     private float duration = 0f;
+    
+    // 플레이어 스크립트
+    private void Start() { player = GetComponent<Player>(); }
 
-    void Start()
-    {
-        // 플레이어 스크립트
-        player = GetComponent<Player>();
-    }
-
-    void Update()
+    private void Update()
     {
         switch (state)
         {
@@ -118,12 +115,5 @@ public class AbilityFSM : MonoBehaviour
     }
 
     // 각 스킬버튼 온클릭함수에 추가해서 버튼이 눌렸는지 체크하는 함수
-    public void AbilityPressed()
-    {
-        if (state == AbilityState.ready)
-        {
-            // 스킬 버튼 누른 상태
-            abilityPressed = true;
-        }
-    }
+    public void AbilityPressed() { if (state == AbilityState.ready) abilityPressed = true; }
 }

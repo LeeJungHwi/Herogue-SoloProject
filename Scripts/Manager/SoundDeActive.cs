@@ -5,15 +5,15 @@ using UnityEngine;
 public class SoundDeActive : MonoBehaviour
 {
     // 오디오소스
-    AudioSource audioSource;
+    private AudioSource audioSource;
 
     // 오브젝트 타입
-    public ObjType type;
+    [SerializeField] private ObjType type;
 
     // 오브젝트 풀
     private PoolingManager poolManager;
 
-    void Awake()
+    private void Awake()
     {
         // 오디오소스
         audioSource = GetComponent<AudioSource>();
@@ -22,12 +22,6 @@ public class SoundDeActive : MonoBehaviour
         poolManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void Update()
-    {
-        // 사운드 비활성화
-        if(!audioSource.isPlaying)
-        {
-            poolManager.ReturnObj(gameObject, type);
-        }
-    }
+    // 사운드 비활성화
+    private void Update() { if(!audioSource.isPlaying) poolManager.ReturnObj(gameObject, type); }
 }

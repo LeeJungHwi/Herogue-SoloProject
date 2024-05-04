@@ -12,12 +12,12 @@ public class AddRoom : MonoBehaviour
     public ObjType type;
     
     // 방이 추가되었는지 체크 : 풀링에서 활성화할때 false로 바꿔서 활성화시켜준다
-    public bool isAdd;
+    [HideInInspector] public bool isAdd;
 
     // RoomBFS
-    public RoomBFS roomBFS;
+    private RoomBFS roomBFS;
 
-    void Start()
+    private void Start()
     {
         // 생성된 방이 리스트에 추가된다
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
@@ -26,7 +26,7 @@ public class AddRoom : MonoBehaviour
         roomBFS = GameObject.FindGameObjectWithTag("RoomBFS").GetComponent<RoomBFS>();
     }
 
-    void Update()
+    private void Update()
     {
         if(!isAdd)
         {

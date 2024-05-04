@@ -6,27 +6,27 @@ using TMPro;
 public class FloatingText : MonoBehaviour
 {
     // 텍스트 이동속도
-    public float moveSpeed;
+    [SerializeField] private float moveSpeed;
 
     // 텍스트 투명속도
-    public float alphaSpeed;
+    [SerializeField] private float alphaSpeed;
 
     // TMP
-    public TextMeshPro text;
+    private TextMeshPro text;
 
     // TMP Color
-    public Color alpha;
+    [HideInInspector] public Color alpha;
 
     // 텍스트 반납 타임
     public float waitTime;
 
     // 오브젝트 타입
-    public ObjType type;
+    [SerializeField] private ObjType type;
 
     // 오브젝트 풀
     private PoolingManager poolingManager;
 
-    void Start()
+    private void Start()
     {
         // TMP
         text = GetComponent<TextMeshPro>();
@@ -38,7 +38,7 @@ public class FloatingText : MonoBehaviour
         poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void Update()
+    private void Update()
     {
         // 텍스트가 위로올라가면서 투명
         transform.Translate(new Vector3(0, moveSpeed * Time.deltaTime, 0));
@@ -46,13 +46,7 @@ public class FloatingText : MonoBehaviour
         text.color = alpha;
 
         // 데미지 텍스트 반납
-        if(waitTime <= 0)
-        {
-            poolingManager.ReturnObj(gameObject, type);
-        }
-        else
-        {
-            waitTime -= Time.deltaTime;
-        }
+        if(waitTime <= 0) poolingManager.ReturnObj(gameObject, type);
+        else waitTime -= Time.deltaTime;
     }
 }

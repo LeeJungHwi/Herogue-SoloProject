@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class QuestBase : ScriptableObject
 {
     public string questName; // 퀘스트 이름
-    
     public abstract void Check(); // 퀘스트 체크
     public virtual void Complete() {} // 퀘스트 완료
 }

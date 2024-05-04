@@ -35,10 +35,13 @@ public class SoundManager : MonoBehaviour
     }
 
     // 배경음악을 재생하는 근원지
-    public AudioSource bgmSound;
+    [SerializeField] private AudioSource bgmSound;
 
     // 배경음악 리스트
     public AudioClip[] bgmList;
+
+    // 던전배경음악 리스트
+    public AudioClip[] dungeonBgmList;
 
     // 메인화면 효과음 리스트
     // 메인화면 버튼클릭 사운드는 풀링을 하지않았음
@@ -46,13 +49,13 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] mainSfxList;
 
     // 랜덤
-    int random;
+    private int random;
 
     // 배경음 볼륨을 저장 할 변수
-    public float bgmVolume;
+    [HideInInspector] public float bgmVolume;
 
     // 효과음 볼륨을 저장 할 변수
-    public float sfxVolume;
+    [HideInInspector] public float sfxVolume;
 
     // 메인화면 효과음
     public void MainSFXPlay(string sfxName, AudioClip clip)

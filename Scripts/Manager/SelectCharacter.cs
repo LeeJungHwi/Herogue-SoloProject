@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SelectCharacter : MonoBehaviour
 {
-    public Character character; // 각 캐릭터 버튼이 가지고 있을 캐릭터 종류
+    [SerializeField] private Character character; // 각 캐릭터 버튼이 가지고 있을 캐릭터 종류
 
     public void CharacterSelect()
     {

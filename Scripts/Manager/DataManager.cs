@@ -29,9 +29,9 @@ public class DataManager : MonoBehaviour
         gameSpeed = 1f; // 메인에서 게임 속도 초기화
     }
 
-    public Character character; // 선택된 캐릭터를 저장 할 변수
+    [HideInInspector] public Character character; // 선택된 캐릭터를 저장 할 변수
 
-    public float gameSpeed; // 게임 속도를 저장 할 변수
+    [HideInInspector] public float gameSpeed; // 게임 속도를 저장 할 변수
 
     // 게임 속도 조절 함수
     public void SetGameSpeed(float speed)

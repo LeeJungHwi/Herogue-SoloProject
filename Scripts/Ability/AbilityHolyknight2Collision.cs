@@ -12,13 +12,10 @@ public class AbilityHolyknight2Collision : MonoBehaviour
     // 플레이어
     private Player player;
 
-    void Start()
-    {
-        // Player 스크립트
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-    }
+    // Player 스크립트
+    private void Start() { player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
 
-    void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject other)
     {
         // 파티클 충돌 
         if (other.TryGetComponent(out Enemy enemy))

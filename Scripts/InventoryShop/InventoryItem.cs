@@ -72,11 +72,8 @@ public class InventoryItem
         // 효과 사용 체크
         bool isUsed = false;
 
-        foreach(InventoryItemEffect effects in Effects)
-        {
-            // 아이템 효과 사용
-            isUsed = effects.UseEffect(player, inventorySlotNumSave);
-        }
+        // 아이템 효과 사용
+        foreach(InventoryItemEffect effects in Effects) isUsed = effects.UseEffect(player, inventorySlotNumSave);
 
         // ExecuteRole에서 효과 사용 성공 시 true 실패 시 false 반환
         return isUsed;

@@ -9,17 +9,10 @@ public class FadeInOut : MonoBehaviour
     // 싱글톤
     private static FadeInOut instance;
     public static FadeInOut Instance => instance;
-    public FadeInOut()
-    {
-        instance = this;
-    }
+    public FadeInOut() { instance = this; }
 
-    public void Awake()
-    {
-        // 페이드 인/아웃 이미지 할당
-        Invoke("SetFadeInOutImage", 0.5f);
-    }
-
+    // 페이드 인/아웃 이미지 할당
+    public void Awake() { Invoke("SetFadeInOutImage", 0.5f); }
     public void SetFadeInOutImage()
     {
         // 페이드 인/아웃 이미지 할당
@@ -33,28 +26,22 @@ public class FadeInOut : MonoBehaviour
     private GameObject fadeInOutImage;
 
     // 진행시간
-    float time = 0f;
+    private float time = 0f;
 
     // 진행시간 계산용
-    float timeCalc = 1f;
+    private float timeCalc = 1f;
 
     // 페이드 인/아웃 코루틴 실행
     // 플레이어가 죽을때
-    public void Fade()
-    {
-        StartCoroutine(GoFadeInOut());
-    }
+    public void Fade() { StartCoroutine(GoFadeInOut()); }
 
     // 페이드 인/아웃 코루틴 실행
     // 다음스테이지, 던전들어가기
-    public void Fade2()
-    {
-        StartCoroutine(GoFadeInOut2());
-    }
+    public void Fade2() { StartCoroutine(GoFadeInOut2()); }
 
     // 페이드 인/아웃 코루틴
     // 플레이어가 죽을때
-    IEnumerator GoFadeInOut()
+    private IEnumerator GoFadeInOut()
     {
         // 페이드 인/아웃 이미지 활성화
         fadeInOutImage.gameObject.SetActive(true);
@@ -113,7 +100,7 @@ public class FadeInOut : MonoBehaviour
     // 다음스테이지, 던전들어가기
     // 1초 대기시간이 있어서 플레이어가 먼저 이동하고 페이드 인/아웃이 실행되므로
     // 처음에 바로 알파값을 1로한후에 페이드 아웃을 진행
-    IEnumerator GoFadeInOut2()
+    private IEnumerator GoFadeInOut2()
     {
         // 페이드 인/아웃 이미지 활성화
         fadeInOutImage.gameObject.SetActive(true);

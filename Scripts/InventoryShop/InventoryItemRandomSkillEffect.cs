@@ -69,12 +69,8 @@ public class InventoryItemRandomSkillEffect : InventoryItemEffect
         }
         else if (skillRandom == 4)
         {
-            // 흡혈귀
-            if (!player.isPermanentSkill[4])
-            {
-                // 흡혈량이 20%가 된다
-                player.bloodDrain = 20;
-            }
+            // 흡혈귀 : 흡혈량이 20%가 된다
+            if (!player.isPermanentSkill[4]) player.bloodDrain = 20;
         }
         else if (skillRandom == 6)
         {
@@ -89,30 +85,18 @@ public class InventoryItemRandomSkillEffect : InventoryItemEffect
         }
         else if (skillRandom == 9)
         {
-            // 시크릿
-            if (!player.isPermanentSkill[9])
-            {
-                // 시크릿상자 드랍률 증가
-                player.secretPercentage += 10;
-            }
+            // 시크릿 : 시크릿상자 드랍률 증가
+            if (!player.isPermanentSkill[9]) player.secretPercentage += 10;
         }
         else if (skillRandom == 14)
         {
-            // HP부스트
-            if (!player.isPermanentSkill[14])
-            {
-                // 최대 HP가 100% 증가
-                player.maxHealth *= 2;
-            }
+            // HP부스트 : 최대 HP가 100% 증가
+            if (!player.isPermanentSkill[14]) player.maxHealth *= 2;
         }
         else if (skillRandom == 21)
         {
-            // 불사신
-            if (!player.isPermanentSkill[21])
-            {
-                // 1초간 3초간격으로 무적상태
-                player.StartCoroutine("Immortality");
-            }
+            // 불사신 : 1초간 3초간격으로 무적상태
+            if (!player.isPermanentSkill[21]) player.StartCoroutine("Immortality");
         }
 
         // 영구 스킬 적용

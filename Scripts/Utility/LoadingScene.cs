@@ -7,66 +7,49 @@ using UnityEngine.SceneManagement;
 public class LoadingScene : MonoBehaviour
 {
     // 로딩바
-    public Slider loadingBarSlider;
+    [SerializeField] private Slider loadingBarSlider;
 
     // 진행상황 텍스트
-    public Text loadingText;
+    [SerializeField] private Text loadingText;
 
     // 로딩 게임 이미지
-    public Image loadingGameImage;
+    [SerializeField] private Image loadingGameImage;
 
     // 로딩 게임 스프라이트
     // 0 : 법사 1 : 소드 2 : 블랙스미스 3 : 성기사
-    public Sprite[] loadingGameImageSprite;
+    [SerializeField] private Sprite[] loadingGameImageSprite;
 
     // 게임 팁 텍스트
-    public Text tipText;
+    [SerializeField] private Text tipText;
 
     // 게임 팁 텍스트 문자열
-    public string[] tipString;
+    [SerializeField] private string[] tipString;
 
     // 랜덤 팁
-    public int tipRandom;
+    private int tipRandom;
 
     // 팁이 바뀌었는지 체크 : 여러번 바뀌는 문제
-    public bool[] isTip;
+    [SerializeField] private bool[] isTip;
 
     // 선택된 캐릭터
-    public string characterType;
+    private string characterType;
 
-    void Start()
+    private void Start()
     {
         // 선택된 캐릭터
         characterType = DataManager.instance.character.ToString();
 
         // 선택된 캐릭터에 따른 로딩 게임 이미지 변경
-        // 기본 : 궁수
-        if(characterType.Equals("Mage"))
-        {
-            // 법사
-            loadingGameImage.sprite = loadingGameImageSprite[0];
-        }
-        else if(characterType.Equals("Sword"))
-        {
-            // 소드
-            loadingGameImage.sprite = loadingGameImageSprite[1];
-        }
-        else if (characterType.Equals("Blacksmith"))
-        {
-            // 블랙스미스
-            loadingGameImage.sprite = loadingGameImageSprite[2];
-        }
-        else if (characterType.Equals("Holyknight"))
-        {
-            // 성기사
-            loadingGameImage.sprite = loadingGameImageSprite[3];
-        }
+        if(characterType.Equals("Mage")) loadingGameImage.sprite = loadingGameImageSprite[0];
+        else if(characterType.Equals("Sword")) loadingGameImage.sprite = loadingGameImageSprite[1];
+        else if (characterType.Equals("Blacksmith")) loadingGameImage.sprite = loadingGameImageSprite[2];
+        else if (characterType.Equals("Holyknight")) loadingGameImage.sprite = loadingGameImageSprite[3];
 
         // 로딩씬으로 넘어오면 로딩진행상황 코루틴을 실행한다
         StartCoroutine(LoadGameSceneProcess());
     }
 
-    void Update()
+    private void Update()
     {
         // 진행상황
         int loadingProcess = Mathf.CeilToInt(loadingBarSlider.value * 100);
@@ -101,7 +84,7 @@ public class LoadingScene : MonoBehaviour
         }
     }
 
-    IEnumerator LoadGameSceneProcess()
+    private IEnumerator LoadGameSceneProcess()
     {
         // 로딩 진행상황
         // 비동기 방식 : 씬 전환 진행상황중에 다른작업을 수행 할 수 있음

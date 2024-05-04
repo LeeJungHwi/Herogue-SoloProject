@@ -8,11 +8,11 @@ public class SecretBox : MonoBehaviour
     private RoomTemplates templates;
 
     // 파괴되었는지 체크
-    public bool isCrash;
+    [HideInInspector] public bool isCrash;
 
     // 추가되었는지 체크
     // 풀링에서 활성화할때 false로 바꿔서 활성화
-    public bool isAdd;
+    [HideInInspector] public bool isAdd;
 
     // 오브젝트 타입
     public ObjType type;
@@ -20,7 +20,7 @@ public class SecretBox : MonoBehaviour
     // 오브젝트 풀
     private PoolingManager poolManager;
 
-    void Start()
+    private void Start()
     {
         // 방 모델
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
@@ -29,13 +29,10 @@ public class SecretBox : MonoBehaviour
         poolManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void Update()
+    private void Update()
     {
         // 애니메이션을 보여주기위해 2초뒤에 시크릿박스 반납
-        if(isCrash)
-        {
-            Invoke("DeActive", 2f);
-        }
+        if(isCrash) Invoke("DeActive", 2f);
 
         // 추가된 상태가 아닐때에만 리스트에 시크릿박스 추가
         if (!isAdd)
@@ -45,9 +42,6 @@ public class SecretBox : MonoBehaviour
         }
     }
 
-    void DeActive()
-    {
-        // 풀에 반환
-        poolManager.ReturnObj(gameObject, ObjType.시크릿박스);
-    }
+    // 풀에 반환
+    private void DeActive() { poolManager.ReturnObj(gameObject, ObjType.시크릿박스); }
 }

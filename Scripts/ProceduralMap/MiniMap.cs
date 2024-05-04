@@ -7,15 +7,15 @@ using UnityEngine.Tilemaps;
 // 던전 그래프 정보에 따라 미니맵 표시
 public class MiniMap : MonoBehaviour
 {
-    public RoomBFS roomBFS; // 그래프
+    [SerializeField] private RoomBFS roomBFS; // 그래프
     public List<GameObject> roomTilePref = new List<GameObject>(); // 미니맵에 표시 할 타일
-    public List<int> drawIndex = new List<int>(); // 인덱스 백업
-    public Player player; // 플레이어
-    public Vector2Int curRoom; // 현재 플레이어가 위치한 방의 좌표, BFS 돌릴때 시작방 (10,10)으로 초기화함
-    public Vector2Int preRoom; // 이전에 플레이어가 위치했던 방의 좌표, BFS 돌릴때 시작방 (10,10)으로 초기화함
+    [HideInInspector] public List<int> drawIndex = new List<int>(); // 인덱스 백업
+    [SerializeField] private Player player; // 플레이어
+    [HideInInspector] public Vector2Int curRoom; // 현재 플레이어가 위치한 방의 좌표, BFS 돌릴때 시작방 (10,10)으로 초기화함
+    [HideInInspector] public Vector2Int preRoom; // 이전에 플레이어가 위치했던 방의 좌표, BFS 돌릴때 시작방 (10,10)으로 초기화함
 
     // 플레이어가 있는 방의 타일을 초록색으로
-    void Update()
+    private void Update()
     {
         // 던전일때만
         if(!player.isShelter)

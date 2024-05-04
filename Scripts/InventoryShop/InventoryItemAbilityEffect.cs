@@ -8,7 +8,7 @@ using UnityEngine;
 public class InventoryItemAbilityEffect : InventoryItemEffect
 {
     // 액티브스킬 인덱스
-    public int abilityNum;
+    [SerializeField] private int abilityNum;
 
     // 추상함수 구현
     public override bool UseEffect(Player player, int inventorySlotNumSave)

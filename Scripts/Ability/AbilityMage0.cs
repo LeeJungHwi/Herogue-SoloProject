@@ -7,7 +7,7 @@ using UnityEngine;
 public class AbilityMage0 : AbilityBase
 {
     // 스킬0 인스턴스
-    GameObject instantAbilityMage0;
+    private GameObject instantAbilityMage0;
 
     // 스킬 실행시 내용
     public override void Activate(GameObject joystick, GameObject player, GameObject poolingManager)

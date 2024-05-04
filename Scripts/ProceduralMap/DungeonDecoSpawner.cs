@@ -10,7 +10,7 @@ public class DungeonDecoSpawner : MonoBehaviour
     // 풀링
     private PoolingManager poolManager;
 
-    void Start()
+    private void Start()
     {
         // 생성된 방이 리스트에 추가된다
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();

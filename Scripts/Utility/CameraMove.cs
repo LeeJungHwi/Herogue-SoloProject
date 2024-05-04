@@ -8,10 +8,10 @@ public class CameraMove : MonoBehaviour
     private GameObject Player;
 
     // 카메라
-    public GameObject MainCamera;
+    [SerializeField] private GameObject MainCamera;
 
     // 특정 레이어 감지
-    public LayerMask layerMask;
+    [SerializeField] private LayerMask layerMask;
 
     // 리그로부터 카메라까지의 거리
     private float camera_dist = 0f;
@@ -26,12 +26,12 @@ public class CameraMove : MonoBehaviour
     private float camera_fix = 3f;
 
     // 방향
-    Vector3 dir;
+    private Vector3 dir;
 
     // 카메라 흔들림 효과가 진행중인지 체크
     public bool isShake { set; get; }
 
-    void Start()
+    private void Start()
     {
         // 카메라리그에서 카메라까지의 길이
         camera_dist = Vector3.Distance(transform.position, MainCamera.transform.position);
@@ -43,13 +43,10 @@ public class CameraMove : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
     }
 
-    void Update()
+    private void Update()
     {
         // 카메라가 흔들리는 중일땐 실행하지 않는다
-        if(isShake)
-        {
-            return;
-        }
+        if(isShake) return;
 
         // 리그의 위치를 플레이어의 위치로 초기화
         transform.position = Player.transform.position;
@@ -84,7 +81,6 @@ public class CameraMove : MonoBehaviour
 
                 //카메라 보정
                 MainCamera.transform.Translate(dir * -1 * camera_fix);
-
             }
         }
         else
@@ -102,9 +98,6 @@ public class CameraMove : MonoBehaviour
         }
     }
 
-    void SetPlayer()
-    {
-        // 플레이어를 할당하는 함수
-        Player = GameObject.FindGameObjectWithTag("Player");
-    }
+    // 플레이어를 할당하는 함수
+    private void SetPlayer() { Player = GameObject.FindGameObjectWithTag("Player"); }
 }

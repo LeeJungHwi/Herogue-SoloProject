@@ -7,31 +7,31 @@ using UnityEngine.UI;
 public class ShopSlot : MonoBehaviour, IPointerUpHandler
 {
     // 상점 아이템
-    public InventoryItem inventoryItem;
+    [HideInInspector] public InventoryItem inventoryItem;
 
     // 상점 슬롯 숫자
-    public int inventorySlotNum;
+    [SerializeField] private int inventorySlotNum;
 
     // 상점 아이템 이미지
-    public Image inventoryItemImage;
+    [SerializeField] private Image inventoryItemImage;
 
     // 플레이어 스크립트
-    public Player player;
+    [SerializeField] private Player player;
 
     // 상점 아이템 구매 패널
-    public GameObject shopItemBuyPanel;
+    [SerializeField] private GameObject shopItemBuyPanel;
 
     // 상점 아이템 구매 이미지
-    public Image shopItemBuyImage;
+    [SerializeField] private Image shopItemBuyImage;
 
     // 상점 아이템 구매 이름
-    public Text shopItemBuyNameText;
+    [SerializeField] private Text shopItemBuyNameText;
 
     // 상점 아이템 구매 스탯
-    public Text shopItemBuyStatusText;
+    [SerializeField] private Text shopItemBuyStatusText;
 
     // 상점 아이템 가격
-    public Text shopItemBuyPriceText;
+    [SerializeField] private Text shopItemBuyPriceText;
 
     public void UpdateSlotUI()
     {
@@ -52,10 +52,7 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
         // 상점 아이템 슬롯이 클릭되었을때
         // 상점 슬롯과 인벤토리 슬롯에서 아이템이 없는데 슬롯이 눌러지는 문제
         // 상점 아이템 리스트 갯수를 넘어서는 슬롯을 누르면 리턴
-        if (player.shopDatabase.shopItemList.Count <= inventorySlotNum)
-        {
-            return;
-        }
+        if (player.shopDatabase.shopItemList.Count <= inventorySlotNum) return;
 
         // 상점 아이템 구매 패널을 보여준다
         shopItemBuyPanel.SetActive(true);
@@ -73,72 +70,28 @@ public class ShopSlot : MonoBehaviour, IPointerUpHandler
         // 장비
         if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.Equipment)
         {
-            if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Weapon)
-            {
-                // 무기면 공격력을 보여준다
-                shopItemBuyStatusText.text = "공격력 + " + player.shopSlots[inventorySlotNum].inventoryItem.attack.ToString();
-            }
-            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Armor)
-            {
-                // 갑옷이면 체력을 보여준다
-                shopItemBuyStatusText.text = "체력 + " + player.shopSlots[inventorySlotNum].inventoryItem.health.ToString();
-            }
-            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Glove)
-            {
-                // 장갑이면 공격속도를 보여준다
-                shopItemBuyStatusText.text = "공격속도 + " + player.shopSlots[inventorySlotNum].inventoryItem.attackSpeed.ToString();
-            }
-            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Shoes)
-            {
-                // 신발이면 이동속도를 보여준다
-                shopItemBuyStatusText.text = "이동속도 + " + player.shopSlots[inventorySlotNum].inventoryItem.moveSpeed.ToString();
-            }
-            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Amulet)
-            {
-                // 아뮬렛이면 크확, 크뎀을 보여준다
-                shopItemBuyStatusText.text = "크리티컬확률 + " + player.shopSlots[inventorySlotNum].inventoryItem.criticalPercentage.ToString() + " %" + System.Environment.NewLine + "크리티컬데미지 + " + player.shopSlots[inventorySlotNum].inventoryItem.criticalDamage.ToString() + " %";
-            }
-            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Pet)
-            {
-                // 펫이면 귀여움을 보여준다
-                shopItemBuyStatusText.text = "귀여움 + " + player.shopSlots[inventorySlotNum].inventoryItem.cute.ToString();
-            }
+            if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Weapon) shopItemBuyStatusText.text = "공격력 + " + player.shopSlots[inventorySlotNum].inventoryItem.attack.ToString();
+            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Armor) shopItemBuyStatusText.text = "체력 + " + player.shopSlots[inventorySlotNum].inventoryItem.health.ToString();
+            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Glove) shopItemBuyStatusText.text = "공격속도 + " + player.shopSlots[inventorySlotNum].inventoryItem.attackSpeed.ToString();
+            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Shoes) shopItemBuyStatusText.text = "이동속도 + " + player.shopSlots[inventorySlotNum].inventoryItem.moveSpeed.ToString();
+            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Amulet) shopItemBuyStatusText.text = "크리티컬확률 + " + player.shopSlots[inventorySlotNum].inventoryItem.criticalPercentage.ToString() + " %" + System.Environment.NewLine + "크리티컬데미지 + " + player.shopSlots[inventorySlotNum].inventoryItem.criticalDamage.ToString() + " %";
+            else if (player.shopSlots[inventorySlotNum].inventoryItem.equipmentItemType == EquipmentItemType.Pet) shopItemBuyStatusText.text = "귀여움 + " + player.shopSlots[inventorySlotNum].inventoryItem.cute.ToString();
         }
 
         // 소모품
-        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.Consumables)
-        {
-            // 소모품아이템의 힐량을 보여준다
-            shopItemBuyStatusText.text = "HP회복 + " + player.shopSlots[inventorySlotNum].inventoryItem.healingPoint.ToString();
-        }
+        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.Consumables) shopItemBuyStatusText.text = "HP회복 + " + player.shopSlots[inventorySlotNum].inventoryItem.healingPoint.ToString();
 
         // 인벤토리 슬롯 확장권
-        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.ExpansionSlot)
-        {
-            // 인벤토리 슬롯 확장권 효과를 보여준다
-            shopItemBuyStatusText.text = "인벤토리 슬롯 4칸을 확장합니다";
-        }
+        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.ExpansionSlot) shopItemBuyStatusText.text = "인벤토리 슬롯 4칸을 확장합니다";
 
         // 랜덤 스킬
-        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.RandomSkill)
-        {
-            // 랜덤 스킬 효과를 보여준다
-            shopItemBuyStatusText.text = "영구적으로 적용되는 스킬을 얻습니다";
-        }
+        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.RandomSkill) shopItemBuyStatusText.text = "영구적으로 적용되는 스킬을 얻습니다";
 
         // 액티브스킬
-        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.Ability)
-        {
-            // 액티브스킬 사용 효과를 보여준다
-            shopItemBuyStatusText.text = player.shopSlots[inventorySlotNum].inventoryItem.skillContent;
-        }
+        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.Ability) shopItemBuyStatusText.text = player.shopSlots[inventorySlotNum].inventoryItem.skillContent;
 
         // 랜덤 펫
-        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.RandomPet)
-        {
-            // 랜덤펫 효과를 보여준다
-            shopItemBuyStatusText.text = "펫이 들어있다";
-        }
+        if (player.shopSlots[inventorySlotNum].inventoryItem.itemType == ItemType.RandomPet) shopItemBuyStatusText.text = "펫이 들어있다";
 
         // 상점 아이템 번호를 스태틱변수에 저장
         InventorySlot.inventorySlotNumSave = inventorySlotNum;

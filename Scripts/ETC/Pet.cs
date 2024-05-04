@@ -12,7 +12,7 @@ public class Pet : MonoBehaviour
     private Transform target;
 
     // 네비매쉬
-    public NavMeshAgent nav;
+    [HideInInspector] public NavMeshAgent nav;
 
     // 물리
     private Rigidbody rigid;
@@ -23,7 +23,7 @@ public class Pet : MonoBehaviour
     // 플레이어와의 거리
     private float distance;
 
-    void Awake()
+    private void Awake()
     {
         // 플레이어 관련 할당
         Invoke("SetPlayer", 0.5f);
@@ -38,7 +38,7 @@ public class Pet : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
     }
 
-    void Update()
+    private void Update()
     {
         // 플레이어와의 거리
         distance = Vector3.Distance(target.transform.position, transform.position);
@@ -57,15 +57,12 @@ public class Pet : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
-    {
-        // 물리충돌시 회전이 유지되는 문제
-        FreezeVelocity();
-    }
+    // 물리충돌시 회전이 유지되는 문제
+    private void FixedUpdate() { FreezeVelocity(); }
 
-    void FreezeVelocity()
+    // 물리충돌시 회전이 유지되는 문제
+    private void FreezeVelocity()
     {
-        // 물리충돌시 회전이 유지되는 문제
         // 속도 0
         rigid.velocity = Vector3.zero;
 
@@ -73,7 +70,7 @@ public class Pet : MonoBehaviour
         rigid.angularVelocity = Vector3.zero;
     }
 
-    void SetPlayer()
+    private void SetPlayer()
     {
         // 플레이어
         player = GameObject.FindGameObjectWithTag("Player");

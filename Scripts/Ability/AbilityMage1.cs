@@ -7,7 +7,7 @@ using UnityEngine;
 public class AbilityMage1 : AbilityBase
 {
     // 스킬1 인스턴스
-    GameObject instantAbilityMage1Active;
+    private GameObject instantAbilityMage1Active;
 
     // 스킬 실행시 내용
     public override void Activate(GameObject joystick, GameObject player, GameObject poolingManager)
@@ -39,10 +39,7 @@ public class AbilityMage1 : AbilityBase
         poolManager.ReturnObj(instantAbilityMage1Active, ObjType.법사스킬2이펙트);
 
         // 충돌 이펙트 풀에 반환
-        for (int i = 0; i < poolManager.AbilityMage1HitEffects.Count; i++)
-        {
-            poolManager.ReturnObj(poolManager.AbilityMage1HitEffects[i].Item1, poolManager.AbilityMage1HitEffects[i].Item2);
-        }
+        for (int i = 0; i < poolManager.AbilityMage1HitEffects.Count; i++) poolManager.ReturnObj(poolManager.AbilityMage1HitEffects[i].Item1, poolManager.AbilityMage1HitEffects[i].Item2);
 
         // 충돌 이펙트가 저장된 리스트 클리어
         poolManager.AbilityMage1HitEffects.Clear();

@@ -7,7 +7,7 @@ using UnityEngine;
 public class AbilitySword2 : AbilityBase
 {
     // 스킬2 인스턴스
-    GameObject instantAbilitySword2;
+    private GameObject instantAbilitySword2;
 
     // 스킬 실행시 내용
     public override void Activate(GameObject joystick, GameObject player, GameObject poolingManager)

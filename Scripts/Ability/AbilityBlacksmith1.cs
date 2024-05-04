@@ -7,7 +7,7 @@ using UnityEngine;
 public class AbilityBlacksmith1 : AbilityBase
 {
     // 스킬1 인스턴스
-    GameObject instantAbilityBlacksmith1;
+    private GameObject instantAbilityBlacksmith1;
 
     // 스킬 실행시 내용
     public override void Activate(GameObject joystick, GameObject player, GameObject poolingManager)

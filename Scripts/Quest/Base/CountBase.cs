@@ -20,11 +20,8 @@ public class CountBase : QuestBase
     public int rewardCoin; // 퀘스트 보상 코인
 
     // 퀘스트 체크
-    public override void Check()
-    {
-	    // 완료 개수 이상이되면 완료
-        if (curCnt >= completeCnt) Complete();
-    }
+    // 완료 개수 이상이되면 완료
+    public override void Check() { if (curCnt >= completeCnt) Complete(); }
 
     // 퀘스트 보상
     protected virtual void Reward()

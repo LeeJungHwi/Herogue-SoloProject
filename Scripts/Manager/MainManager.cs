@@ -7,16 +7,16 @@ using UnityEngine.SceneManagement;
 public class MainManager : MonoBehaviour
 {
     // 메인패널
-    public GameObject mainPanel;
+    [SerializeField] private GameObject mainPanel;
 
     // 셀렉트패널
-    public GameObject selectPanel;
+    [SerializeField] private GameObject selectPanel;
 
     // 옵션패널
-    public GameObject optionPanel;
+    [SerializeField] private GameObject optionPanel;
 
     // 메인타이틀 이미지
-    public GameObject mainTitleImage;
+    [SerializeField] private GameObject mainTitleImage;
 
     // 캐릭터선택창
     public void GameStart()
@@ -61,18 +61,8 @@ public class MainManager : MonoBehaviour
     public void GoToMain(string panelType)
     {
         // 셀렉트패널 및 옵션패널에서 메인패널로가는 함수
-        if(panelType == "Select")
-        {
-            // 셀렉트패널이면
-            // 셀렉트패널 비활성화
-            selectPanel.SetActive(false);
-        }
-        else if(panelType == "Option")
-        {
-            // 옵션패널이면
-            // 옵션패널 비활성화
-            optionPanel.SetActive(false);
-        }
+        if(panelType == "Select") selectPanel.SetActive(false);
+        else if(panelType == "Option") optionPanel.SetActive(false);
 
         // 메인패널 활성화
         mainPanel.SetActive(true);

@@ -6,43 +6,43 @@ using UnityEngine;
 public class ControlSky : MonoBehaviour
 {
     // 낮
-    public Material dayMat;
+    [SerializeField] private Material dayMat;
 
     // 밤
-    public Material nightMat;
+    [SerializeField] private Material nightMat;
 
     // 초저녁
-    public Material earlyEveningMat;
+    [SerializeField] private Material earlyEveningMat;
 
     // 새벽
-    public Material dawnMat;
+    [SerializeField] private Material dawnMat;
 
     // 낮 빛
-    public GameObject dayLight;
+    [SerializeField] private GameObject dayLight;
 
     // 밤 빛
-    public GameObject nightLight;
+    [SerializeField] private GameObject nightLight;
 
     // 초저녁 빛
-    public GameObject earlyEveningLight;
+    [SerializeField] private GameObject earlyEveningLight;
 
     // 새벽 빛
-    public GameObject dawnLight;
+    [SerializeField] private GameObject dawnLight;
 
     // 낮 안개
-    public Color dayFog;
+    [SerializeField] private Color dayFog;
 
     // 밤 안개
-    public Color nightFog;
+    [SerializeField] private Color nightFog;
 
     // 초저녁 안개
-    public Color earlyEveningFog;
+    [SerializeField] private Color earlyEveningFog;
 
     // 새벽 안개
-    public Color dawnFog;
+    [SerializeField] private Color dawnFog;
 
     // 하루의 시간
-    public float dayTime;
+    [SerializeField] private float dayTime;
 
     // 흘러간 시간
     private float passedTime;
@@ -50,7 +50,7 @@ public class ControlSky : MonoBehaviour
     // 낮과 밤이 전환되었는지 체크
     private bool isSwap;
 
-    void Update()
+    private void Update()
     {
         // 스카이박스 회전
         RenderSettings.skybox.SetFloat("_Rotation", Time.time * 1.5f);
@@ -59,39 +59,21 @@ public class ControlSky : MonoBehaviour
         passedTime += Time.deltaTime;
 
         // 하루의 반복
-        if(passedTime >= dayTime)
-        {
-            passedTime = 0;
-        }
+        if(passedTime >= dayTime) passedTime = 0;
 
         // 낮 -> 초저녁 -> 밤 -> 새벽 -> 낮
         if(!isSwap)
         {
-            if (Mathf.FloorToInt(dayTime * 0.3f) == Mathf.FloorToInt(passedTime))
-            {
-                // 낮 -> 초저녁
-                ChangeSky(earlyEveningMat, earlyEveningFog, earlyEveningLight, dayLight);
-            }
-            else if (Mathf.FloorToInt(dayTime * 0.5f) == Mathf.FloorToInt(passedTime))
-            {
-                // 초저녁 -> 밤
-                ChangeSky(nightMat, nightFog, nightLight, earlyEveningLight);
-            }
-            else if (Mathf.FloorToInt(dayTime * 0.7f) == Mathf.FloorToInt(passedTime))
-            {
-                // 밤 -> 새벽
-                ChangeSky(dawnMat, dawnFog, dawnLight, nightLight);
-            }
-            else if (Mathf.FloorToInt(dayTime * 0.9f) == Mathf.FloorToInt(passedTime))
-            {
-                // 새벽 -> 낮
-                ChangeSky(dayMat, dayFog, dayLight, dawnLight);
-            }
+            if (Mathf.FloorToInt(dayTime * 0.3f) == Mathf.FloorToInt(passedTime)) ChangeSky(earlyEveningMat, earlyEveningFog, earlyEveningLight, dayLight);
+            else if (Mathf.FloorToInt(dayTime * 0.5f) == Mathf.FloorToInt(passedTime)) ChangeSky(nightMat, nightFog, nightLight, earlyEveningLight);
+            else if (Mathf.FloorToInt(dayTime * 0.7f) == Mathf.FloorToInt(passedTime)) ChangeSky(dawnMat, dawnFog, dawnLight, nightLight);
+            else if (Mathf.FloorToInt(dayTime * 0.9f) == Mathf.FloorToInt(passedTime)) ChangeSky(dayMat, dayFog, dayLight, dawnLight);
+
             isSwap = false;
         }
     }
 
-    void ChangeSky(Material curMatType, Color curFogType, GameObject curLightType, GameObject preLightType)
+    private void ChangeSky(Material curMatType, Color curFogType, GameObject curLightType, GameObject preLightType)
     {
         // 시간에 따른 하늘 변화
         isSwap = true;

@@ -16,9 +16,9 @@ public class AbilityArrow0Collision : MonoBehaviour
     private PoolingManager poolingManager;
 
     // 충돌 이펙트
-    public GameObject instantHit;
+    private GameObject instantHit;
 
-    void Start()
+    private void Start()
     {
         // 플레이어
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
@@ -27,7 +27,7 @@ public class AbilityArrow0Collision : MonoBehaviour
         poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject other)
     {
         // 파티클 충돌
         if(other.TryGetComponent(out Enemy enemy))

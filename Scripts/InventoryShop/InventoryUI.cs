@@ -7,16 +7,16 @@ using UnityEngine.UI;
 public class InventoryUI : MonoBehaviour
 {
     // 인벤토리 슬롯
-    public InventorySlot[] inventorySlots;
+    private InventorySlot[] inventorySlots;
 
     // 인벤토리 슬롯을 관리하는 변수
-    public Transform slotHolder;
+    [SerializeField] private Transform slotHolder;
 
     // 인벤토리
-    Inventory inventory;
+    private Inventory inventory;
 
     // 인벤토리 슬롯 확장 횟수
-    public int inventorySlotExpansionCnt;
+    private int inventorySlotExpansionCnt;
 
     void Start()
     {
@@ -33,10 +33,7 @@ public class InventoryUI : MonoBehaviour
         inventory.onChangeInventoryItem += RedrawSlotUI;
 
         // 선택된 캐릭터와 다르면 캔버스 삭제
-        if (DataManager.instance.character.ToString() + "Canvas" != gameObject.name)
-        {
-            gameObject.SetActive(false);
-        }
+        if (DataManager.instance.character.ToString() + "Canvas" != gameObject.name) gameObject.SetActive(false);
     }
 
     public void InventorySlotChange(int val)
@@ -49,14 +46,8 @@ public class InventoryUI : MonoBehaviour
             inventorySlots[i].inventorySlotNum = i;
 
             // 슬롯 카운트의 개수만 남기고 슬롯 비활성화
-            if (i < inventory.InventorySlotCnt)
-            {
-                inventorySlots[i].GetComponent<Button>().interactable = true;
-            }
-            else
-            {
-                inventorySlots[i].GetComponent<Button>().interactable = false;
-            }
+            if (i < inventory.InventorySlotCnt) inventorySlots[i].GetComponent<Button>().interactable = true;
+            else inventorySlots[i].GetComponent<Button>().interactable = false;
         }
     }
 
@@ -88,7 +79,7 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    void RedrawSlotUI()
+    private void RedrawSlotUI()
     {
         // OnChangeInventoryItem 이벤트대리자가 대리 할 함수
         // 인벤토리 갱신 함수

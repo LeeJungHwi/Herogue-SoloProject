@@ -9,7 +9,7 @@ public class RoomSpawner : MonoBehaviour
     // 2 : 위쪽문이 열려있는 방이 필요한 방이다
     // 3 : 왼쪽문이 열려있는 방이 필요한 방이다
     // 4 : 오른쪽문이 열려있는 방이 필요한 방이다
-    public int openingDirection;
+    [SerializeField] private int openingDirection;
 
     // 랜덤맵 오브젝트 풀링
     private PoolingManager poolingManager;
@@ -21,12 +21,12 @@ public class RoomSpawner : MonoBehaviour
     private int rand;
 
     // 스폰되었는지 체크
-    public bool spawned = false;
+    [HideInInspector] public bool spawned = false;
 
     // 맵 0.1초 뒤에 생성
-    public float waitTime = 0.1f;
+    [HideInInspector] public float waitTime = 0.1f;
 
-    void Start()
+    private void Start()
     {
         // 방 모델
         templates = GameObject.FindGameObjectWithTag("Rooms").GetComponent<RoomTemplates>();
@@ -35,7 +35,7 @@ public class RoomSpawner : MonoBehaviour
         poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void Update()
+    private void Update()
     {
         // 대기시간이 0이하일때
         if(waitTime <= 0)
@@ -53,26 +53,11 @@ public class RoomSpawner : MonoBehaviour
                     return;
                 }
 
-                if (openingDirection == 1)
-                {
-                    // 아래쪽 방으로부터 생성
-                    RoomSpawn(templates.bottomRooms);
-                }
-                else if (openingDirection == 2)
-                {
-                    // 위쪽 방으로부터 생성
-                    RoomSpawn(templates.topRooms);
-                }
-                else if (openingDirection == 3)
-                {
-                    // 왼쪽 방으로부터 생성
-                    RoomSpawn(templates.leftRooms);
-                }
-                else if (openingDirection == 4)
-                {
-                    // 오른쪽 방으로부터 생성
-                    RoomSpawn(templates.rightRooms);
-                }
+                // 각 방향 방 생성
+                if (openingDirection == 1) RoomSpawn(templates.bottomRooms);
+                else if (openingDirection == 2) RoomSpawn(templates.topRooms);
+                else if (openingDirection == 3) RoomSpawn(templates.leftRooms);
+                else if (openingDirection == 4) RoomSpawn(templates.rightRooms);
 
                 // 스폰상태
                 spawned = true;
@@ -85,7 +70,7 @@ public class RoomSpawner : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         // 이미 생성된곳에 비밀방 생성
         if(other.CompareTag("SpawnPoint"))
@@ -148,7 +133,7 @@ public class RoomSpawner : MonoBehaviour
         }
     }
 
-    void RoomSpawn(GameObject[] roomType)
+    private void RoomSpawn(GameObject[] roomType)
     {
         // 방 생성 함수
         rand = Random.Range(0, roomType.Length);
@@ -158,7 +143,7 @@ public class RoomSpawner : MonoBehaviour
         instantRoom.transform.rotation = roomType[rand].transform.rotation;
     }
 
-    void SecretBoxSpawn(Vector3 spawnPosition)
+    private void SecretBoxSpawn(Vector3 spawnPosition)
     {
         // 시크릿박스 생성 함수
         rand = Random.Range(0, 2);

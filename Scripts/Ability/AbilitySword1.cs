@@ -8,7 +8,7 @@ using TMPro;
 public class AbilitySword1 : AbilityBase
 {
     // 스킬1 인스턴스
-    GameObject instantAbilitySword1;
+    private GameObject instantAbilitySword1;
 
     // 스킬 실행시 내용
     public override void Activate(GameObject joystick, GameObject player, GameObject poolingManager)

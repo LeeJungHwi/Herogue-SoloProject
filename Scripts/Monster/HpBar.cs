@@ -9,30 +9,30 @@ public class HpBar : MonoBehaviour
     [SerializeField] GameObject HpBarPrefab;
 
     // 몬스터 자신의 위치를 저장할 변수
-    Transform MonsterPos;
+    private Transform MonsterPos;
 
     // 캔버스
     private GameObject Canvas;
 
     // 생성된 체력바
-    public GameObject instantHpBar;
+    [HideInInspector] public GameObject instantHpBar;
 
     // 오브젝트 풀링
-    PoolingManager poolingManager;
+    private PoolingManager poolingManager;
 
     // Enemy 스크립트
-    Enemy enemy;
+    private Enemy enemy;
 
     // 체력바가 생성되었는지 체크
-    public bool spawnHpBar;
+    [HideInInspector] public bool spawnHpBar;
 
     // 카메라
-    Camera cam = null;
+    private Camera cam = null;
 
     // 플레이어와의 거리
     private float distance;
 
-    void Start()
+    private void Start()
     {
         // 카메라
         cam = Camera.main;
@@ -50,7 +50,7 @@ public class HpBar : MonoBehaviour
         MonsterPos = transform;
     }
 
-    void Update()
+    private void Update()
     {
         // 체력바가 생성되지 않았을때에만
         // 체력바를 생성
@@ -61,26 +61,11 @@ public class HpBar : MonoBehaviour
             instantHpBar = poolingManager.GetObj(ObjType.몬스터체력바);
             spawnHpBar = true;
         }
-        if(enemy.enemyType == Type.Bat)
-        {
-            instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 15f, 0));
-        }
-        else if(enemy.enemyType == Type.Bomb)
-        {
-            instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 20f, 0));
-        }
-        else if(enemy.enemyType == Type.Ciclop)
-        {
-            instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 30f, 0));
-        }
-        else if(enemy.enemyType == Type.Golem)
-        {
-            instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
-        }
-        else if(enemy.enemyType == Type.Rabbit)
-        {
-            instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
-        }
+        if(enemy.enemyType == Type.Bat) instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 15f, 0));
+        else if(enemy.enemyType == Type.Bomb) instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 20f, 0));
+        else if(enemy.enemyType == Type.Ciclop) instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 30f, 0));
+        else if(enemy.enemyType == Type.Golem) instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
+        else if(enemy.enemyType == Type.Rabbit) instantHpBar.transform.position = cam.WorldToScreenPoint(MonsterPos.position + new Vector3(0, 25f, 0));
 
         // 플레이어와의 거리
         distance = Vector3.Distance(enemy.player.transform.position, transform.position);
@@ -94,7 +79,7 @@ public class HpBar : MonoBehaviour
     }
 
     // 플레이어 시야에 몬스터가 보이는지 체크
-    bool IsMonsterVisible()
+    private bool IsMonsterVisible()
     {
         Vector3 layDir = MonsterPos.position - enemy.player.transform.position; // 레이 방향
         float radius = 1.0f; // 레이 반지름
@@ -142,10 +127,6 @@ public class HpBar : MonoBehaviour
         return false;
     }
 
-    void SetCanvas()
-    {
-        // 캔버스를 할당하는 함수
-        // 캔버스 할당
-        Canvas = GameObject.FindGameObjectWithTag("Canvas");
-    }
+    // 캔버스를 할당하는 함수
+    private void SetCanvas() { Canvas = GameObject.FindGameObjectWithTag("Canvas"); }
 }

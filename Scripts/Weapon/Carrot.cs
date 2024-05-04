@@ -15,24 +15,15 @@ public class Carrot : MonoBehaviour
 
     private PoolingManager poolManager;
 
-    void Awake()
-    {
-        poolManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
-    }
+    private void Awake() { poolManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>(); }
 
-    void Update()
+    private void Update()
     {
         // 당근 및 키클로페스 눈 회전
         transform.Rotate(Vector3.right * 90 * Time.deltaTime);
         
-        if (waitTime <= 0)
-        {
-            // 당근 및 키클로페스 눈 반납
-            poolManager.ReturnObj(gameObject, type);
-        }
-        else
-        {
-            waitTime -= Time.deltaTime;
-        }
+        // 당근 및 키클로페스 눈 반납
+        if (waitTime <= 0) poolManager.ReturnObj(gameObject, type);
+        else waitTime -= Time.deltaTime;
     }
 }

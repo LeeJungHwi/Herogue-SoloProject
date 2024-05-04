@@ -19,12 +19,12 @@ public class AbilityArrow1Collision : MonoBehaviour
     private ParticleSystem particle;
 
     // 충돌 이벤트를 저장 할 리스트
-    List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
+    private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
 
     // 충돌시 생성할 이펙트
-    public GameObject instantHit;
+    private GameObject instantHit;
 
-    void Start()
+    private void Start()
     {
         // 파티클 시스템
         particle = GetComponent<ParticleSystem>();
@@ -36,7 +36,7 @@ public class AbilityArrow1Collision : MonoBehaviour
         poolingManager = GameObject.FindGameObjectWithTag("PoolManager").GetComponent<PoolingManager>();
     }
 
-    void OnParticleCollision(GameObject other)
+    private void OnParticleCollision(GameObject other)
     {
         // 파티클 충돌
         // 파티클 충돌 이벤트의 수
@@ -50,10 +50,7 @@ public class AbilityArrow1Collision : MonoBehaviour
             instantHit.transform.rotation = Quaternion.LookRotation(collisionEvents[i].normal);
         }
 
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            // 스킬 충돌 공통 로직
-            player.AbilityCollisionLogic(damage, enemy, transform);
-        }
+        // 스킬 충돌 공통 로직
+        if (other.TryGetComponent(out Enemy enemy)) player.AbilityCollisionLogic(damage, enemy, transform);
     }
 }

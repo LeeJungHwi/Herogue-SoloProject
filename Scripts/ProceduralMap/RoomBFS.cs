@@ -8,19 +8,19 @@ using Unity.VisualScripting;
 // 목적 : 문의 다음방이 없는 이슈 픽스 + 시작방에서 가장 거리가 먼 방에 보스 생성
 public class RoomBFS : MonoBehaviour
 {
-    public int n = 21, m = 21; // N, M 21, 21
+    private int n = 21, m = 21; // N, M 21, 21
     public ObjType[,] graph; // 그래프
-    public int[,] dis; // 거리
-    Queue<Vector2Int> checkPos = new Queue<Vector2Int>(); // 체크 할 위치
-    List<Vector2Int> checkDir = new List<Vector2Int>(); // 상하좌우 -> 상 : X -200 하 X +200 좌 Z -200 우 Z +200 -> 200을 1단위로 봄 상 : X - 1 하 : X + 1 좌 Z - 1 우 Z + 1
-    public PoolingManager poolingManager; // 방생성
-    public RoomTemplates templates; // 방모델
-    int maxDis = 0; // 최대거리
-    public Vector3 maxDisPos = Vector3.zero; // 최대거리 위치
-    public bool isBFS = false; // BFS 돌렸는지 체크
-    public MiniMap miniMap; // 던전 미니맵
+    private int[,] dis; // 거리
+    private Queue<Vector2Int> checkPos = new Queue<Vector2Int>(); // 체크 할 위치
+    private List<Vector2Int> checkDir = new List<Vector2Int>(); // 상하좌우 -> 상 : X -200 하 X +200 좌 Z -200 우 Z +200 -> 200을 1단위로 봄 상 : X - 1 하 : X + 1 좌 Z - 1 우 Z + 1
+    [SerializeField] private PoolingManager poolingManager; // 방생성
+    [SerializeField] private RoomTemplates templates; // 방모델
+    private int maxDis = 0; // 최대거리
+    [HideInInspector] public Vector3 maxDisPos = Vector3.zero; // 최대거리 위치
+    private bool isBFS = false; // BFS 돌렸는지 체크
+    private MiniMap miniMap; // 던전 미니맵
 
-    void Awake()
+    private void Awake()
     {
         // 그래프
         graph = new ObjType[n, m];
@@ -41,13 +41,10 @@ public class RoomBFS : MonoBehaviour
         miniMap = GameObject.Find(DataManager.instance.character.ToString() + "Canvas").GetComponentInChildren<MiniMap>();
     }
 
-    void Update()
+    private void Update()
     {
         // BFS 이미 돌렸으면 리턴
-        if(isBFS)
-        {
-            return;
-        }
+        if(isBFS) return;
 
         // 방이 모두 생성된 상태
         if(templates.rooms.Count > templates.baseStage + templates.currentStage / templates.stageCoef * templates.stageCoef)
@@ -107,10 +104,7 @@ public class RoomBFS : MonoBehaviour
             string checkDoor = graph[standardPos.x, standardPos.y].ToString(); // 체크 할 문 : 방타입을 일단 문자열로 가져옴 B BL TBL ....
 
             // 시크릿방은 4방향 모두 문이므로 TBLR로 바꿔줌
-            if(checkDoor == "SecretRoom")
-            {
-                checkDoor = "TBLR";
-            }
+            if(checkDoor == "SecretRoom") checkDoor = "TBLR";
 
             for(int i = 0; i < checkDoor.Length; i++) 
             {
@@ -200,34 +194,22 @@ public class RoomBFS : MonoBehaviour
                 // 여기서 문이 있는 방향만 가야 제대로된 거리 측정
                 if(checkDoor.IndexOf("T") == -1) // T가 없으면 상으로 갈수없음
                 {
-                    if(i == 0)
-                    {
-                        continue;
-                    }
+                    if(i == 0) continue;
                 }
 
                 if(checkDoor.IndexOf("B") == -1) // B가 없으면 하로 갈수없음
                 {
-                    if(i == 1)
-                    {
-                        continue;
-                    }
+                    if(i == 1) continue;
                 }
 
                 if(checkDoor.IndexOf("L") == -1) // L이 없으면 좌로 갈수없음
                 {
-                    if(i == 2)
-                    {
-                        continue;
-                    }
+                    if(i == 2) continue;
                 }
 
                 if(checkDoor.IndexOf("R") == -1) // R이 없으면 우로 갈수없음
                 {
-                    if(i == 3)
-                    {
-                        continue;
-                    }
+                    if(i == 3) continue;
                 }
 
                 // 체크 할 위치
@@ -235,22 +217,13 @@ public class RoomBFS : MonoBehaviour
                 int checkJ = standardPos.y + checkDir[i].y;
 
                 // 경계체크
-                if(checkI < 0 || checkJ < 0 || checkI >= n || checkJ >= m)
-                {
-                    continue;
-                }
+                if(checkI < 0 || checkJ < 0 || checkI >= n || checkJ >= m) continue;
 
                 // 방문체크
-                if(dis[checkI, checkJ] > 0)
-                {
-                    continue;
-                }
+                if(dis[checkI, checkJ] > 0) continue;
 
                 // 방체크
-                if(graph[checkI, checkJ] == ObjType.화살)
-                {
-                    continue;
-                }
+                if(graph[checkI, checkJ] == ObjType.화살) continue;
 
                 // 큐에저장 거리저장 최대거리갱신 최대거리위치갱신
                 checkPos.Enqueue(new Vector2Int(checkI, checkJ));
@@ -270,7 +243,7 @@ public class RoomBFS : MonoBehaviour
     }
 
     // 방생성
-    void RoomSpawn(ObjType type, Vector3 pos)
+    private void RoomSpawn(ObjType type, Vector3 pos)
     {
         GameObject instantRoom = poolingManager.GetObj(type);
         instantRoom.transform.position = pos;
@@ -291,10 +264,8 @@ public class RoomBFS : MonoBehaviour
         }
 
         // 이전 스테이지에서 활성화했던 미니맵 타일 초기화 및 보스방 타일 다시 흰색으로
-        for(int i = 0; i < miniMap.drawIndex.Count; i++)
-        {
-            miniMap.roomTilePref[miniMap.drawIndex[i]].SetActive(false);
-        }
+        for(int i = 0; i < miniMap.drawIndex.Count; i++) miniMap.roomTilePref[miniMap.drawIndex[i]].SetActive(false);
+        
         miniMap.drawIndex.Clear();
         miniMap.roomTilePref[(int)maxDisPos.x / 200 * 21 + (int)maxDisPos.z / 200].GetComponent<UnityEngine.UI.Image>().color = Color.white;
 

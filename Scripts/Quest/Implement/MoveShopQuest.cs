@@ -6,8 +6,7 @@ using UnityEngine;
 public class MoveShopQuest : ObjectiveBase, ISequential
 {
     // 다음 퀘스트
-    [SerializeField]
-    private QuestBase nextQuest;
+    [SerializeField] private QuestBase nextQuest;
     public QuestBase NextQuest 
     { 
         get { return nextQuest; }

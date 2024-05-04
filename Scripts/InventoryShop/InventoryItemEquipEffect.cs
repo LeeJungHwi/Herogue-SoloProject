@@ -25,7 +25,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 장비 장착 할 수 있는지 체크
-    bool CanEquip(Player player, InventoryItem inventoryItem)
+    private bool CanEquip(Player player, InventoryItem inventoryItem)
     {
         EquipmentItemType equipmentItemType = inventoryItem.equipmentItemType; // 장비 타입
 
@@ -49,7 +49,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 캐릭터 타입에 따른 유효한 무기인지 체크
-    bool IsValidWeaponType(Player player, InventoryItem inventoryItem)
+    private bool IsValidWeaponType(Player player, InventoryItem inventoryItem)
     {
         WeaponType weaponType = inventoryItem.weaponType; // 무기 타입
 
@@ -69,7 +69,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 장비 장착
-    void EquipLogic(Player player, InventoryItem inventoryItem)
+    private void EquipLogic(Player player, InventoryItem inventoryItem)
     {
         // 장비 슬롯 이미지 업데이트
         UpdateEquipSlotImage(player, inventoryItem);
@@ -84,14 +84,11 @@ public class InventoryItemEquipEffect : InventoryItemEffect
         UpdateFlag(player, inventoryItem);
 
         // 펫 이면 펫 생성
-        if(inventoryItem.equipmentItemType == EquipmentItemType.Pet)
-        {
-            PetSpawn(player, inventoryItem);
-        }
+        if(inventoryItem.equipmentItemType == EquipmentItemType.Pet) PetSpawn(player, inventoryItem);
     }
 
     // 장비 슬롯 이미지 업데이트
-    void UpdateEquipSlotImage(Player player, InventoryItem inventoryItem)
+    private void UpdateEquipSlotImage(Player player, InventoryItem inventoryItem)
     {
         EquipmentItemType equipmentItemType = inventoryItem.equipmentItemType; // 장비 타입
 
@@ -127,7 +124,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 플레이어 스탯 업데이트
-    void UpdatePlayerStat(Player player, InventoryItem inventoryItem)
+    private void UpdatePlayerStat(Player player, InventoryItem inventoryItem)
     {
         player.damage += inventoryItem.attack; // 공격력
         player.curHealth += inventoryItem.health; // 현재 체력
@@ -139,7 +136,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 현재 장착되어있는 장비 업데이트
-    void UpdateEquipedItem(Player player, InventoryItem inventoryItem)
+    private void UpdateEquipedItem(Player player, InventoryItem inventoryItem)
     {
         EquipmentItemType equipmentItemType = inventoryItem.equipmentItemType; // 장비 타입
 
@@ -167,7 +164,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 장비 장착 플래그 업데이트
-    void UpdateFlag(Player player, InventoryItem inventoryItem)
+    private void UpdateFlag(Player player, InventoryItem inventoryItem)
     {
         EquipmentItemType equipmentItemType = inventoryItem.equipmentItemType; // 장비 타입
 
@@ -196,7 +193,7 @@ public class InventoryItemEquipEffect : InventoryItemEffect
     }
 
     // 펫 생성
-    void PetSpawn(Player player, InventoryItem inventoryItem)
+    private void PetSpawn(Player player, InventoryItem inventoryItem)
     {
         GameObject instantPet = player.poolingManager.GetObj(inventoryItem.type); // 펫 활성화
         player.RepositionPet(instantPet); // 펫 위치 설정

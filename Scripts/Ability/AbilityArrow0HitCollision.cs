@@ -11,20 +11,10 @@ public class AbilityArrow0HitCollision : MonoBehaviour
 
     // 플레이어
     private Player player;
+    
+    // Player 스크립트
+    private void Start() { player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
 
-    void Start()
-    {
-        // Player 스크립트
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-    }
-
-    void OnParticleCollision(GameObject other)
-    {
-        // 파티클 충돌
-        // 스킬 충돌 공통 로직
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            player.AbilityCollisionLogic(damage, enemy, transform);
-        }
-    }
+    // 파티클 충돌
+    private void OnParticleCollision(GameObject other) { if (other.TryGetComponent(out Enemy enemy)) player.AbilityCollisionLogic(damage, enemy, transform); }
 }

@@ -14,107 +14,107 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
     public static InventoryItem inventoryItemSave;
 
     // 인벤토리 아이템 이미지
-    public Image inventoryItemImage;
+    [SerializeField] private Image inventoryItemImage;
 
     // 인벤토리 슬롯 숫자
-    public int inventorySlotNum;
+    [HideInInspector] public int inventorySlotNum;
 
     // 인벤토리 슬롯 숫자 싱글톤 : 포션을 사용하기위해서 어떤슬롯이든 공유
     public static int inventorySlotNumSave;
 
     // 인벤토리
-    public Inventory inventory;
+    [SerializeField] private Inventory inventory;
 
     // 인벤토리 장비아이템 정보패널
-    public GameObject inventoryEquipmentItemInfoPanel;
+    [SerializeField] private GameObject inventoryEquipmentItemInfoPanel;
 
     // 인벤토리 장비아이템 이미지
-    public Image inventoryEquipmentItemInfoImage;
+    [SerializeField] private Image inventoryEquipmentItemInfoImage;
 
     // 인벤토리 장비아이템 이름
-    public Text inventoryEquipmentItemInfoNameText;
+    [SerializeField] private Text inventoryEquipmentItemInfoNameText;
 
     // 인벤토리 장비아이템 스탯
-    public Text inventoryEquipmentItemInfoStatusText;
+    [SerializeField] private Text inventoryEquipmentItemInfoStatusText;
 
     // 인벤토리 소모품아이템 정보패널
-    public GameObject inventoryConsumablesItemInfoPanel;
+    [SerializeField] private GameObject inventoryConsumablesItemInfoPanel;
 
     // 인벤토리 소모품아이템 이미지
-    public Image inventoryConsumablesItemInfoImage;
+    [SerializeField] private Image inventoryConsumablesItemInfoImage;
 
     // 인벤토리 소모품아이템 이름
-    public Text inventoryConsumablesItemInfoNameText;
+    [SerializeField] private Text inventoryConsumablesItemInfoNameText;
 
     // 인벤토리 소모품아이템 스탯
-    public Text inventoryConsumablesItemInfoStatusText;
+    [SerializeField] private Text inventoryConsumablesItemInfoStatusText;
 
     // 인벤토리 장비아이템 해제패널
-    public GameObject inventoryEquipmentItemInfoUnEquipPanel;
+    [SerializeField] private GameObject inventoryEquipmentItemInfoUnEquipPanel;
 
     // 인벤토리 장비아이템 해제패널 이미지
-    public Image inventoryEquipmentItemInfoUnEquipImage;
+    [SerializeField] private Image inventoryEquipmentItemInfoUnEquipImage;
 
     // 인벤토리 장비아이템 해제패널 이름
-    public Text inventoryEquipmentItemInfoUnEquipNameText;
+    [SerializeField] private Text inventoryEquipmentItemInfoUnEquipNameText;
 
     // 인벤토리 장비아이템 해제패널 스탯
-    public Text inventoryEquipmentItemInfoUnEquipStatusText;
+    [SerializeField] private Text inventoryEquipmentItemInfoUnEquipStatusText;
 
     // 해제 할 인벤토리 아이템 : 해제 할 장비를 저장하기위한 스태틱변수
-    public static InventoryItem unequipInventoryItemSave;
+    [SerializeField] private static InventoryItem unequipInventoryItemSave;
 
     // 플레이어
-    public Player player;
+    [SerializeField] private Player player;
 
     // 장비아이템 가격 텍스트
-    public Text inventoryEquipmentItemPriceText;
+    [SerializeField] private Text inventoryEquipmentItemPriceText;
 
     // 소모품 가격 텍스트
-    public Text inventoryConsumablesItemPriceText;
+    [SerializeField] private Text inventoryConsumablesItemPriceText;
 
     // 인벤토리 아이템 판매 패널
-    public GameObject inventoryItemSellPanel;
+    [SerializeField] private GameObject inventoryItemSellPanel;
 
     // 인벤토리 아이템 판매 이미지
-    public Image inventoryItemSellImage;
+    [SerializeField] private Image inventoryItemSellImage;
 
     // 인벤토리 아이템 판매 이름
-    public Text inventoryItemSellNameText;
+    [SerializeField] private Text inventoryItemSellNameText;
 
     // 상점 아이템 구매 스탯
-    public Text inventoryItemSellStatusText;
+    [SerializeField] private Text inventoryItemSellStatusText;
 
     // 인벤토리 아이템 판매 가격텍스트
-    public Text inventoryItemSellPriceText;
+    [SerializeField] private Text inventoryItemSellPriceText;
 
     // 인벤토리 슬롯 확장 패널
     public GameObject inventoryExpansionSlotItemInfoPanel;
 
     // 랜덤 스킬 패널
-    public GameObject inventoryRandomSkillItemInfoPanel;
+    [SerializeField] private GameObject inventoryRandomSkillItemInfoPanel;
 
     // 액티브스킬 패널
-    public GameObject inventoryAbilityItemInfoPanel;
+    [SerializeField] private GameObject inventoryAbilityItemInfoPanel;
 
     // 액티브스킬 이미지
-    public Image inventoryAbilityItemInfoImage;
+    [SerializeField] private Image inventoryAbilityItemInfoImage;
 
     // 액티브스킬 이름 텍스트
-    public Text inventoryAbilityItemInfoNameText;
+    [SerializeField] private Text inventoryAbilityItemInfoNameText;
 
     // 액티브스킬 스탯 텍스트
-    public Text inventoryAbilityItemInfoStatusText;
+    [SerializeField] private Text inventoryAbilityItemInfoStatusText;
 
     // 액티브스킬 가격 텍스트
-    public Text inventoryAbilityItemPriceText;
+    [SerializeField] private Text inventoryAbilityItemPriceText;
 
     // 랜덤펫 패널
-    public GameObject inventoryRandomPetItemInfoPanel;
+    [SerializeField] private GameObject inventoryRandomPetItemInfoPanel;
 
     // 장비 슬롯 이미지 스프라이트
     // 0 : 무기 1 : 갑옷 2 : 장갑 3 : 신발 4 : 아뮬렛 5 : 펫
-    public Sprite[] equipmentSlotImageSpirte;
+    [SerializeField] private Sprite[] equipmentSlotImageSpirte;
 
     public void UpdateSlotUI()
     {
@@ -134,40 +134,22 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
     {
         // 인벤토리 아이템을 버리는 함수
         // 장비 : 장비 패널 닫기
-        if(itemType == "Equipment")
-        {
-            inventoryEquipmentItemInfoPanel.SetActive(false);
-        }
+        if(itemType == "Equipment") inventoryEquipmentItemInfoPanel.SetActive(false);
 
         // 소모품 : 소모품 패널 닫기
-        if(itemType == "Consumables")
-        {
-            inventoryConsumablesItemInfoPanel.SetActive(false);
-        }
+        if(itemType == "Consumables") inventoryConsumablesItemInfoPanel.SetActive(false);
 
         // 인벤토리 슬롯확장권 : 인벤토리 슬롯 확장 패널 닫기
-        if(itemType == "ExpansionSlot")
-        {
-            inventoryExpansionSlotItemInfoPanel.SetActive(false);
-        }
+        if(itemType == "ExpansionSlot") inventoryExpansionSlotItemInfoPanel.SetActive(false);
 
         // 랜덤 스킬 : 랜덤 스킬 패널 닫기
-        if (itemType == "RandomSkill")
-        {
-            inventoryRandomSkillItemInfoPanel.SetActive(false);
-        }
+        if (itemType == "RandomSkill") inventoryRandomSkillItemInfoPanel.SetActive(false);
 
         // 액티브스킬 : 액티브스킬 패널 닫기
-        if (itemType == "Ability")
-        {
-            inventoryAbilityItemInfoPanel.SetActive(false);
-        }
+        if (itemType == "Ability") inventoryAbilityItemInfoPanel.SetActive(false);
 
         // 랜덤펫 : 랜덤펫 패널 닫기
-        if (itemType == "RandomPet")
-        {
-            inventoryRandomPetItemInfoPanel.SetActive(false);
-        }
+        if (itemType == "RandomPet") inventoryRandomPetItemInfoPanel.SetActive(false);
 
         // 인벤토리 아이템 제거
         inventory.RemoveInventoryItem(inventorySlotNumSave);
@@ -195,46 +177,14 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
     public void DeActiveInventoryPanel(string panelType)
     {
         // 패널 비활성화
-        if(panelType == "Sell")
-        {
-            // 아이템 판매창 닫기
-            inventoryItemSellPanel.SetActive(false);
-        }
-        else if(panelType == "RandomSkill")
-        {
-            // 랜덤스킬패널 닫기
-            inventoryRandomSkillItemInfoPanel.SetActive(false);
-        }
-        else if(panelType == "Consumables")
-        {
-            // 소모품 정보창 닫기
-            inventoryConsumablesItemInfoPanel.SetActive(false);
-        }
-        else if (panelType == "Equipment")
-        {
-            // 장비 정보창 닫기
-            inventoryEquipmentItemInfoPanel.SetActive(false);
-        }
-        else if (panelType == "UnEquip")
-        {
-            // 장비 아이템 해제패널 닫기
-            inventoryEquipmentItemInfoUnEquipPanel.SetActive(false);
-        }
-        else if (panelType == "ExpansionSlot")
-        {
-            // 인벤토리 슬롯 확장 패널 닫기
-            inventoryExpansionSlotItemInfoPanel.SetActive(false);
-        }
-        else if (panelType == "Ability")
-        {
-            // 액티브스킬 패널 닫기
-            inventoryAbilityItemInfoPanel.SetActive(false);
-        }
-        else if (panelType == "RandomPet")
-        {
-            // 랜덤펫 패널 닫기
-            inventoryRandomPetItemInfoPanel.SetActive(false);
-        }
+        if(panelType == "Sell") inventoryItemSellPanel.SetActive(false);
+        else if(panelType == "RandomSkill") inventoryRandomSkillItemInfoPanel.SetActive(false);
+        else if(panelType == "Consumables") inventoryConsumablesItemInfoPanel.SetActive(false);
+        else if (panelType == "Equipment") inventoryEquipmentItemInfoPanel.SetActive(false);
+        else if (panelType == "UnEquip") inventoryEquipmentItemInfoUnEquipPanel.SetActive(false);
+        else if (panelType == "ExpansionSlot") inventoryExpansionSlotItemInfoPanel.SetActive(false);
+        else if (panelType == "Ability") inventoryAbilityItemInfoPanel.SetActive(false);
+        else if (panelType == "RandomPet") inventoryRandomPetItemInfoPanel.SetActive(false);
 
         // 사운드
         SoundManager.instance.SFXPlay(ObjType.버튼소리);
@@ -245,10 +195,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
         // 인벤토리 슬롯 클릭
         // 상점 슬롯과 인벤토리 슬롯에서 아이템이 없는데 슬롯이 눌러지는 문제
         // 현재 인벤토리에 있는 아이템의 개수를 넘어서는 슬롯을 누르면 리턴
-        if(inventory.inventoryItems.Count <= inventorySlotNum)
-        {
-            return;
-        }
+        if(inventory.inventoryItems.Count <= inventorySlotNum) return;
 
         if(!player.isShop)
         {
@@ -266,37 +213,12 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
                 inventoryEquipmentItemInfoNameText.text = inventory.inventoryItems[inventorySlotNum].itemName;
 
                 // 장비아이템 종류에 따라 스탯을 보여준다
-                if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Weapon)
-                {
-                    // 무기면 공격력을 보여준다
-                    inventoryEquipmentItemInfoStatusText.text = "공격력 + " + inventory.inventoryItems[inventorySlotNum].attack.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Armor)
-                {
-                    // 갑옷이면 체력을 보여준다
-                    inventoryEquipmentItemInfoStatusText.text = "체력 + " + inventory.inventoryItems[inventorySlotNum].health.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Glove)
-                {
-                    // 장갑이면 공격속도를 보여준다
-                    inventoryEquipmentItemInfoStatusText.text = "공격속도 + " + inventory.inventoryItems[inventorySlotNum].attackSpeed.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Shoes)
-                {
-                    // 신발이면 이동속도를 보여준다
-                    inventoryEquipmentItemInfoStatusText.text = "이동속도 + " + inventory.inventoryItems[inventorySlotNum].moveSpeed.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Amulet)
-                {
-                    // 아뮬렛이면 크확, 크뎀을 보여준다
-                    inventoryEquipmentItemInfoStatusText.text = "크리티컬확률 + " + inventory.inventoryItems[inventorySlotNum].criticalPercentage.ToString() + " %" + System.Environment.NewLine + "크리티컬데미지 + " + inventory.inventoryItems[inventorySlotNum].criticalDamage.ToString() + " %";
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Pet)
-                {
-                    // 펫이면
-                    // 펫 시스템은 나중에 구현하여 펫의 스탯을 보여준다
-                    inventoryEquipmentItemInfoStatusText.text = "귀여움 + " + inventory.inventoryItems[inventorySlotNum].cute.ToString();
-                }
+                if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Weapon) inventoryEquipmentItemInfoStatusText.text = "공격력 + " + inventory.inventoryItems[inventorySlotNum].attack.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Armor) inventoryEquipmentItemInfoStatusText.text = "체력 + " + inventory.inventoryItems[inventorySlotNum].health.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Glove) inventoryEquipmentItemInfoStatusText.text = "공격속도 + " + inventory.inventoryItems[inventorySlotNum].attackSpeed.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Shoes) inventoryEquipmentItemInfoStatusText.text = "이동속도 + " + inventory.inventoryItems[inventorySlotNum].moveSpeed.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Amulet) inventoryEquipmentItemInfoStatusText.text = "크리티컬확률 + " + inventory.inventoryItems[inventorySlotNum].criticalPercentage.ToString() + " %" + System.Environment.NewLine + "크리티컬데미지 + " + inventory.inventoryItems[inventorySlotNum].criticalDamage.ToString() + " %";
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Pet) inventoryEquipmentItemInfoStatusText.text = "귀여움 + " + inventory.inventoryItems[inventorySlotNum].cute.ToString();
 
                 // 장비아이템의 가격을 보여준다
                 inventoryEquipmentItemPriceText.text = inventory.inventoryItems[inventorySlotNum].price.ToString();
@@ -322,18 +244,10 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
             }
 
             // 인벤토리 슬롯 확장권
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.ExpansionSlot)
-            {
-                // 인벤토리 슬롯 확장권 아이템 정보패널 활성화
-                inventoryExpansionSlotItemInfoPanel.SetActive(true);
-            }
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.ExpansionSlot) inventoryExpansionSlotItemInfoPanel.SetActive(true);
 
             // 랜덤 스킬
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomSkill)
-            {
-                // 랜덤 스킬 아이템 정보패널 활성화
-                inventoryRandomSkillItemInfoPanel.SetActive(true);
-            }
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomSkill) inventoryRandomSkillItemInfoPanel.SetActive(true);
 
             // 액티브스킬
             if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.Ability)
@@ -354,11 +268,8 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
                 inventoryAbilityItemPriceText.text = inventory.inventoryItems[inventorySlotNum].price.ToString();
             }
 
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomPet)
-            {
-                // 랜덤펫뽑기 정보패널 활성화
-                inventoryRandomPetItemInfoPanel.SetActive(true);
-            }
+            // 랜덤펫뽑기 정보패널 활성화
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomPet) inventoryRandomPetItemInfoPanel.SetActive(true);
 
             // 아이템을 스태틱변수에 저장
             inventoryItemSave = inventoryItem;
@@ -385,72 +296,28 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
             // 장비
             if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.Equipment)
             {
-                if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Weapon)
-                {
-                    // 무기면 공격력을 보여준다
-                    inventoryItemSellStatusText.text = "공격력 + " + inventory.inventoryItems[inventorySlotNum].attack.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Armor)
-                {
-                    // 갑옷이면 체력을 보여준다
-                    inventoryItemSellStatusText.text = "체력 + " + inventory.inventoryItems[inventorySlotNum].health.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Glove)
-                {
-                    // 장갑이면 공격속도를 보여준다
-                    inventoryItemSellStatusText.text = "공격속도 + " + inventory.inventoryItems[inventorySlotNum].attackSpeed.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Shoes)
-                {
-                    // 신발이면 이동속도를 보여준다
-                    inventoryItemSellStatusText.text = "이동속도 + " + inventory.inventoryItems[inventorySlotNum].moveSpeed.ToString();
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Amulet)
-                {
-                    // 아뮬렛이면 크확, 크뎀을 보여준다
-                    inventoryItemSellStatusText.text = "크리티컬확률 + " + inventory.inventoryItems[inventorySlotNum].criticalPercentage.ToString() + " %" + System.Environment.NewLine + "크리티컬데미지 + " + inventory.inventoryItems[inventorySlotNum].criticalDamage.ToString() + " %";
-                }
-                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Pet)
-                {
-                    // 펫이면
-                    // 펫 시스템은 나중에 구현하여 펫의 스탯을 보여준다
-                    inventoryItemSellStatusText.text = "귀여움 + " + inventory.inventoryItems[inventorySlotNum].cute.ToString();
-                }
+                if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Weapon) inventoryItemSellStatusText.text = "공격력 + " + inventory.inventoryItems[inventorySlotNum].attack.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Armor) inventoryItemSellStatusText.text = "체력 + " + inventory.inventoryItems[inventorySlotNum].health.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Glove) inventoryItemSellStatusText.text = "공격속도 + " + inventory.inventoryItems[inventorySlotNum].attackSpeed.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Shoes) inventoryItemSellStatusText.text = "이동속도 + " + inventory.inventoryItems[inventorySlotNum].moveSpeed.ToString();
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Amulet) inventoryItemSellStatusText.text = "크리티컬확률 + " + inventory.inventoryItems[inventorySlotNum].criticalPercentage.ToString() + " %" + System.Environment.NewLine + "크리티컬데미지 + " + inventory.inventoryItems[inventorySlotNum].criticalDamage.ToString() + " %";
+                else if (inventory.inventoryItems[inventorySlotNum].equipmentItemType == EquipmentItemType.Pet) inventoryItemSellStatusText.text = "귀여움 + " + inventory.inventoryItems[inventorySlotNum].cute.ToString();
             }
 
             // 소모품
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.Consumables)
-            {
-                // 소모품아이템의 힐량을 보여준다
-                inventoryItemSellStatusText.text = "HP회복 + " + inventory.inventoryItems[inventorySlotNum].healingPoint.ToString();
-            }
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.Consumables) inventoryItemSellStatusText.text = "HP회복 + " + inventory.inventoryItems[inventorySlotNum].healingPoint.ToString();
 
             // 인벤토리 슬롯 확장권
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.ExpansionSlot)
-            {
-                // 인벤토리 슬롯 확장권의 효과를 보여준다
-                inventoryItemSellStatusText.text = "인벤토리 슬롯 4칸을 확장합니다";
-            }
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.ExpansionSlot) inventoryItemSellStatusText.text = "인벤토리 슬롯 4칸을 확장합니다";
 
             // 랜덤 스킬 아이템
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomSkill)
-            {
-                // 랜덤 스킬 아이템 효과를 보여준다
-                inventoryItemSellStatusText.text = "영구적으로 적용되는 스킬을 얻습니다";
-            }
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomSkill) inventoryItemSellStatusText.text = "영구적으로 적용되는 스킬을 얻습니다";
 
             // 액티브스킬
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.Ability)
-            {
-                // 랜덤 스킬 아이템 효과를 보여준다
-                inventoryItemSellStatusText.text = inventory.inventoryItems[inventorySlotNum].skillContent;
-            }
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.Ability) inventoryItemSellStatusText.text = inventory.inventoryItems[inventorySlotNum].skillContent;
 
-            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomPet)
-            {
-                // 랜덤펫뽑기 효과를 보여준다
-                inventoryItemSellStatusText.text = "펫이 들어있다";
-            }
+            // 랜덤펫뽑기
+            if (inventory.inventoryItems[inventorySlotNum].itemType == ItemType.RandomPet) inventoryItemSellStatusText.text = "펫이 들어있다";
 
             // 판매아이템을 스태틱변수에 저장
             inventoryItemSave = inventoryItem;
@@ -473,26 +340,11 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
             Inventory.instance.RemoveInventoryItem(inventorySlotNumSave);
 
             // 패널 비활성화
-            if(itemType == "Equipment")
-            {
-                inventoryEquipmentItemInfoPanel.SetActive(false);
-            }
-            else if(itemType == "Consumables")
-            {
-                inventoryConsumablesItemInfoPanel.SetActive(false);
-            }
-            else if(itemType == "RandomSkill")
-            {
-                inventoryRandomSkillItemInfoPanel.SetActive(false);
-            }
-            else if (itemType == "Ability")
-            {
-                inventoryAbilityItemInfoPanel.SetActive(false);
-            }
-            else if (itemType == "RandomPet")
-            {
-                inventoryRandomPetItemInfoPanel.SetActive(false);
-            }
+            if(itemType == "Equipment") inventoryEquipmentItemInfoPanel.SetActive(false);
+            else if(itemType == "Consumables") inventoryConsumablesItemInfoPanel.SetActive(false);
+            else if(itemType == "RandomSkill") inventoryRandomSkillItemInfoPanel.SetActive(false);
+            else if (itemType == "Ability") inventoryAbilityItemInfoPanel.SetActive(false);
+            else if (itemType == "RandomPet") inventoryRandomPetItemInfoPanel.SetActive(false);
         }
     }
 
@@ -641,10 +493,7 @@ public class InventorySlot : MonoBehaviour, IPointerUpHandler
     {
         // 장비 해제
         // 인벤토리가 가득찼는데 장비해제가 되는 문제 : 인벤토리가 가득차면 리턴
-        if(inventory.inventoryItems.Count == inventory.InventorySlotCnt)
-        {
-            return;
-        }
+        if(inventory.inventoryItems.Count == inventory.InventorySlotCnt) return;
 
         // 해제한 장비 인벤토리로 이동
         inventory.AddInventoryItem(unequipInventoryItemSave);

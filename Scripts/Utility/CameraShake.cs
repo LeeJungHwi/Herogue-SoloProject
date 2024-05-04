@@ -18,24 +18,15 @@ public class CameraShake : MonoBehaviour
     private CameraMove cameraMove;
 
     // 생성자
-    public CameraShake()
-    {
-        instance = this;
-    }
+    public CameraShake() { instance = this; }
 
-    private void Awake()
-    {
-        // CameraMove 스크립트
-        cameraMove = GetComponent<CameraMove>();
-    }
+    // CameraMove 스크립트
+    private void Awake() { cameraMove = GetComponent<CameraMove>(); }
 
     public void OnCameraShake(float shakeTime = 1.0f, float shakeIntensity = 0.1f)
     {
         // 카메라가 흔들리는 중일땐 실행하지 않는다
-        if(cameraMove.isShake)
-        {
-            return;
-        }
+        if(cameraMove.isShake) return;
 
         // 카메라 흔들림 시작
         // 위치 or 회전 선택

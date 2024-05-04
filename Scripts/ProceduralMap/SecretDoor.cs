@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class SecretDoor : MonoBehaviour
 {
-    public bool isOpen; // 문이 열렸는지 체크
+    [HideInInspector] public bool isOpen; // 문이 열렸는지 체크
 }

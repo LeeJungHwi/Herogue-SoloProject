@@ -12,19 +12,9 @@ public class AbilityBlacksmith0Collision : MonoBehaviour
     // 플레이어
     private Player player;
 
-    void Start()
-    {
-        // Player 스크립트
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-    }
+    // Player 스크립트
+    private void Start() { player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>(); }
 
-    void OnParticleCollision(GameObject other)
-    {
-        // 파티클 충돌
-        if (other.TryGetComponent(out Enemy enemy))
-        {
-            // 스킬 충돌 공통 로직
-            player.AbilityCollisionLogic(damage, enemy, transform);
-        }
-    }
+    // 파티클 충돌
+    private void OnParticleCollision(GameObject other) { if (other.TryGetComponent(out Enemy enemy)) player.AbilityCollisionLogic(damage, enemy, transform); }
 }
