@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 // 생성할 프리팹 타입 -> 키로 사용
 public enum ObjType
@@ -74,93 +75,44 @@ public enum ObjType
     퀘스트완료소리
 }
 
-public class PoolingManager : MonoBehaviour
+public class PoolingManager : SerializedMonoBehaviour
 {
-    // 기타 필드
-    // 방 모델
-    public RoomTemplates templates;
+    [Title ("기타 필드")]
+    [SerializeField] private RoomTemplates templates; // 방 모델
+    [SerializeField] private RoomBFS roomBFS; // RoomBFS
+    [SerializeField] [InfoBox ("몬스터 랜덤 배치")]private Vector3[] MonsterVec; // 방내에서 몬스터 랜덤배치를 위한 벡터
+    private GameObject Canvas; // 캔버스
+    [SerializeField] private GameObject FloatingText; // 텍스트 표시
+    [SerializeField] [InfoBox ("생성된 프리팹의 부모 오브젝트")] private GameObject poolSet; // 풀셋 -> 부모를 캔버스로 둬야하는 UI를 제외한 프리팹은 부모를 풀셋으로
 
-    // RoomBFS
-    public RoomBFS roomBFS;
+    [HideInInspector] public List<Tuple<GameObject, ObjType>> AbilityArrow1HitEffects = new List<Tuple<GameObject, ObjType>>(); // AbilityArrow1Hit를 저장 할 리스트
+    [HideInInspector] public List<Tuple<GameObject, ObjType>> AbilityArrow2HitEffects = new List<Tuple<GameObject, ObjType>>(); // AbilityArrow2Hit를 저장 할 리스트
+    [HideInInspector] public List<Tuple<GameObject, ObjType>> AbilityMage1HitEffects = new List<Tuple<GameObject, ObjType>>(); // AbilityMage1Hit과 AbilityMage1Hit2를 저장 할 리스트
+    [HideInInspector] public List<Tuple<GameObject, ObjType>> AbilityHolyknight1HitEffects = new List<Tuple<GameObject, ObjType>>(); // AbilityHolyknight1Hit을 저장 할 리스트
+    [HideInInspector] public List<Tuple<GameObject, ObjType>> AbilityArrow0HitEffects = new List<Tuple<GameObject, ObjType>>(); // AbilityArrow0Hit을 저장 할 리스트
 
-    // 방내에서 몬스터 랜덤배치를 위한 벡터
-    public Vector3[] MonsterVec;
+    [Title ("맵핑 필드")] [PropertySpace (20, 20)]
+    [SerializeField] [ReadOnly] [InfoBox ("모든 프리팹 리스트 저장 => 코드로")] private List<List<GameObject> > Prefs = new List<List<GameObject> >(); // 모든 프리팹 리스트 저장
+    [DetailedInfoBox ("생성 할 프리팹 => 인스펙터에서 할당", "무기\n패시브\n액티브\n코인\n시크릿박스\n몬스터\n랜덤맵\n던전장식\n이펙트\n체력바\n플로팅텍스트\n사운드\n인벤토리아이템\n펫\n기타")]
+    [SerializeField] private List<GameObject> WeaponPrefs = new List<GameObject>(); // 무기
+    [SerializeField] private List<GameObject> PassiveSkillPrefs = new List<GameObject>(); // 패시브 스킬
+    [SerializeField] private List<GameObject> ActiveSkillPrefs = new List<GameObject>(); // 액티브 스킬
+    [SerializeField] private List<GameObject> CoinPrefs = new List<GameObject>(); // 코인
+    public List<GameObject> SecretBoxPrefs = new List<GameObject>(); // 시크릿 박스
+    [SerializeField] private List<GameObject> MonsterPrefs = new List<GameObject>(); // 몬스터
+    public List<GameObject> RandomMapPrefs = new List<GameObject>(); // 랜덤맵 모델
+    [SerializeField] private List<GameObject> DungeonDecoPrefs = new List<GameObject>(); // 던전 장식
+    public List<GameObject> EffectPrefs = new List<GameObject>(); // 이펙트
+    [SerializeField] private List<GameObject> MonsterHpBarPrefs = new List<GameObject>(); // 체력바
+    public List<GameObject> FloationTextPrefs = new List<GameObject>(); // 텍스트 표시
+    [SerializeField] private List<GameObject> SoundPrefs = new List<GameObject>(); // 사운드
+    [SerializeField] private List<GameObject> InventoryItemPrefs = new List<GameObject>(); // 인벤토리 아이템
+    public List<GameObject> PetPrefs = new List<GameObject>(); // 펫
+    [SerializeField] private List<GameObject> EtcPrefabs = new List<GameObject>(); // 기타
+    [SerializeField] [ReadOnly] [InfoBox ("키 : 타입 , 값 : 프리팹 => 코드로")] [PropertySpace (20, 0)] private Dictionary<ObjType, GameObject> genPref = new Dictionary<ObjType, GameObject>(); // (타입, 프리팹) 맵핑
+    [SerializeField] [ReadOnly] [InfoBox ("키 : 타입, 값 : 큐 => 코드로")] private Dictionary<ObjType, Queue<GameObject>> poolPref = new Dictionary<ObjType, Queue<GameObject>>(); // (타입, 큐) 맵핑
 
-    // 캔버스
-    public GameObject Canvas;
-
-    // 텍스트 표시
-    public GameObject FloatingText;
-
-    // 풀셋 -> 부모를 캔버스로 둬야하는 UI를 제외한 프리팹은 부모를 풀셋으로
-    public GameObject poolSet; 
-
-    // AbilityArrow1Hit를 저장 할 리스트
-    public List<Tuple<GameObject, ObjType>> AbilityArrow1HitEffects = new List<Tuple<GameObject, ObjType>>();
-
-    // AbilityArrow2Hit를 저장 할 리스트
-    public List<Tuple<GameObject, ObjType>> AbilityArrow2HitEffects = new List<Tuple<GameObject, ObjType>>();
-
-    // AbilityMage1Hit과 AbilityMage1Hit2를 저장 할 리스트
-    public List<Tuple<GameObject, ObjType>> AbilityMage1HitEffects = new List<Tuple<GameObject, ObjType>>();
-
-    // AbilityHolyknight1Hit을 저장 할 리스트
-    public List<Tuple<GameObject, ObjType>> AbilityHolyknight1HitEffects = new List<Tuple<GameObject, ObjType>>();
-
-    // AbilityArrow0Hit을 저장 할 리스트
-    public List<Tuple<GameObject, ObjType>> AbilityArrow0HitEffects = new List<Tuple<GameObject, ObjType>>();
-
-    // 생성할 프리팹 -> 인스펙터에서 할당
-
-    // 모든 프리팹 리스트 저장
-    public List<List<GameObject> > Prefs = new List<List<GameObject> >();
-
-    // 무기
-    public List<GameObject> WeaponPrefs = new List<GameObject>();
-
-    // 패시브 스킬
-    public List<GameObject> PassiveSkillPrefs = new List<GameObject>();
-
-    // 액티브 스킬
-    public List<GameObject> ActiveSkillPrefs = new List<GameObject>();
-    
-    // 코인
-    public List<GameObject> CoinPrefs = new List<GameObject>();
-
-    // 시크릿 박스
-    public List<GameObject> SecretBoxPrefs = new List<GameObject>();
-
-    // 몬스터
-    public List<GameObject> MonsterPrefs = new List<GameObject>();
-
-    // 랜덤맵 모델
-    public List<GameObject> RandomMapPrefs = new List<GameObject>();
-
-    // 던전 장식
-    public List<GameObject> DungeonDecoPrefs = new List<GameObject>();
-
-    // 이펙트
-    public List<GameObject> EffectPrefs = new List<GameObject>();
-
-    // 체력바
-    public List<GameObject> MonsterHpBarPrefs = new List<GameObject>();
-
-    // 텍스트 표시
-    public List<GameObject> FloationTextPrefs = new List<GameObject>();
-
-    // 사운드
-    public List<GameObject> SoundPrefs = new List<GameObject>();
-    
-    // 인벤토리 아이템
-    public List<GameObject> InventoryItemPrefs = new List<GameObject>();
-
-    // 펫
-    public List<GameObject> PetPrefs = new List<GameObject>();
-
-    // 기타
-    public List<GameObject> EtcPrefabs = new List<GameObject>();
-
-    void Awake()
+    private void Awake()
     {
         // 캔버스 할당
         Canvas = GameObject.Find(DataManager.instance.character.ToString() + "Canvas");
@@ -194,12 +146,6 @@ public class PoolingManager : MonoBehaviour
         Prefs.Add(PetPrefs);
         Prefs.Add(EtcPrefabs);
     }
-
-    // (타입, 프리팹) 맵핑
-    private Dictionary<ObjType, GameObject> genPref = new Dictionary<ObjType, GameObject>();
-
-    // (타입, 큐) 맵핑
-    private Dictionary<ObjType, Queue<GameObject>> poolPref = new Dictionary<ObjType, Queue<GameObject>>();
 
     // (타입, 프리팹) 맵핑
     private void Map()
@@ -309,7 +255,7 @@ public class PoolingManager : MonoBehaviour
     }
 
     // 비활성화전에 따로 처리해줘야 하는 프리팹 처리
-    void GenSubTask(ObjType type, GameObject obj)
+    private void GenSubTask(ObjType type, GameObject obj)
     {
         switch(type)
         {

@@ -4,199 +4,83 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
 using TMPro;
+using System.Linq;
+using Sirenix.OdinInspector;
 
 public class Player : MonoBehaviour
 {
-    // 체크
-    public bool isBorder = false, isShoot = false, isDamage, isDead, isSecretRoom, isShelter = true, iDown, fDown, isShop;
-
-    // 스탯
-    public float curHealth, maxHealth, attackSpeed = 0.5f, damage, criticalDamage, accuracy, bloodDrain, barrier;
+    [HideInInspector] public bool isBorder = false, isShoot = false, isDamage, isDead, isSecretRoom, isShelter = true, iDown, fDown, isShop; // 체크
+    private float invincibilityTime = 3f, invincibilityTimeCalc = 3f; // 불사신 무적시간 계산용
+    
+    [Title ("플레이어 스탯")]
+    [DetailedInfoBox ("플레이어 스탯 정보", "현재체력\n풀체력\n공속\n공격력\n크리티컬뎀\n정확도\n크리티컬확률\n시크릿박스확률\n액티브드랍률\n패시브드랍률\n인벤토리아이템드랍률")]
+    public float curHealth;
+    public float maxHealth, attackSpeed = 0.5f, damage, criticalDamage, accuracy;
+    [HideInInspector] public float bloodDrain, barrier;
     public int criticalPercentage;
-
-    // 불사신 무적시간 계산용
-    private float invincibilityTime = 3f;
-    private float invincibilityTimeCalc = 3f;
-
-    // 코인
+    public float secretPercentage, activeDropPercentage, passiveDropPercentage, inventoryItemPercentage;
     public int coin, maxCoin;
 
-    // 랜덤코인을 뽑기위해서 코인값 저장
-    public int[] coinValue;
+    [Title ("플레이어 장비")]
+    public Image weaponSlotImage; // 장착된 장비의 이미지를 보여주기 위한 변수들
+    public Image armorSlotImage, gloveSlotImage, shoesSlotImage, amuletSlotImage;
+    [PropertySpace (0, 20)] public Image petSlotImage;
+    [HideInInspector] public bool isWeapon, isArmor, isGlove, isShoes, isAmulet, isPet; // 현재 장착된 무기가 있는지 체크하는 변수 => 장착된 장비가 있는상태에서도 장비가 착용되는문제 => 장착 : 플래그가 false 일때만 가능, 장착후에 플래그 true, 해제 : 플래그 false
+    [HideInInspector] public InventoryItem equipedWeaponItem, equipedArmorItem, equipedGloveItem, equipedShoesItem, equipedAmuletItem, equipedPetItem; // 현재 장비 슬롯에 장착되어있는 장비를 저장하는 변수들 
+    [HideInInspector] public GameObject spawnedPet; // 현재 소환된 펫 저장
 
-    // 드랍률
-    public float secretPercentage, activeDropPercentage, passiveDropPercentage, inventoryItemPercentage;
-
-    // 애니메이터
-    public Animator anim;
-
-    // 화살 생성위치
-    public Transform[] ArrowPos;
-
-    // 오브젝트 풀링
-    public PoolingManager poolingManager;
-
-    // 물리
-    private Rigidbody rigid;
-
-    // 플레이어와 가까이 있는 오브젝트
-    public GameObject nearObject;
-
-    // 조이스틱 스크립트
-    public Joystick joystickScript;
-
-    // 다음스테이지 함수를 호출하기위해
-    public RoomTemplates templates;
-
-    // 체력바
-    public Slider playerHpBar;
-
-    // 획득한 스킬의 설명을 저장 할 변수
-    private StringBuilder sb = new StringBuilder();
-
-    // 텍스트
-    public Text skillListText, statusInfoText, coinText, barrierText;
-
-    // 장착된 장비의 이미지를 보여주기 위한 변수들
-    public Image weaponSlotImage, armorSlotImage, gloveSlotImage, shoesSlotImage, amuletSlotImage, petSlotImage;
-
-    // 현재 장비 슬롯에 장착되어있는 장비를 저장하는 변수들
-    // 현재 장착되어있는 무기
-    public InventoryItem equipedWeaponItem, equipedArmorItem, equipedGloveItem, equipedShoesItem, equipedAmuletItem, equipedPetItem;
-
-    // 현재 장착된 무기가 있는지 체크하는 변수
-    // 장착된 장비가 있는상태에서도 장비가 착용되는문제
-    // 장착 : 플래그가 false 일때만 가능, 장착후에 플래그 true
-    // 해제 : 플래그 false
-    public bool isWeapon, isArmor, isGlove, isShoes, isAmulet, isPet;
-
-    // 상점 패널
+    [Title ("인벤토리 및 상점")]
     public GameObject shopPanel;
-
-    // 인벤토리 패널
     public GameObject inventoryPanel;
+    [HideInInspector] public ShopDatabase shopDatabase;
+    [HideInInspector] public ShopSlot[] shopSlots;
+    [SerializeField] private Transform shopSlotHolder; // 상점 슬롯을 관리하는 변수
+    [SerializeField] [FoldoutGroup ("상점 이미지 변경")] private InventoryItem[] abilitySwordSkillItem, abilityMageSkillItem, abilityBlacksmithSkillItem, abilityHolyknightSkillItem; // 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
+    [HideInInspector] public int abilitySkillCnt; // 스킬 카운트 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
+    [SerializeField] [FoldoutGroup ("상점 이미지 변경")] private InventoryItem[] swordItem, staffItem, hammerItem; // 무기 아이템 : 캐릭터에 따라 상점 무기를 바꾸기 위해, 검은 성기사도 같이 사용
+    [HideInInspector] public int weaponCnt; // 무기 아이템 카운트 : 캐릭터에 따라 상점 무기를 바꾸기 위해
 
-    // 상점 아이템 데이터베이스
-    public ShopDatabase shopDatabase;
+    [Title ("플레이어 스킬")]
+    [PropertySpace (20, 0)] [InfoBox ("영구 패시브 표시")] public Text permanentSkillListText;
+    public StringBuilder permanentSb = new StringBuilder(); // 영구 스킬의 설명을 저장 할 변수
+    [InfoBox ("영구 패시브 체크")] public bool[] isPermanentSkill; // 영구 패시브 스킬인지 체크
+    [HideInInspector] public int permanentSkillCnt; // 영구 패시브 획득 횟수
+    [InfoBox ("액티브 잠금 이미지")] public GameObject[] abilityLock; // 액티브스킬 잠금 이미지
+    [InfoBox ("액티브 해제 체크")] public bool[] isAbility; // 액티브스킬을 해제했는지 체크
+    [InfoBox ("0 : 멀티샷 1 : 사선샷")] public List<int> ActiveSkill = new List<int>(); // 액티브 관리
+    public enum PassiveSkillType { 한발노리기, 백발백중, 방벽, 초월방벽, 흡혈귀, 거울, 도박꾼, 저거너트, 즉사, 시크릿, 혈액갑옷, 버티기, 구사일생, 폭발적치유, HP부스트, 광전사, 근심, 고동, 꿈의끝, 분신, 향상된대쉬, 불사신 } // 패시브 스킬 타입")
+    [DetailedInfoBox ("패시브 정보", "0 : 한발노리기 -> 크리티컬 확률 100% 명중률 50%\n1 : 백발백중 -> 명중률 100% 크리티컬 데미지 50% 감소\n2 : 방벽 -> 다음스테이지 갈때마다 1개씩 얻는다 적의 공격을 1회 막는다\n3 : 초월방벽 -> 방벽을 즉시 20개얻는대신 체력이 1이된다 다음스테이지 갈때마다 2개씩 얻는다 적의 공격을 1회 막는다\n4 : 흡혈귀 -> 입힌데미지의 20% 회복\n5 : 거울 -> 50 확률로 공격을 반사 플레이어도 데미지를 입는다 보스와 폭탄은 반사를 하지않는다 근접공격만 반사한다\n6 : 도박꾼 -> 몬스터 아이템 드랍률 10% 증가\n7 : 저거너트 -> 받는피해가 80% 감소\n8 : 즉사 -> 보스를 제외하고 체력이 20% 이하인적을 공격하면 즉사시킨다\n9 : 시크릿 -> 시크릿박스에서 아이템 드랍률 10% 증가\n10 : 혈액갑옷 -> 플레이어 최대체력의 10% 추가 데미지를 입힌다\n11 : 버티기 -> 죽기전 50% 확률로 버티며 체력이 1이된다\n12 : 구사일생 -> 버티기 성공시 HP 모두 회복\n13 : 폭발적치유 -> 다음스테이지로 갈때 현재체력50% 회복\n14 : HP 부스트 -> 최대체력이 100% 증가\n15 : 광전사 -> 공격 및 피격 모두 데미지가 2배가 된다\n16 : 근심 -> 방벽의 획득량이 두배가된다\n17 : 고동 -> 다음스테이지로 갈때 현제체력100% 회복\n18 : 꿈의 끝 -> 보스를 제외하고 체력이 50% 이하인적을 공격하면 즉사시킨다\n19 : 분신 -> 몬스터를 제거하면 방벽을 1개 얻는다 근심을 고려해서 몬스터가 제거되는 모든곳에서 방벽을 증가시켜줘야한다\n20 : 향상된대쉬 -> 대쉬할때 무적상태가 된다\n21 : 불사신 -> 3초간격으로 무적상태가 된다")]
+    public List<int> PassiveSkill = new List<int>(); // 패시브 관리
 
-    // 상점 슬롯
-    public ShopSlot[] shopSlots;
-
-    // 상점 슬롯을 관리하는 변수
-    public Transform shopSlotHolder;
-
-    // 영구 스킬의 설명을 저장 할 변수
-    public StringBuilder permanentSb = new StringBuilder();
-
-    // 영구 스킬리스트 텍스트
-    public Text permanentSkillListText;
-
-    // 영구 패시브 스킬인지 체크
-    public bool[] isPermanentSkill;
-
-    // 영구 패시브 획득 횟수
-    public int permanentSkillCnt;
-
-    // 액티브스킬 잠금 이미지
-    public GameObject[] abilityLock;
-    
-    // 액티브스킬을 해제했는지 체크
-    public bool[] isAbility;
-
-    // 현재 소환된 펫 저장
-    public GameObject spawnedPet;
-
-    // 마을
+    [Title ("기타 필드")]
+    [SerializeField] [PropertySpace (20, 20)] [InfoBox ("발사체 생성 위치")] private Transform[] ArrowPos;
+    public PoolingManager poolingManager;
+    [HideInInspector] public Animator anim;
+    private Rigidbody rigid;
+    [HideInInspector] public GameObject nearObject;
+    public Joystick joystickScript;
+    [SerializeField] private RoomTemplates templates;
+    private StringBuilder sb = new StringBuilder(); // 획득한 스킬의 설명을 저장 할 변수
+    [SerializeField] private Text skillListText, statusInfoText, coinText, barrierText;
+    [SerializeField] private Slider playerHpBar;
+    [HideInInspector] public float slopeAngle; // 경사각
+    private bool isForwardObject, isDownObject; // 플레이어 앞쪽 아래쪽에 오브젝트가 있는지 체크
+    [SerializeField] private LayerMask layerMask; // 경사각 레이어마스크
     public GameObject shelter;
+    private int attackCnt; // 공격 카운트 : 콤보 공격을 위해
+    private float waitTime; // 공격 카운트 대기시간 : 콤보 공격을 위해
+    [HideInInspector] public string characterType; // 선택된 캐릭터
 
-    // 경사각
-    public float slopeAngle;
-
-    // 플레이어 앞쪽 아래쪽에 오브젝트가 있는지 체크
-    public bool isForwardObject, isDownObject;
-
-    // 경사각 레이어마스크
-    public LayerMask layerMask;
-
-    // 스킬 아이템 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
-    public InventoryItem[] abilitySwordSkillItem, abilityMageSkillItem, abilityBlacksmithSkillItem, abilityHolyknightSkillItem;
-
-    // 스킬 카운트 : 캐릭터에 따라 상점 스킬 아이템을 바꾸기 위해
-    public int abilitySkillCnt;
-
-    // 무기 아이템 : 캐릭터에 따라 상점 무기를 바꾸기 위해, 검은 성기사도 같이 사용
-    public InventoryItem[] swordItem, staffItem, hammerItem;
-
-    // 무기 아이템 카운트 : 캐릭터에 따라 상점 무기를 바꾸기 위해
-    public int weaponCnt;
-
-    // 공격 카운트 : 콤보 공격을 위해
-    public int attackCnt;
-
-    // 공격 카운트 대기시간 : 콤보 공격을 위해
-    public float waitTime;
-
-    // 선택된 캐릭터
-    public string characterType;
-
-    // 액티브스킬
-    // 0 : 멀티샷
-    // 1 : 사선화살
-    // 0, 1 모두없으면 화살 하나
-    // 0 있으면 화살 두개
-    // 1 있으면 사선화살
-    // 0, 1 모두있으면 화살 두개씩 사선화살
-    public List<int> ActiveSkill = new List<int>();
-
-    // 패시브스킬
-    // 플레이어 기본 데이터 -> 공격력 100 체력 1000 크리티컬확률 25% 크리티컬데미지 200% 명중률 75% 다음스테이지로 갈때 현재체력10%회복 O
-    // 0 : 한발노리기 -> 크리티컬 확률 100% 명중률 50% O
-    // 1 : 백발백중 -> 명중률 100% 크리티컬 데미지 50% 감소 O
-    // 2 : 방벽 -> 다음스테이지 갈때마다 1개씩 얻는다 적의 공격을 1회 막는다 O
-    // 3 : 초월방벽 -> 방벽을 즉시 20개얻는대신 체력이 1이된다 다음스테이지 갈때마다 2개씩 얻는다 적의 공격을 1회 막는다 O
-    // 4 : 흡혈귀 -> 입힌데미지의 20% 회복 O
-    // 5 : 거울 -> 50 확률로 공격을 반사 플레이어도 데미지를 입는다 보스와 폭탄은 반사를 하지않는다 근접공격만 반사한다 O 
-    // 6 : 도박꾼 -> 몬스터 아이템 드랍률 10% 증가 O
-    // 7 : 저거너트 -> 받는피해가 80% 감소 O
-    // 8 : 즉사 -> 보스를 제외하고 체력이 20% 이하인적을 공격하면 즉사시킨다 O
-    // 9 : 시크릿 -> 시크릿박스에서 아이템 드랍률 10% 증가 O
-    // 10 : 혈액갑옷 -> 플레이어 최대체력의 10% 추가 데미지를 입힌다 O
-    // 11 : 버티기 -> 죽기전 50% 확률로 버티며 체력이 1이된다 O
-    // 12 : 구사일생 -> 버티기 성공시 HP 모두 회복 O
-    // 13 : 폭발적치유 -> 다음스테이지로 갈때 현재체력50% 회복 O
-    // 14 : HP 부스트 -> 최대체력이 100% 증가 O
-    // 15 : 광전사 -> 공격 및 피격 모두 데미지가 2배가 된다 O
-    // 16 : 근심 -> 방벽의 획득량이 두배가된다 O
-    // 17 : 고동 -> 다음스테이지로 갈때 현제체력100% 회복 O
-    // 18 : 꿈의 끝 -> 보스를 제외하고 체력이 50% 이하인적을 공격하면 즉사시킨다 O
-    // 19 : 분신 -> 몬스터를 제거하면 방벽을 1개 얻는다 근심을 고려해서 몬스터가 제거되는 모든곳에서 방벽을 증가시켜줘야한다 O
-    // 20 : 향상된대쉬 -> 대쉬할때 무적상태가 된다 O
-    // 21 : 불사신 -> 3초간격으로 무적상태가 된다 O
-    public enum PassiveSkillType { 한발노리기, 백발백중, 방벽, 초월방벽, 흡혈귀, 거울, 도박꾼, 저거너트, 즉사, 시크릿, 혈액갑옷, 버티기, 구사일생, 폭발적치유, HP부스트, 광전사, 근심, 고동, 꿈의끝, 분신, 향상된대쉬, 불사신 } // 패시브 스킬 타입
-    public List<int> PassiveSkill = new List<int>(); // 패시브 스킬 관리
-
-    void Awake() 
+    private void Awake() 
     {
-        // 애니메이터
         anim = GetComponent<Animator>();
-
-        // 물리
         rigid = GetComponent<Rigidbody>();
-
-        // 상점 슬롯
         shopSlots = shopSlotHolder.GetComponentsInChildren<ShopSlot>();
-
-        // 선택된 캐릭터
         characterType = DataManager.instance.character.ToString();
-
-        // 선택된 캐릭터와 다르면 삭제
-        if(characterType != gameObject.name)
-        {
-            gameObject.SetActive(false);
-        }
+        if(characterType != gameObject.name) gameObject.SetActive(false); // 선택된 캐릭터와 다르면 삭제
     }
 
-    void Update()
+    private void Update()
     {
         // 컴퓨터 확인용 키입력
         GetInput();
@@ -226,16 +110,10 @@ public class Player : MonoBehaviour
         CalcSlopeAngle();
 
         // 콤보 공격
-        if (waitTime <= 0 && !isShoot)
-        {
-            // 대기시간이 0 이하이면서 공격상태가 아닐때
-            // 공격 카운트 초기화
-            attackCnt = 0;
-        }
-        else
-        {
-            waitTime -= Time.deltaTime;
-        }
+        // 대기시간이 0 이하이면서 공격상태가 아닐때
+        // 공격 카운트 초기화
+        if (waitTime <= 0 && !isShoot) attackCnt = 0;
+        else waitTime -= Time.deltaTime;
     }
 
     public float DamageCalc()
@@ -253,185 +131,98 @@ public class Player : MonoBehaviour
             if (random < criticalPercentage) // 0~24
             {
                 // 크리티컬이 터졌을때 광전사 유무
-                if (PassiveSkill[15] > 0)
-                {
-                    // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
-                    return (damage + applyDamage) * (criticalDamage / 100) * 2;
-                }
-                else
-                {
-                    // 크리티컬이 발동하고 광전사가 없을때 -> 100을 기준으로 200
-                    return (damage + applyDamage) * (criticalDamage / 100);
-                }
+                // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
+                // 크리티컬이 발동하고 광전사가 없을때 -> 100을 기준으로 200
+                if (PassiveSkill[15] > 0) return (damage + applyDamage) * (criticalDamage / 100) * 2;
+                else return (damage + applyDamage) * (criticalDamage / 100);
             }
             else // 25~99
             {
                 // 크리티컬이 안터졌을때 광전사 유무
-                if (PassiveSkill[15] > 0)
-                {
-                    // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
-                    return (damage + applyDamage) * 2;
-                }
-                else
-                {
-                    // 크리티컬이 안터지고 광전사가 없을때 -> 100을 기준으로 100
-                    return damage + applyDamage;
-                }
+                // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
+                // 크리티컬이 안터지고 광전사가 없을때 -> 100을 기준으로 100
+                if (PassiveSkill[15] > 0) return (damage + applyDamage) * 2;
+                else return damage + applyDamage;
             }
         }
         else
         {
             // 영구적인 광전사가 있으면
             int random = Random.Range(0, 100); // 0~99
-            if (random < criticalPercentage) // 0~24
-            {
-                // 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
-                return (damage + applyDamage) * (criticalDamage / 100) * 2;
-            }
-            else
-            {
-                // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
-                return (damage + applyDamage) * 2;
-            }
+            if (random < criticalPercentage) return (damage + applyDamage) * (criticalDamage / 100) * 2; // 0~24 크리티컬이 발동하고 광전사가 있을때 -> 100을 기준으로 400
+            else return (damage + applyDamage) * 2; // 크리티컬이 안터지고 광전사가 있을때 -> 100을 기준으로 200
         }
     }
 
-    // 컴퓨터 확인
+    // 컴퓨터 확인용
     // 공격
-    void GetInput()
+    private void GetInput()
     {
-        // 컴퓨터 확인용 키입력
         fDown = Input.GetButton("Fire1");
         iDown = Input.GetButtonDown("Interaction");
     }
 
     // 경사각 계산 함수
-    void CalcSlopeAngle()
+    private void CalcSlopeAngle()
     {
         isForwardObject = Physics.Raycast(transform.position + transform.up * 2, transform.forward, out RaycastHit hitForward, 5, layerMask); // 앞쪽 오브젝트
         isDownObject = Physics.Raycast(transform.position, transform.up * -1, out RaycastHit hitDown, 5, layerMask); // 아래쪽 오브젝트
         slopeAngle = (isForwardObject && isDownObject) ? Vector3.Angle(hitForward.normal, hitDown.normal) : 0f; // 경사각 계산
     }
 
-    IEnumerator Immortality()
+    private IEnumerator Immortality()
     {
         // 불사신
         while(true)
         {
             yield return null;
-
-            // 처음상태는 무적아닌상태
-            transform.gameObject.layer = 7;
-
-            // 점점 시간을 줄여주고
-            invincibilityTimeCalc -= Time.deltaTime;
+            transform.gameObject.layer = 7; // 처음상태는 무적아닌상태
+            invincibilityTimeCalc -= Time.deltaTime; // 점점 시간을 줄여주고
 
             if (invincibilityTimeCalc <= 0)
             {
-                // 3초뒤에
-                invincibilityTimeCalc = invincibilityTime;
-
-                // 무적상태
-                transform.gameObject.layer = 15;
-
-                // 1초간 지속
-                yield return new WaitForSeconds(1f);
+                invincibilityTimeCalc = invincibilityTime; // 3초뒤에
+                transform.gameObject.layer = 15; // 무적상태
+                yield return new WaitForSeconds(1f); // 1초간 지속
             }
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        // 플레이어 물리충돌시 회전하는문제
-        FreezeRotation();
-
-        // 플레이어가 경계에 닿았는지 체크
-        StopBorder();
+        FreezeRotation(); // 플레이어 물리충돌시 회전하는문제
+        StopBorder(); // 플레이어가 경계에 닿았는지 체크
     }
 
-    void FreezeRotation()
-    {
-        // 플레이어 물리충돌시 회전하는문제
-        rigid.angularVelocity = Vector3.zero;
-    }
+    // 플레이어 물리충돌시 회전하는문제
+    private void FreezeRotation() { rigid.angularVelocity = Vector3.zero; }
 
-    void StopBorder()
-    {
-        // 플레이어가 경계와 닿았는지 체크
-        // 플레이어가 벽을 뚫는문제 : 레이캐스트 길이 늘렸음 + 플레이어 이동방향으로 레이를 쏨
-        // Debug.DrawRay(transform.position + transform.up * 5, transform.forward * 5, Color.green);
-        isBorder = Physics.Raycast(transform.position + transform.up * 5, joystickScript.moveVec, 5, LayerMask.GetMask("Border"));
-    }
+    // 플레이어가 경계와 닿았는지 체크
+    // 플레이어가 벽을 뚫는문제 : 레이캐스트 길이 늘렸음 + 플레이어 이동방향으로 레이를 쏨
+    private void StopBorder() { isBorder = Physics.Raycast(transform.position + transform.up * 5, joystickScript.moveVec, 5, LayerMask.GetMask("Border")); }
     
+    // 모바일 플레이어 공격
     public void MobileShoot()
     {
-        // 모바일 플레이어 공격
-        // 마을이면 공격 불가능
-        if (isShelter)
-        {
-            return;
-        }
-
-        // 궁수 공격
-        if (!joystickScript.isDash && !isShoot && characterType.Equals("Archer"))
-        {
-            ArcherAttack();
-        }
-
-        // 소드, 성기사, 블랙스미스 공격
-        if (!joystickScript.isDash && !isShoot)
-        {
-            if (characterType.Equals("Sword") || characterType.Equals("Blacksmith") || characterType.Equals("Holyknight"))
-            {
-                ComboAttack();
-            }
-        }
-
-        // 법사 공격
-        if (!joystickScript.isDash && !isShoot && characterType.Equals("Mage"))
-        {
-            MageAttack();
-        }
+        if (isShelter) return; // 마을이면 공격 불가능
+        if (!joystickScript.isDash && !isShoot && characterType.Equals("Archer")) ArcherAttack(); // 궁수 공격
+        if (!joystickScript.isDash && !isShoot && (characterType.Equals("Sword") || characterType.Equals("Blacksmith") || characterType.Equals("Holyknight"))) ComboAttack(); // 소드, 성기사, 블랙스미스 공격
+        if (!joystickScript.isDash && !isShoot && characterType.Equals("Mage")) MageAttack(); // 법사 공격
     }
 
-    void Shoot()
+    // 컴퓨터 플레이어 공격
+    private void Shoot()
     {
-        // 컴퓨터 플레이어 공격
-        // 마을이면 공격 불가능
-        if(isShelter)
-        {
-            return;
-        }
-
-        // 궁수 공격
-        if(fDown && !joystickScript.isDash && !isShoot && characterType.Equals("Archer"))
-        {
-            ArcherAttack();
-        }
-
-        // 소드, 성기사, 블랙스미스 공격
-        if (fDown && !joystickScript.isDash && !isShoot)
-        {
-            if (characterType.Equals("Sword") || characterType.Equals("Blacksmith") || characterType.Equals("Holyknight"))
-            {
-                ComboAttack();
-            }
-        }
-
-        // 법사 공격
-        if (fDown && !joystickScript.isDash && !isShoot && characterType.Equals("Mage"))
-        {
-            MageAttack();
-        }
+        if(isShelter) return; // 마을이면 공격 불가능
+        if(fDown && !joystickScript.isDash && !isShoot && characterType.Equals("Archer")) ArcherAttack(); // 궁수 공격
+        if (fDown && !joystickScript.isDash && !isShoot && (characterType.Equals("Sword") || characterType.Equals("Blacksmith") || characterType.Equals("Holyknight"))) ComboAttack(); // 소드, 성기사, 블랙스미스 공격
+        if (fDown && !joystickScript.isDash && !isShoot && characterType.Equals("Mage")) MageAttack(); // 법사 공격
     }
 
-    void ShootOut()
-    {
-        // 플레이어 공속제한
-        isShoot = false;
-    }
+    // 플레이어 공속제한
+    private void ShootOut() { isShoot = false; }
 
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         // 방벽에 따른 플레이어 피격
         if(barrier > 0)
@@ -443,14 +234,9 @@ public class Player : MonoBehaviour
                 // 근접 몬스터
                 if (!isDamage)
                 {
-                    // 애니메이션
-                    StartCoroutine(DoDamaged("doBlock"));
-
-                    // 방벽감소
-                    barrier--;
-
-                    // 플레이어 피격 사운드 : 방벽 O
-                    SoundManager.instance.SFXPlay(ObjType.방벽소리);
+                    StartCoroutine(DoDamaged("doBlock")); // 애니메이션
+                    barrier--; // 방벽감소
+                    SoundManager.instance.SFXPlay(ObjType.방벽소리); // 플레이어 피격 사운드 : 방벽 O
                 }
             }
             else if (other.tag == "EnemyRange")
@@ -458,21 +244,10 @@ public class Player : MonoBehaviour
                 // 원거리 몬스터
                 if (!isDamage)
                 {
-                    // 원거리 투사체는 리지드바디를 가지고있음
-                    if (other.GetComponent<Rigidbody>() != null)
-                    {
-                        // 당근 반납
-                        poolingManager.ReturnObj(other.gameObject, other.gameObject.GetComponent<Carrot>().type);
-                    }
-
-                    // 애니메이션
-                    StartCoroutine(DoDamaged("doBlock"));
-
-                    // 방벽 감소
-                    barrier--;
-
-                    // 플레이어 피격 사운드 : 방벽 O
-                    SoundManager.instance.SFXPlay(ObjType.방벽소리);
+                    if (other.GetComponent<Rigidbody>() != null) poolingManager.ReturnObj(other.gameObject, other.gameObject.GetComponent<Carrot>().type); // 원거리 투사체는 리지드바디를 가지고있음 => 당근 반납
+                    StartCoroutine(DoDamaged("doBlock")); // 애니메이션
+                    barrier--; // 방벽 감소
+                    SoundManager.instance.SFXPlay(ObjType.방벽소리); // 플레이어 피격 사운드 : 방벽 O
                 }
             }
         }
@@ -488,34 +263,19 @@ public class Player : MonoBehaviour
                     if (curHealth > 0)
                     {
                         Enemy enemy = other.GetComponentInParent<Enemy>();
-
-                        // 저거너트
-                        Juggernaut(enemy);
+                        Juggernaut(enemy); // 저거너트
 
                         // 거울
                         // 영구적인 거울이 있는지 체크
                         if(!isPermanentSkill[5])
                         {
                             // 영구적인 거울이 없으면
-                            if (PassiveSkill[5] > 0)
-                            {
-                                // 거울
-                                Mirror(enemy);
-                            }
+                            if (PassiveSkill[5] > 0) Mirror(enemy);
                         }
-                        else
-                        {
-                            // 영구적인 거울이 있을때
-                            // 거울
-                            Mirror(enemy);
-                        }
+                        else Mirror(enemy); // 영구적인 거울이 있을때
 
                         // 피격 리액션
-                        if (curHealth > 0)
-                        {
-                            // 살아있을때
-                            StartCoroutine(DoDamaged("doDamaged"));
-                        }
+                        if (curHealth > 0) StartCoroutine(DoDamaged("doDamaged")); // 살아있을때
                         else
                         {
                             // 죽어있을때
@@ -523,27 +283,13 @@ public class Player : MonoBehaviour
                             if(!isPermanentSkill[11])
                             {
                                 // 영구적인 버터기가 없을때
-                                if (PassiveSkill[11] > 0)
-                                {
-                                    // 버티기
-                                    HoldOn();
-                                }
-                                else
-                                {
-                                    // 버티기가 없으면 죽음
-                                    StartCoroutine("DoDie");
-                                }
+                                if (PassiveSkill[11] > 0) HoldOn();
+                                else StartCoroutine("DoDie"); // 버티기가 없으면 죽음
                             }
-                            else
-                            {
-                                // 영구적인 버티기가 있을때
-                                // 버티기
-                                HoldOn();
-                            }
+                            else HoldOn(); // 영구적인 버티기가 있을때
                         }
                     }
-                    // 플레이어 피격 사운드 : 방벽 X
-                    SoundManager.instance.SFXPlay(ObjType.플레이어피격소리);
+                    SoundManager.instance.SFXPlay(ObjType.플레이어피격소리); // 플레이어 피격 사운드 : 방벽 X
                 }
             }
             else if (other.tag == "EnemyRange")
@@ -551,25 +297,14 @@ public class Player : MonoBehaviour
                 // 원거리 몬스터
                 if (!isDamage)
                 {
-                    // 원거리 무기 스크립트
                     Carrot carrot = other.GetComponent<Carrot>();
+                    Juggernaut(carrot); // 저거너트
 
-                    // 저거너트
-                    Juggernaut(carrot);
-
-                    // 원거리 투사체는 리지드바디를 가지고있음
-                    if (other.GetComponent<Rigidbody>() != null)
-                    {
-                        // 당근 반납
-                        poolingManager.ReturnObj(other.gameObject, other.gameObject.GetComponent<Carrot>().type);
-                    }
+                    // 원거리 투사체는 리지드바디를 가지고있음 => 당근 반납
+                    if (other.GetComponent<Rigidbody>() != null) poolingManager.ReturnObj(other.gameObject, other.gameObject.GetComponent<Carrot>().type);
 
                     // 피격 리액션
-                    if (curHealth > 0)
-                    {
-                        // 살아있을때
-                        StartCoroutine(DoDamaged("doDamaged"));
-                    }
+                    if (curHealth > 0) StartCoroutine(DoDamaged("doDamaged")); // 살아있을때
                     else
                     {
                         // 죽어있을때
@@ -577,26 +312,12 @@ public class Player : MonoBehaviour
                         if(!isPermanentSkill[11])
                         {
                             // 영구적인 버티기가 없을때
-                            if (PassiveSkill[11] > 0)
-                            {
-                                // 버티기
-                                HoldOn();
-                            }
-                            else
-                            {
-                                // 버티기 없으면 죽음
-                                StartCoroutine("DoDie");
-                            }
+                            if (PassiveSkill[11] > 0) HoldOn();
+                            else StartCoroutine("DoDie"); // 버티기 없으면 죽음
                         }
-                        else
-                        {
-                            // 영구적인 버티기가 있을때
-                            // 버티기
-                            HoldOn();
-                        }
+                        else HoldOn(); // 영구적인 버티기가 있을때
                     }
-                    // 플레이어 피격 사운드 : 방벽 X
-                    SoundManager.instance.SFXPlay(ObjType.플레이어피격소리);
+                    SoundManager.instance.SFXPlay(ObjType.플레이어피격소리); // 플레이어 피격 사운드 : 방벽 X
                 }
             }
         }
@@ -605,20 +326,11 @@ public class Player : MonoBehaviour
         {
             // 시크릿 문 열기
             // 열린상태면 종료
-            if(other.GetComponent<SecretDoor>().isOpen == true)
-            {
-                return;
-            }
+            if(other.GetComponent<SecretDoor>().isOpen == true) return;
 
             // 문 열기
-            if(other.tag == "SecretDoorLeft")
-            {
-                other.gameObject.transform.rotation *= Quaternion.Euler(0, 90f, 0);
-            }
-            else if(other.tag == "SecretDoorRight")
-            {
-                other.gameObject.transform.rotation *= Quaternion.Euler(0, -90f, 0);
-            }
+            if(other.tag == "SecretDoorLeft") other.gameObject.transform.rotation *= Quaternion.Euler(0, 90f, 0);
+            else if(other.tag == "SecretDoorRight") other.gameObject.transform.rotation *= Quaternion.Euler(0, -90f, 0);
 
             // 문이 열린 상태
             other.gameObject.transform.GetComponent<SecretDoor>().isOpen = true;
@@ -627,17 +339,9 @@ public class Player : MonoBehaviour
             SoundManager.instance.SFXPlay(ObjType.시크릿문소리);
         }
 
-        if(other.tag == "FallTrigger")
-        {
-            // 떨어지면 죽음
-            StartCoroutine("DoDie");
-        }
+        if(other.tag == "FallTrigger") StartCoroutine("DoDie"); // 떨어지면 죽음
 
-        // 가까운 오브젝트 있음
-        if(other.tag == "GoToDungeon" || other.tag == "Shop")
-        {
-            nearObject = other.gameObject;
-        }
+        if(other.tag == "GoToDungeon" || other.tag == "Shop") nearObject = other.gameObject; // 가까운 오브젝트 있음
 
         // 목표베이스 퀘스트 처리
         if(other.tag == "Shop" || other.tag == "GoToDungeon")
@@ -656,175 +360,96 @@ public class Player : MonoBehaviour
         if(other.tag == "QuestBorder") QuestManager.instance.QuestNotify("퀘스트를 완료하세요!");
     }
 
-    void NextStageHP(float percentage)
+    // 패시브 유무에 따른 다음스테이지 HP회복
+    private void NextStageHP(float percentage)
     {
-        // 패시브 유무에 따른 다음스테이지 HP회복
-        if ((curHealth + maxHealth * percentage / 100f) > maxHealth)
-        {
-            // 최대체력을 넘어서는 회복을하면 현재체력을 최대체력으로
-            curHealth = maxHealth;
-        }
-        else
-        {
-            // 아니라면 정상적으로 회복
-            curHealth += maxHealth * percentage / 100f;
-        }
+        if ((curHealth + maxHealth * percentage / 100f) > maxHealth) curHealth = maxHealth;
+        else curHealth += maxHealth * percentage / 100f;
     }
 
     // 플레이어 피격
     // 애니메이션 이름을 입력받아서 피격 및 블락애니메이션을 실행
-    IEnumerator DoDamaged(string animName)
+    private IEnumerator DoDamaged(string animName)
     {
-        // 피격상태
-        isDamage = true;
-
+        isDamage = true; // 피격상태
         yield return new WaitForSeconds(0.3f);
-
-        // 애니메이션
-        anim.SetTrigger(animName);
-
+        anim.SetTrigger(animName); // 애니메이션
         yield return new WaitForSeconds(0.7f);
-
-        // 피격상태 종료
-        isDamage = false;
+        isDamage = false; // 피격상태 종료
     }
 
     // 플레이어 죽음
-    IEnumerator DoDie()
+    private IEnumerator DoDie()
     {
         yield return new WaitForSeconds(0.3f);
 
         // 불사신을 먹었으면 불사신 초기화
         // 영구적인 불사신이 있는지 체크
-        if(!isPermanentSkill[21])
-        {
-            // 영구적인 불사신이 없을때만 해제
-            if (PassiveSkill[21] > 0)
-            {
-                StopCoroutine("Immortality");
-            }
-        }
+        // 영구적인 불사신이 없을때만 해제
+        if(!isPermanentSkill[21] && PassiveSkill[21] > 0) StopCoroutine("Immortality");
 
-        // 스킬리스트 텍스트 초기화
-        skillListText.text = "";
-
-        // 획득한 스킬의 설명이 저장된 변수 초기화
-        sb.Clear();
-
-        // 플레이어 죽음
-        isDead = true;
-
-        // 애니메이션
-        anim.SetTrigger("doDie");
-
-        // 2초뒤에
+        skillListText.text = ""; // 스킬리스트 텍스트 초기화
+        sb.Clear(); // 획득한 스킬의 설명이 저장된 변수 초기화
+        isDead = true; // 플레이어 죽음
+        anim.SetTrigger("doDie"); // 애니메이션
         yield return new WaitForSeconds(2f);
-
-        // 페이드 인/아웃
-        FadeInOut.Instance.Fade();
-
-        // 1초뒤에
+        FadeInOut.Instance.Fade(); // 페이드 인/아웃
         yield return new WaitForSeconds(1f);
-
-        // 마을로가면 죽는애니메이션 종료
-        anim.SetTrigger("goShelter");
-
-        // 마을로
-        templates.GotoShelter();
-
-        // 마을 배경음악
-        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]);
+        anim.SetTrigger("goShelter"); // 마을로가면 죽는애니메이션 종료
+        templates.GotoShelter(); // 마을로
+        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]); // 마을 배경음악
     }
 
-    public void MobileInteraction()
-    {
-        // 상호작용
-        // 모바일
-        if (nearObject != null && !joystickScript.isJump && !joystickScript.isDash && !isDead)
-        {
-            Interaction();
-        }
-    }
+    // 모바일 상호작용 
+    public void MobileInteraction() { if (nearObject != null && !joystickScript.isJump && !joystickScript.isDash && !isDead) Interaction(); }
 
-    public void ComputerInteraction()
-    {
-        // 상호작용
-        // 컴퓨터용
-        if(iDown && nearObject != null && !joystickScript.isJump && !joystickScript.isDash && !isDead && !isShop)
-        {
-            Interaction();
-        }
-    }
+    // 컴퓨터 상호작용
+    private void ComputerInteraction() { if(iDown && nearObject != null && !joystickScript.isJump && !joystickScript.isDash && !isDead && !isShop) Interaction(); }
 
-    void GetActiveSkill(int activeSkillIndex, GameObject nearObject)
+    // 액티브 스킬 얻었을때 공통조건을 정의해둔 함수
+    private void GetActiveSkill(int activeSkillIndex, GameObject nearObject)
     {
-        // 액티브 스킬 얻었을때 공통조건을 정의해둔 함수
-        if (ActiveSkill[activeSkillIndex] > 0)
-        {
-            // 이미 먹은 스킬이야? -> 그럼 리턴
-            return;
-        }
+        if (ActiveSkill[activeSkillIndex] > 0) return; // 이미 먹은 스킬이야? -> 그럼 리턴
 
         // 새로운 스킬이야? -> 그럼 먹고 반납
         ActiveSkill[activeSkillIndex]++;
         poolingManager.ReturnObj(nearObject, nearObject.GetComponent<Item>().objType);
     }
 
-    void OnTriggerStay(Collider other)
-    {
-        // 가까운 오브젝트 있음
-        if(other.tag == "PassiveSkill" || other.tag == "ActiveSkill" || other.tag == "Coin" || other.tag == "SecretBox" || other.tag == "NextStage" || other.tag == "GoToDungeon" || other.tag == "Shop")
-        {
-            nearObject = other.gameObject;
-        }
-    }
+    // 가까운 오브젝트 있음
+    private void OnTriggerStay(Collider other) { if(other.tag == "PassiveSkill" || other.tag == "ActiveSkill" || other.tag == "Coin" || other.tag == "SecretBox" || other.tag == "NextStage" || other.tag == "GoToDungeon" || other.tag == "Shop") nearObject = other.gameObject; } 
 
-    void OnTriggerExit(Collider other)
-    {
-        // 가까운 오브젝트 없음
-        if (other.tag == "PassiveSkill" || other.tag == "ActiveSkill" || other.tag == "Coin" || other.tag == "SecretBox" || other.tag == "NextStage" || other.tag == "GotoDungeon" || other.tag == "Shop")
-        {
-            nearObject = null;
-        }
-    }
+    // 가까운 오브젝트 없음
+    private void OnTriggerExit(Collider other) { if (other.tag == "PassiveSkill" || other.tag == "ActiveSkill" || other.tag == "Coin" || other.tag == "SecretBox" || other.tag == "NextStage" || other.tag == "GotoDungeon" || other.tag == "Shop") nearObject = null; }
 
-    void DelaySpawn()
+    // 룸템플릿에 있는 똑같은함수
+    // 던전으로 갔을때 waitTime이 초기화되지않아서
+    // 몬스터와 보스가 바로 생성되는 문제
+    private void DelaySpawn()
     {
-        // 룸템플릿에 있는 똑같은함수
-        // 던전으로 갔을때 waitTime이 초기화되지않아서
-        // 몬스터와 보스가 바로 생성되는 문제
         templates.waitTime = 4f;
         templates.spawnedBoss = false;
     }
 
+    // 펫 장착 시 RepositionPet 함수가 호출되지 않는 문제
+    // 로그 찍어 본 결과 if(isPet) 내부로 들어가지 못 함
+    // 펫 장착 시 펫 생성보다 플래그 업데이트가 늦어져서 발생한 문제
+    // 펫의 위치를 재설정하는 함수
     public void RepositionPet(GameObject pet)
     {
-        // 펫 장착 시 RepositionPet 함수가 호출되지 않는 문제
-        // 로그 찍어 본 결과 if(isPet) 내부로 들어가지 못 함
-        // 펫 장착 시 펫 생성보다 플래그 업데이트가 늦어져서 발생한 문제
-        //Debug.Log("in1");
-        // 펫의 위치를 재설정하는 함수
         if(isPet)
         {
-            //Debug.Log("in2");
-            // 네비메쉬 잠깐 꺼주고
-            pet.GetComponent<Pet>().nav.enabled = false;
-
-            // 트랜스폼 초기화한후
-            pet.transform.position = transform.position;
+            pet.GetComponent<Pet>().nav.enabled = false; // 네비메쉬 잠깐 꺼주고
+            pet.transform.position = transform.position; // 트랜스폼 초기화한후
             pet.transform.rotation = poolingManager.PetPrefs[3].transform.rotation;
-
-            // 네비메쉬를 다시 켜준다
-            pet.GetComponent<Pet>().nav.enabled = true;
-
-            // 소환된 펫에 저장
-            spawnedPet = pet;
+            pet.GetComponent<Pet>().nav.enabled = true; // 네비메쉬를 다시 켜준다
+            spawnedPet = pet;// 소환된 펫에 저장
         }
     }
 
+    // 스킬 충돌 공통 로직
     public void AbilityCollisionLogic(float skillBasicDamage, Enemy enemy, Transform skillTransform)
     {
-        // 스킬 충돌 공통 로직
         // HP 감소 : 스킬기본데미지 + 플레이어공격력
         enemy.curHealth -= skillBasicDamage + damage;
 
@@ -846,9 +471,9 @@ public class Player : MonoBehaviour
         StartCoroutine(enemy.OnDamage(reactVec));
     }
 
+    // 궁수 공격 함수
     public void ArcherAttack()
     {
-        // 궁수 공격 함수
         if (ActiveSkill[0] == 0 && ActiveSkill[1] == 0)
         {
             // 0, 1 모두 없을때
@@ -946,22 +571,15 @@ public class Player : MonoBehaviour
             arrowRigid6.velocity = ArrowPos[5].right * 60 * -1; // 0
         }
 
-        // 슈팅 상태
-        isShoot = true;
-
-        // 슈팅 애니메이션
-        anim.SetTrigger("doShoot");
-
-        // 슈팅 종료
-        Invoke("ShootOut", 1f - attackSpeed * 0.2f);
-
-        // 슈팅 효과음 재생
-        SoundManager.instance.SFXPlay(ObjType.슈팅소리);
+        isShoot = true; // 슈팅 상태
+        anim.SetTrigger("doShoot"); // 슈팅 애니메이션
+        Invoke("ShootOut", 1f - attackSpeed * 0.2f); // 슈팅 종료
+        SoundManager.instance.SFXPlay(ObjType.슈팅소리); // 슈팅 효과음 재생
     }
 
+    // 법사 공격 함수
     public void MageAttack()
     {
-        // 법사 공격 함수
         // 미사일 생성
         GameObject instantMageMissile = poolingManager.GetObj(ObjType.법사미사일);
 
@@ -973,24 +591,16 @@ public class Player : MonoBehaviour
         Rigidbody mageMissileRigid = instantMageMissile.GetComponent<Rigidbody>();
         mageMissileRigid.velocity = ArrowPos[0].forward * 60;
 
-        // 슈팅 상태
-        isShoot = true;
-
-        // 애니메이션
-        anim.SetTrigger("doShoot");
-
-        // 슈팅 종료
-        Invoke("ShootOut", 1f - attackSpeed * 0.2f);
-
-        // 슈팅 효과음 재생
-        SoundManager.instance.SFXPlay(ObjType.법사미사일소리);
+        isShoot = true; // 슈팅 상태
+        anim.SetTrigger("doShoot"); // 애니메이션
+        Invoke("ShootOut", 1f - attackSpeed * 0.2f); // 슈팅 종료
+        SoundManager.instance.SFXPlay(ObjType.법사미사일소리); // 슈팅 효과음 재생
     }
 
     // 콤보 공격 함수
     public void ComboAttack()
     {
         waitTime = 2f; // 콤보 대기시간
-
         CreateAndInitializeComboEffect(attackCnt); // 콤보 공격 이펙트 활성화
         
         switch (attackCnt) // 콤보 공격 애니메이션
@@ -1007,16 +617,13 @@ public class Player : MonoBehaviour
         }
 
         attackCnt = (attackCnt + 1) % 3; // 콤보 카운트
-
         isShoot = true; // 공격 플래그
-
         Invoke("ShootOut", 1f - attackSpeed * 0.2f); // 공격 종료
-
         SoundManager.instance.SFXPlay(ObjType.칼소리); // 공격 사운드
     }
 
     // 콤보 공격 이펙트 활성화 함수
-    void CreateAndInitializeComboEffect(int index)
+    private void CreateAndInitializeComboEffect(int index)
     {
         if(characterType.Equals("Sword"))
         {
@@ -1044,7 +651,7 @@ public class Player : MonoBehaviour
         }  
     }
 
-
+    // 상호작용
     public void Interaction()
     {
         if (nearObject.tag == "PassiveSkill") // 패시브 스킬이면
@@ -1053,23 +660,15 @@ public class Player : MonoBehaviour
             PassiveSkillType passiveSkillType = (PassiveSkillType)item.value; // 패시브 스킬 타입
 
             // 영구적인 패시브 스킬이 있거나 이미 얻은 패시브 스킬이면 리턴
-            if (isPermanentSkill[(int)passiveSkillType] || PassiveSkill[(int)passiveSkillType] > 0)
-            {
-                return;
-            }
+            if (isPermanentSkill[(int)passiveSkillType] || PassiveSkill[(int)passiveSkillType] > 0) return;
 
             // 스킬리스트 텍스트 표시
             sb.AppendLine(item.skillContent);
             skillListText.text = sb.ToString();
 
-            // 패시브 스킬 획득
-            PassiveSkill[(int)passiveSkillType]++;
-
-            // 아이템 풀에 반환
-            poolingManager.ReturnObj(nearObject, nearObject.GetComponent<Item>().objType);
-
-            // 아이템 획득 사운드
-            SoundManager.instance.SFXPlay(ObjType.아이템소리);
+            PassiveSkill[(int)passiveSkillType]++; // 패시브 스킬 획득
+            poolingManager.ReturnObj(nearObject, nearObject.GetComponent<Item>().objType); // 아이템 풀에 반환
+            SoundManager.instance.SFXPlay(ObjType.아이템소리); // 아이템 획득 사운드
 
             // 추가적 처리가 필요한 패시브 스킬
             switch (passiveSkillType)
@@ -1117,23 +716,18 @@ public class Player : MonoBehaviour
 
             // 현재 조건 : 풀링에서 hasItem 플래그를 false로 해서 활성화 시켜주고 던전에서 죽을때 패시브값이 모두 0이된다
             // hasItem 플래그가 false 이면서 해당패시브값이 0일때만 로직을 실행한다
+            // 스킬설명을 리스트에 저장
+            // 스킬리스트 텍스트에 표시
+            // 아이템 획득 음원 재생
+            // 가지고있는 상태
             if (ActiveSkillIndex == 0)
             {
                 // 멀티샷
                 if (!item.hasItem && ActiveSkill[0] == 0)
                 {
-                    // 스킬설명을 리스트에 저장
                     sb.AppendLine("멀티샷 : 화살이 2개가 된다");
-
-                    // 스킬을 얻었을때 개별로직에서의 공통로직을 정의해둔 함수
-                    // 스킬리스트 텍스트에 표시
                     skillListText.text = sb.ToString();
-
-                    // 사운드 재생
-                    // 아이템 획득 음원 재생
                     SoundManager.instance.SFXPlay(ObjType.아이템소리);
-
-                    // 가지고있는 상태
                     item.hasItem = true;
                 }
             }
@@ -1142,53 +736,29 @@ public class Player : MonoBehaviour
                 // 사선샷
                 if (!item.hasItem && ActiveSkill[1] == 0)
                 {
-                    // 스킬설명을 리스트에 저장
                     sb.AppendLine("사선샷 : 화살이 3개가 된다");
-
-                    // 스킬을 얻었을때 개별로직에서의 공통로직을 정의해둔 함수
-                    // 스킬리스트 텍스트에 표시
                     skillListText.text = sb.ToString();
-
-                    // 사운드 재생
-                    // 아이템 획득 음원 재생
                     SoundManager.instance.SFXPlay(ObjType.아이템소리);
-
-                    // 가지고있는 상태
                     item.hasItem = true;
                 }
             }
 
-            // 액티브 스킬 공통로직 : 먹은적이 없는 액티브스킬 활성화 후 반납
-            GetActiveSkill(ActiveSkillIndex, nearObject);
+            GetActiveSkill(ActiveSkillIndex, nearObject); // 액티브 스킬 공통로직 : 먹은적이 없는 액티브스킬 활성화 후 반납
         }
         else if (nearObject.tag == "Coin")
         {
-            // 코인이면
-            // 코인의 스크립트를 가져온 후
+            // 코인
             Item item = nearObject.GetComponent<Item>();
 
             if (!item.hasItem)
             {
-                // 먹은 코인이 아니면
-                // 해당코인의 값만큼 현재코인에 더하기
                 coin += item.value;
-
-                // 사운드 재생
-                // 아이템 획득 음원 재생
                 SoundManager.instance.SFXPlay(ObjType.아이템소리);
-
-                // 먹은 코인
                 item.hasItem = true;
             }
 
-            // 현재코인이 최대코인을 넘기면 최대코인으로
-            if (coin > maxCoin)
-            {
-                coin = maxCoin;
-            }
-
-            // 해당 코인 반납
-            poolingManager.ReturnObj(nearObject.gameObject, nearObject.GetComponent<Item>().objType);
+            if (coin > maxCoin) coin = maxCoin; // 현재코인이 최대코인을 넘기면 최대코인으로
+            poolingManager.ReturnObj(nearObject.gameObject, nearObject.GetComponent<Item>().objType); // 해당 코인 반납
         }
         else if (nearObject.tag == "SecretBox")
         {
@@ -1196,11 +766,8 @@ public class Player : MonoBehaviour
             // 깨진상태가 아닐때에만
             if (nearObject.GetComponent<SecretBox>().isCrash == false)
             {
-                // 깨진 상태로 변경
-                nearObject.GetComponent<SecretBox>().isCrash = true;
-
-                // 애니메이션 활성화
-                nearObject.GetComponent<Animator>().SetTrigger("doCrash");
+                nearObject.GetComponent<SecretBox>().isCrash = true; // 깨진 상태로 변경
+                nearObject.GetComponent<Animator>().SetTrigger("doCrash"); // 애니메이션 활성화
 
                 // 스킬 드랍
                 int random = Random.Range(0, 100); // 0~99
@@ -1268,23 +835,10 @@ public class Player : MonoBehaviour
                     if (!isPermanentSkill[16])
                     {
                         // 영구적인 근심이 없을때
-                        if (PassiveSkill[16] > 0)
-                        {
-                            // 근심이 있을때
-                            barrier += 2;
-                        }
-                        else
-                        {
-                            // 근심이 없을때
-                            barrier++;
-                        }
+                        if (PassiveSkill[16] > 0) barrier += 2; // 근심이 있을때
+                        else barrier++; // 근심이 없을때
                     }
-                    else
-                    {
-                        // 영구적인 근심이 있을때
-                        // 근심이 있을때
-                        barrier += 2;
-                    }
+                    else barrier += 2; // 영구적인 근심이 있을때
                 }
             }
             else
@@ -1295,23 +849,10 @@ public class Player : MonoBehaviour
                 if (!isPermanentSkill[16])
                 {
                     // 영구적인 근심이 없을때
-                    if (PassiveSkill[16] > 0)
-                    {
-                        // 근심이 있을때
-                        barrier += 2;
-                    }
-                    else
-                    {
-                        // 근심이 없을때
-                        barrier++;
-                    }
+                    if (PassiveSkill[16] > 0) barrier += 2; // 근심이 있을때
+                    else barrier++; // 근심이 없을때
                 }
-                else
-                {
-                    // 영구적인 근심이 있을때
-                    // 근심이 있을때
-                    barrier += 2;
-                }
+                else barrier += 2; // 영구적인 근심이 있을때
             }
 
             // 초월방벽 계산
@@ -1326,23 +867,10 @@ public class Player : MonoBehaviour
                     if (!isPermanentSkill[16])
                     {
                         // 영구적인 근심이 없을때
-                        if (PassiveSkill[16] > 0)
-                        {
-                            // 근심이 있을때
-                            barrier += 4;
-                        }
-                        else
-                        {
-                            // 근심이 없을때
-                            barrier += 2;
-                        }
+                        if (PassiveSkill[16] > 0) barrier += 4; // 근심이 있을때
+                        else barrier += 2; // 근심이 없을때
                     }
-                    else
-                    {
-                        // 영구적인 근심이 있을때
-                        // 근심이 있을때
-                        barrier += 4;
-                    }
+                    else barrier += 4; // 영구적인 근심이 있을때
                 }
             }
             else
@@ -1353,23 +881,10 @@ public class Player : MonoBehaviour
                 if (!isPermanentSkill[16])
                 {
                     // 영구적인 근심이 없을때
-                    if (PassiveSkill[16] > 0)
-                    {
-                        // 근심이 있을때
-                        barrier += 4;
-                    }
-                    else
-                    {
-                        // 근심이 없을때
-                        barrier += 2;
-                    }
+                    if (PassiveSkill[16] > 0) barrier += 4; // 근심이 있을때
+                    else barrier += 2; // 근심이 없을때
                 }
-                else
-                {
-                    // 영구적인 근심이 있을때
-                    // 근심이 있을때
-                    barrier += 4;
-                }
+                else barrier += 4; // 영구적인 근심이 있을때
             }
 
             // 패시브 유무에 따른 HP 회복 계산
@@ -1378,107 +893,45 @@ public class Player : MonoBehaviour
             {
                 // 영구적인 폭발적치유 X 영구적인 고동 X
                 // 원래 로직 그대로 적용
-                if (PassiveSkill[13] == 0 && PassiveSkill[17] == 0)
-                {
-                    // 폭발적치유와 고동 둘다없을때 -> 10% 회복
-                    NextStageHP(10f);
-                }
-                else if (PassiveSkill[13] > 0 && PassiveSkill[17] == 0)
-                {
-                    // 폭발적치유만 있을때 -> 50% 회복
-                    NextStageHP(50f);
-                }
-                else if (PassiveSkill[13] == 0 && PassiveSkill[17] > 0)
-                {
-                    // 고동만 있을때 -> 100% 회복
-                    NextStageHP(100f);
-                }
-                else if (PassiveSkill[13] > 0 && PassiveSkill[17] > 0)
-                {
-                    // 폭발적치유와 고동 둘다있을때 -> 100% 회복
-                    NextStageHP(100f);
-                }
+                if (PassiveSkill[13] == 0 && PassiveSkill[17] == 0)NextStageHP(10f); // 폭발적치유와 고동 둘다없을때 -> 10% 회복
+                else if (PassiveSkill[13] > 0 && PassiveSkill[17] == 0) NextStageHP(50f); // 폭발적치유만 있을때 -> 50% 회복
+                else if (PassiveSkill[13] == 0 && PassiveSkill[17] > 0) NextStageHP(100f); // 고동만 있을때 -> 100% 회복
+                else if (PassiveSkill[13] > 0 && PassiveSkill[17] > 0) NextStageHP(100f); // 폭발적치유와 고동 둘다있을때 -> 100% 회복
             }
             if (isPermanentSkill[13] && !isPermanentSkill[17])
             {
                 // 영구적인 폭발적치유 O 영구적인 고동 X
                 // 고동 유무에 따라서 로직
-                if (PassiveSkill[17] == 0)
-                {
-                    // 고동 X
-                    // 폭발적치유만 있을때 -> 50% 회복
-                    NextStageHP(50f);
-                }
-                else
-                {
-                    // 고동 O
-                    // 폭발적치유와 고동 둘다있을때 -> 100% 회복
-                    NextStageHP(100f);
-                }
+                if (PassiveSkill[17] == 0) NextStageHP(50f); // 고동 X 폭발적치유만 있을때 -> 50% 회복
+                else NextStageHP(100f); // 고동 O 폭발적치유와 고동 둘다있을때 -> 100% 회복
             }
             if (!isPermanentSkill[13] && isPermanentSkill[17])
             {
                 // 영구적인 폭발적치유 X 영구적인 고동 O
                 // 폭발적치유 유무에 따라서 로직
-                if (PassiveSkill[13] == 0)
-                {
-                    // 폭발적치유 X
-                    // 고동만 있을때 -> 100% 회복
-                    NextStageHP(100f);
-                }
-                else
-                {
-                    // 폭발적치유 O
-                    // 폭발적치유와 고동 둘다있을때 -> 100% 회복
-                    NextStageHP(100f);
-                }
+                if (PassiveSkill[13] == 0) NextStageHP(100f); // 폭발적치유 X 고동만 있을때 -> 100% 회복
+                else NextStageHP(100f); // 폭발적치유 O 폭발적치유와 고동 둘다있을때 -> 100% 회복
             }
-            if (isPermanentSkill[13] && isPermanentSkill[17])
-            {
-                // 영구적인 폭발적치유 O 영구적인 고동 O
-                // 폭발적치유 O 고동 O 인로직만 수행
-                // 폭발적치유와 고동 둘다있을때 -> 100% 회복
-                NextStageHP(100f);
-            }
-
-            // 던전 배경음악
-            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[3]);
+            if (isPermanentSkill[13] && isPermanentSkill[17]) NextStageHP(100f); // 영구적인 폭발적치유 O 영구적인 고동 O, 폭발적치유 O 고동 O 인로직만 수행, 폭발적치유와 고동 둘다있을때 -> 100% 회복
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.dungeonBgmList[Random.Range(0, SoundManager.instance.dungeonBgmList.Length)]); // 던전 배경음악
         }
         else if (nearObject.tag == "GoToDungeon")
         {
             // 마을에서 던전으로가는 로직
-            // 페이드 인/아웃
-            FadeInOut.Instance.Fade2();
-
-            // 스폰딜레이 : 던전으로 이동시 몬스터가 바로 생성되는문제
-            DelaySpawn();
-
-            // 새로운 EntryRoom 생성
-            Instantiate(templates.entryRoom, templates.entryRoom.transform.position, Quaternion.identity);
-
-            // 플레이어를 새로운 EntryRoom위치로 이동
-            transform.position = templates.entryRoom.transform.position;
-
-            // 펫의 위치 변경
-            RepositionPet(spawnedPet);
-
-            // 플레이어 마을아님
-            isShelter = false;
-
-            // 마을 비활성화
-            shelter.SetActive(false);
-
-            // 던전 배경음악
-            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[3]);
+            FadeInOut.Instance.Fade2(); // 페이드 인/아웃
+            DelaySpawn(); // 스폰딜레이 : 던전으로 이동시 몬스터가 바로 생성되는문제
+            Instantiate(templates.entryRoom, templates.entryRoom.transform.position, Quaternion.identity); // 새로운 EntryRoom 생성
+            transform.position = templates.entryRoom.transform.position; // 플레이어를 새로운 EntryRoom위치로 이동
+            RepositionPet(spawnedPet); // 펫의 위치 변경
+            isShelter = false; // 플레이어 마을아님
+            shelter.SetActive(false); // 마을 비활성화
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.dungeonBgmList[Random.Range(0, SoundManager.instance.dungeonBgmList.Length)]); // 던전 배경음악
         }
         else if (nearObject.tag == "Shop")
         {
             // 상점
-            // 상점 패널 활성화
-            shopPanel.SetActive(true);
-
-            // 상점 배경음악
-            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[2]);
+            shopPanel.SetActive(true); // 상점 패널 활성화
+            SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[2]); // 상점 배경음악
 
             // 인벤토리 패널 위치 변경 : 상점과 인벤토리를 보여주기 위해 첫번째 자식으로
             inventoryPanel.transform.SetParent(shopPanel.transform);
@@ -1488,138 +941,84 @@ public class Player : MonoBehaviour
             shopDatabase = nearObject.GetComponent<ShopDatabase>();
 
             // 상점 아이템 초기화
+            // UI를 그리기전에
+            // 각 타입에 맞는 아이템 이미지 추가
             for (int i = 0; i < shopDatabase.shopItemList.Count; i++)
             {
-                //  UI를 그리기전에
                 if (shopDatabase.shopItemList[i].itemType == ItemType.Ability)
                 {
-                    // 기본 : 궁수스킬
-                    if (characterType.Equals("Sword"))
+                    if (characterType.Equals("Sword")) // 소드스킬이면
                     {
-                        // 소드스킬이면
-                        // 차례로 0, 1, 2번 스킬 아이템이 추가된다
                         shopDatabase.shopItemList[i] = abilitySwordSkillItem[abilitySkillCnt];
-
-                        // Ability 스킬 카운트 증가
                         abilitySkillCnt++;
                     }
-                    else if (characterType.Equals("Mage"))
+                    else if (characterType.Equals("Mage")) // 마법사 스킬이면
                     {
-                        // 마법사 스킬이면
-                        // 차례로 0, 1, 2번 스킬 아이템이 추가된다
                         shopDatabase.shopItemList[i] = abilityMageSkillItem[abilitySkillCnt];
-
-                        // Ability 스킬 카운트 증가
                         abilitySkillCnt++;
                     }
-                    else if (characterType.Equals("Blacksmith"))
+                    else if (characterType.Equals("Blacksmith")) // 블랙스미스 스킬이면
                     {
-                        // 블랙스미스 스킬이면
-                        // 차례로 0, 1, 2번 스킬 아이템이 추가된다
                         shopDatabase.shopItemList[i] = abilityBlacksmithSkillItem[abilitySkillCnt];
-
-                        // Ability 스킬 카운트 증가
                         abilitySkillCnt++;
                     }
-                    else if (characterType.Equals("Holyknight"))
+                    else if (characterType.Equals("Holyknight")) // 성기사 스킬이면
                     {
-                        // 성기사 스킬이면
-                        // 차례로 0, 1, 2번 스킬 아이템이 추가된다
                         shopDatabase.shopItemList[i] = abilityHolyknightSkillItem[abilitySkillCnt];
-
-                        // Ability 스킬 카운트 증가
                         abilitySkillCnt++;
                     }
                 }
 
-                //  UI를 그리기전에
                 if (shopDatabase.shopItemList[i].equipmentItemType == EquipmentItemType.Weapon)
                 {
-                    // 기본 : 궁수무기
-                    if (characterType.Equals("Sword") || characterType.Equals("Holyknight"))
+                    if (characterType.Equals("Sword") || characterType.Equals("Holyknight")) // 전사나 성기사 무기이면
                     {
-                        // 전사나 성기사 무기이면
-                        // 소드무기로 바꿔준다
                         shopDatabase.shopItemList[i] = swordItem[weaponCnt];
-
-                        // 무기 카운트 증가 : 널 에러
                         weaponCnt++;
                     }
-                    else if (characterType.Equals("Mage"))
+                    else if (characterType.Equals("Mage")) // 마법사 무기이면
                     {
-                        // 마법사 무기이면
-                        // 지팡이로 바꿔준다
                         shopDatabase.shopItemList[i] = staffItem[weaponCnt];
-
-                        // 무기 카운트 증가 : 널 에러
                         weaponCnt++;
                     }
-                    else if (characterType.Equals("Blacksmith"))
+                    else if (characterType.Equals("Blacksmith")) // 블랙스미스 무기이면
                     {
-                        // 블랙스미스 무기이면
-                        // 해머로 바꿔준다
                         shopDatabase.shopItemList[i] = hammerItem[weaponCnt];
-
-                        // 무기 카운트 증가 : 널 에러
                         weaponCnt++;
                     }
                 }
-
-                // 상점에 아이템 추가
-                shopSlots[i].inventoryItem = shopDatabase.shopItemList[i];
-
-                // 상점 슬롯에 UI를 그려준다
-                shopSlots[i].UpdateSlotUI();
+                shopSlots[i].inventoryItem = shopDatabase.shopItemList[i]; // 상점에 아이템 추가
+                shopSlots[i].UpdateSlotUI(); // 상점 슬롯에 UI를 그려준다
             }
 
-            // 현재 상점임
-            isShop = true;
-
-            // 사운드
-            SoundManager.instance.SFXPlay(ObjType.버튼소리);
+            isShop = true; // 현재 상점임
+            SoundManager.instance.SFXPlay(ObjType.버튼소리); // 사운드
         }
     }   
 
     // 버티기
-    public void HoldOn()
+    private void HoldOn()
     {
-        // 버티기
         int random = Random.Range(0, 2); // 0, 1
         if (random == 0)
         {
-            // 죽기전 50% 확률로 버티며 체력이 1
-            curHealth = 1;
-
-            // 죽은게 아니므로 데미지를 입는 애니메이션을 실행
-            StartCoroutine(DoDamaged("doDamaged"));
+            curHealth = 1; // 죽기전 50% 확률로 버티며 체력이 1
+            StartCoroutine(DoDamaged("doDamaged")); // 죽은게 아니므로 데미지를 입는 애니메이션을 실행
 
             // 구사일생
             // 영구적인 구사일생이 있는지 체크
             if (!isPermanentSkill[12])
             {
                 // 영구적인 구사일생이 없을때
-                if (PassiveSkill[12] > 0)
-                {
-                    // 버티기 성공시 HP 모두 회복
-                    curHealth = maxHealth;
-                }
+                if (PassiveSkill[12] > 0) curHealth = maxHealth; // 버티기 성공시 HP 모두 회복
             }
-            else
-            {
-                // 영구적인 구사일생이 있을때
-                // 버티기 성공시 HP 모두 회복
-                curHealth = maxHealth;
-            }
+            else curHealth = maxHealth; // 영구적인 구사일생이 있을때 버티기 성공시 HP 모두 회복
         }
-        else
-        {
-            // 버티기 실패시 죽음
-            StartCoroutine("DoDie");
-        }
+        else StartCoroutine("DoDie"); // 버티기 실패시 죽음
     }
 
     // 거울
-    public void Mirror(Enemy enemyScript)
+    private void Mirror(Enemy enemyScript)
     {
         // 보스 폭탄 원거리를 제외한 공격을 반사
         int random = Random.Range(0, 2); // 0~1
@@ -1630,91 +1029,40 @@ public class Player : MonoBehaviour
                 // 몬스터 죽음
                 if (enemyScript.curHealth - enemyScript.damage <= 0)
                 {
-                    // 카운트베이스 퀘스트 처리
-                    enemyScript.EnemyKillQuestCheck();
-
-                    // 아이템 드랍
-                    if (!enemyScript.isDrop)
-                    {
-                        enemyScript.ItemDrop(false);
-                    }
-
-                    // 방벽 얻기
-                    enemyScript.GetBarrier();
-
-                    // 몬스터 체력바 반납
-                    poolingManager.ReturnObj(enemyScript.GetComponent<HpBar>().instantHpBar, ObjType.몬스터체력바);
-
-                    // 몬스터 반납
-                    poolingManager.ReturnObj(enemyScript.transform.gameObject, enemyScript.transform.gameObject.GetComponent<Enemy>().type);
+                    enemyScript.EnemyKillQuestCheck(); // 카운트베이스 퀘스트 처리
+                    if (!enemyScript.isDrop) enemyScript.ItemDrop(false); // 아이템 드랍
+                    enemyScript.GetBarrier(); // 방벽 얻기
+                    poolingManager.ReturnObj(enemyScript.GetComponent<HpBar>().instantHpBar, ObjType.몬스터체력바); // 몬스터 체력바 반납
+                    poolingManager.ReturnObj(enemyScript.transform.gameObject, enemyScript.transform.gameObject.GetComponent<Enemy>().type); // 몬스터 반납
                 }
-                else
-                {
-                    // 아니라면 정상적으로 데미지 반사
-                    enemyScript.curHealth -= enemyScript.damage;
-                }
+                else enemyScript.curHealth -= enemyScript.damage; // 아니라면 정상적으로 데미지 반사
             }
         }
     }
 
     // 저거너트 ( 근거리 )
-    public void Juggernaut(Enemy enemyScript)
+    private void Juggernaut(Enemy enemyScript)
     {
         // 영구적인 저거너트가 있는지 체크
         if (!isPermanentSkill[7])
         {
             // 영구적인 저거너트가 없으면
-            if (PassiveSkill[7] > 0)
-            {
-                // 저거너트
-                // 받는피해 80% 감소
-                curHealth -= enemyScript.damage * 20 / 100;
-            }
-            else
-            {
-                // 저거너트 X
-                // 받는피해 그대로 적용
-                curHealth -= enemyScript.damage;
-            }
+            if (PassiveSkill[7] > 0) curHealth -= enemyScript.damage * 20 / 100; // 저거너트 있으면 받는피해 80% 감소
+            else curHealth -= enemyScript.damage; // 받는피해 그대로 적용
         }
-        else
-        {
-            // 영구적인 저거너트가 있으면
-            // 저거너트
-            // 받는피해 80% 감소
-            curHealth -= enemyScript.damage * 20 / 100;
-        }
+        else curHealth -= enemyScript.damage * 20 / 100; // 영구적인 저거너트가 있으면 받는피해 80% 감소
     }
 
     // 저거너트 ( 원거리 )
-    public void Juggernaut(Carrot carrotScript)
+    private void Juggernaut(Carrot carrotScript)
     {
         // 영구적인 저거너트가 있는지 체크
         if (!isPermanentSkill[7])
         {
             // 영구적인 저거너트가 없을때
-            if (PassiveSkill[7] > 0)
-            {
-                // 저거너트
-                // 받는피해 80% 감소
-                // 스테이지가 높아질수록 당근데미지 증가
-                curHealth -= (carrotScript.damage + 100 * (templates.currentStage)) * 20 / 100;
-            }
-            else
-            {
-                // 저거너트 X
-                // 받는피해 그대로 적용
-                // 스테이지가 높아질수록 당근데미지 증가
-                curHealth -= carrotScript.damage + 100 * (templates.currentStage);
-            }
+            if (PassiveSkill[7] > 0) curHealth -= (carrotScript.damage + 100 * (templates.currentStage)) * 20 / 100; // 저거너트 있으면 받는피해 80% 감소
+            else curHealth -= carrotScript.damage + 100 * (templates.currentStage); // 받는피해 그대로 적용
         }
-        else
-        {
-            // 영구적인 저거너트가 있을때
-            // 저거너트
-            // 받는피해 80% 감소
-            // 스테이지가 높아질수록 당근데미지 증가
-            curHealth -= (carrotScript.damage + 100 * (templates.currentStage)) * 20 / 100;
-        }
+        else curHealth -= (carrotScript.damage + 100 * (templates.currentStage)) * 20 / 100; // 영구적인 저거너트가 있을때 받는피해 80% 감소
     }
 }
