@@ -47,7 +47,7 @@
   - Objective Base : Quest Base 상속 ⇒ 목표 기반 공통 멤버 정의
   - ILoop : 반복 퀘스트 인터페이스 멤버 정의
   - ISequential : 순차 퀘스트 인터페이스 멤버 정의
-  - Quest Implement : 카운트 또는 목표 기반 퀘스트를 상속, 필요 시 반복 퀘스트와 순차 퀘스트를 다중상속해서 각 퀘스트 구현
+  - Quest Implement : 기반 퀘스트를 상속, 필요 시 반복 퀘스트와 순차 퀘스트를 다중상속해서 각 퀘스트 구현
   - Quest Manager : Quest Base형 리스트를 참조해서 퀘스트 진행 상황 관리
 - ![퀘스트 다이어그램 drawio](https://github.com/LeeJungHwi/Herogue_./assets/101587101/ccc545cb-1289-4eaf-9caa-36e8fa1c5b45)
 
