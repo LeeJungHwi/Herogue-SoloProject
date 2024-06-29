@@ -43,7 +43,7 @@
 
 - 퀘스트 UML
   - Quest Base : Scriptable Object 상속 ⇒ 모든 퀘스트 공통 멤버 정의
-  - Count Base : Quest Base 상속 ⇒ 카운트 기반 공통 멤버 정의
+  - Count Base : Quest Base 상속 ⇒ 카운트 기반 공통 멤버 정의, 프로퍼티를 사용해서 셋될 때 완료조건 체크
   - Objective Base : Quest Base 상속 ⇒ 목표 기반 공통 멤버 정의
   - ILoop : 반복 퀘스트 인터페이스 멤버 정의
   - ISequential : 순차 퀘스트 인터페이스 멤버 정의
