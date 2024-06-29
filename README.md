@@ -75,6 +75,10 @@
 
 ⚡ 풀 시스템
 - 오브젝트 풀링 : 무기, 스킬, 코인, 박스, 몬스터, 맵, 장식, 이펙트, 체력바, 플로팅 텍스트, 사운드, 아이템, 펫, ETC...
+- ![풀링 인스펙터](https://github.com/LeeJungHwi/Herogue_./assets/101587101/8c467dce-1084-400f-bc19-0967816ce8d7)
+
+<br>
+
 - 사운드 풀링 : 자주 사용되는 사운드, 특히 스킬 시전 사운드는 무조건 재사용이 필요했음 
 - ![스킬 풀링](https://github.com/LeeJungHwi/Herogue_./assets/101587101/6dcc60f9-fb30-4819-ae7d-eafb609a80d4)
 
