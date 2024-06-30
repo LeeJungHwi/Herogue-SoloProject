@@ -32,7 +32,7 @@
 <br>
 
 - 스킬 FSM
-- ![스킬시스템 UML drawio](https://github.com/LeeJungHwi/Herogue_./assets/101587101/53f58779-1144-4bf6-948b-5c489e2e3099)
+- ![스킬시스템 UML drawio](https://github.com/LeeJungHwi/Herogue_./assets/101587101/53f58779-1144-4bf6-948b-5c489e2e3099) ![스킬 FSM 인스펙터(히)](https://github.com/LeeJungHwi/Herogue_./assets/101587101/8aa45e6a-1b67-453e-8453-df767a626ce5)
 
 <br>
 
