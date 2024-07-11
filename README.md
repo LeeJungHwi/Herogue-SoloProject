@@ -8,15 +8,15 @@
 <br>
 
 # 주요 기능  
-⚡ 절차적 던전 시스템
+⚡ 절차적 던전 시스템 [[스크립트 폴더](https://github.com/LeeJungHwi/Herogue_./tree/main/Scripts/ProceduralMap)]
 - 랜덤맵 생성 : 현재 스테이지에 따라 레벨 디자인
 - 몬스터 스폰 : 현재 스테이지에 따라 레벨 디자인
-- 미니맵 표시 : 초록색(플레이어), 하얀색(일반), 빨간색(보스, 최장거리)
+- 미니맵 표시 : 초록색(플레이어), 하얀색(일반), 빨간색(보스, 최장거리) [[bfs](https://github.com/LeeJungHwi/Herogue_./blob/main/Scripts/ProceduralMap/RoomBFS.cs)]
 - ![ProceduralGif](https://github.com/LeeJungHwi/Herogue_./assets/101587101/a126e706-bac7-454e-b062-4bc513dd9e8a)
 
 <br>
 
-⚡ 스킬 시스템
+⚡ 스킬 시스템 [[스크립트 폴더](https://github.com/LeeJungHwi/Herogue_./tree/main/Scripts/Ability)]
 - 스킬 데이터 : Scriptable Object
 - ![스킬시스템 스크립터블](https://github.com/LeeJungHwi/Herogue_./assets/101587101/0845e6f3-af8b-46e3-9f1d-b9c36d579f62)
 
@@ -41,7 +41,7 @@
 
 <br>
 
-⚡ 퀘스트 시스템
+⚡ 퀘스트 시스템 [[스크립트 폴더](https://github.com/LeeJungHwi/Herogue_./tree/main/Scripts/Quest)]
 - 퀘스트 데이터 : Scriptable Object
 - ![퀘스트 스크립터블](https://github.com/LeeJungHwi/Herogue_./assets/101587101/869d7074-b98c-4d57-836a-db3a2954f3fb)
 
@@ -59,7 +59,7 @@
 
 <br>
 
-⚡ 인벤토리 시스템
+⚡ 인벤토리 시스템 [[스크립트 폴더](https://github.com/LeeJungHwi/Herogue_./tree/main/Scripts/InventoryShop)]
 - 아이템 데이터 : User Class ⇒ 각 아이템이 참조
 - ![인벤토리 유저 클래스](https://github.com/LeeJungHwi/Herogue_./assets/101587101/8e08c4bc-1ef0-426b-afd3-17fc79303a3f)
 
@@ -75,7 +75,7 @@
 
 <br>
 
-⚡ 풀 시스템
+⚡ 풀 시스템 [[스크립트](https://github.com/LeeJungHwi/Herogue_./blob/main/Scripts/Manager/PoolingManager.cs)]
 - 오브젝트 풀링 : 무기, 스킬, 코인, 박스, 몬스터, 맵, 장식, 이펙트, 체력바, 플로팅 텍스트, 사운드, 아이템, 펫, ETC...
 - ![풀링 인스펙터](https://github.com/LeeJungHwi/Herogue_./assets/101587101/8c467dce-1084-400f-bc19-0967816ce8d7)
 
