@@ -26,7 +26,7 @@
   - Ability Base : Scriptable Object 상속 ⇒ 모든 스킬 공통 멤버 정의
   - Ability Implement : Ability Base 상속 ⇒ 각 스킬 구체화
   - Ability FSM : Ability Base 참조 ⇒ 각 FSM의 스킬 데이터가 갖는 스킬 상태 관리
-  - Polling Manager : 스킬 시전 또는 종료 시 스킬 오브젝트와 사운드 풀링
+  - Pooling Manager : 스킬 시전 또는 종료 시 스킬 오브젝트와 사운드 풀링
 - ![스킬 다이어그램 final drawio](https://github.com/LeeJungHwi/Herogue_./assets/101587101/4cd1082d-7f22-421a-a937-f3f710a36156)
 
 <br>
