@@ -2,6 +2,10 @@
 
 <br>
 
+![히어로그 썸넬](https://github.com/user-attachments/assets/891b6551-3507-476f-8912-2959f1ba2ab1)
+
+<br>
+
 # 시연 영상  
 + [히어로그 궁수](<https://youtu.be/cZ1Evc3VNB4>)
 
