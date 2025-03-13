@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,8 +49,20 @@ public class GameManager : MonoBehaviour
     // IndicateHand
     [SerializeField] private GameObject[] indicateHandImage;
 
+    // 세이브 버튼
+    [SerializeField] private Button saveBtn;
+
     private void Start()
     {
+        // 선택된 캐릭터와 다르면 게임매니저 삭제
+        if (DataManager.instance.character.ToString() + "GameManager" != gameObject.name) { gameObject.SetActive(false); return; }
+
+        // 로드인 경우 전체 데이터 로드
+        if(SaveManager.instance.isLoad) SaveManager.instance.LoadAll();
+
+        // 게임화면 시작시 저장 버튼에 이벤트 리스너 등록
+        saveBtn.onClick.AddListener(GameSave);
+
         // 게임화면 시작시 배경음 슬라이더값 세팅
         bgmSlider.value = SoundManager.instance.bgmVolume;
 
@@ -70,9 +80,6 @@ public class GameManager : MonoBehaviour
 
         // 게임화면 시작시 게임속도 슬라이더에 이벤트 리스너 등록
         gameSpeedSlider.onValueChanged.AddListener(DataManager.instance.SetGameSpeed);
-
-        // 선택된 캐릭터와 다르면 게임매니저 삭제
-        if (DataManager.instance.character.ToString() + "GameManager" != gameObject.name) gameObject.SetActive(false);
     }
 
     private void LateUpdate()
@@ -202,6 +209,15 @@ public class GameManager : MonoBehaviour
 
         // 사운드
         SoundManager.instance.SFXPlay(ObjType.버튼소리);
+    }
+
+    // 게임 저장
+    public void GameSave()
+    {
+        // 마을이 아니면 X
+        if(!player.isShelter) return;
+        
+        SaveManager.instance.SaveAll();
     }
 
     // 게임 종료

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -34,6 +32,22 @@ public class MainManager : MonoBehaviour
     // 로딩화면
     public void Select()
     {
+        // 로딩화면
+        SceneManager.LoadScene(1);
+
+        // 마을 배경음악
+        SoundManager.instance.BgmSoundPlay(SoundManager.instance.bgmList[1]);
+
+        // 사운드
+        SoundManager.instance.MainSFXPlay("ButtonSound", SoundManager.instance.mainSfxList[0]);
+    }
+
+    // 불러오기
+    public void GameLoad()
+    {
+        // 캐릭터 타입 로드 => 저장된 파일이 없으면 X
+        if(!SaveManager.instance.characterSave.CharacterTypeLoad()) return;
+
         // 로딩화면
         SceneManager.LoadScene(1);
 
