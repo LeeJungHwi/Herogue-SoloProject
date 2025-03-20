@@ -6,8 +6,17 @@
 
 <br>
 
+# 프로젝트 개요
+| 개발 환경 | Unity |
+|:------:|:------:|
+| 개발 기간 | 2022/07/05 ~ ing  |
+| 게임 설명 | 로그라이크 RPG |
+| 공모전 참여 | 2022 MWU |
+
+<br>
+
 # 시연 영상  
-+ [히어로그 궁수](<https://youtu.be/cZ1Evc3VNB4>)
++ [Herogue](<https://youtu.be/cZ1Evc3VNB4>)
 
 <br>
 
@@ -15,7 +24,7 @@
 ⚡ 절차적 던전 시스템 [[스크립트 폴더](https://github.com/LeeJungHwi/Herogue_./tree/main/Scripts/ProceduralMap)]
 - 랜덤맵 생성 : 현재 스테이지에 따라 레벨 디자인
 - 몬스터 스폰 : 현재 스테이지에 따라 레벨 디자인
-- 미니맵 표시 : 초록색(플레이어), 하얀색(일반), 빨간색(보스, 최장거리) [[bfs](https://github.com/LeeJungHwi/Herogue_./blob/main/Scripts/ProceduralMap/RoomBFS.cs)]
+- 미니맵 표시 : 초록색(플레이어), 하얀색(일반), 빨간색(보스, 최장거리) [[스크립트](https://github.com/LeeJungHwi/Herogue_./blob/main/Scripts/ProceduralMap/RoomBFS.cs)]
 - ![ProceduralGif](https://github.com/LeeJungHwi/Herogue_./assets/101587101/a126e706-bac7-454e-b062-4bc513dd9e8a)
 
 <br>
@@ -87,6 +96,11 @@
 
 - 사운드 풀링 : 자주 사용되는 사운드, 특히 스킬 시전 사운드는 무조건 재사용이 필요했음 
 - ![스킬 풀링](https://github.com/LeeJungHwi/Herogue_./assets/101587101/6dcc60f9-fb30-4819-ae7d-eafb609a80d4)
+
+<br>
+
+⚡ 세이브 시스템 [[스크립트 폴더](Scripts/Save)]
+- Json 형태로 저장 및 로드
 
 <br>
 
